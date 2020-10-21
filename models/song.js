@@ -7,7 +7,10 @@ const mongoose = require('mongoose'),
 	Genre = require('./genre');
 
 const songSchema = new Schema({
-	gDriveId: String,
+	gDriveFLAC: String,
+	gDriveM4A: String,
+	gDriveMP3: String,
+	gDriveOGG: String,
 	title: String,
 	trackNo: Number,
 	discNo: Number,
