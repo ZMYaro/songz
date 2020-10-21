@@ -7,48 +7,115 @@
 			label {
 				display: block;
 			}
+			audio {
+				width: 100%;
+			}
+			#prev-btn,
+			#play-pause-btn,
+			#next-btn {
+				font-size: 200%;
+			}
 		</style>
 		<script>
-			let player;
+			let activePlayer,
+				inactivePlayer,
+				queue = [],
+				queuePosition = -1,
+				playing = false;
 			
 			function toGDriveURL(gDriveId) {
 				return `https://drive.google.com/uc?export=view&id=${gDriveId}`;
 			}
 			
 			window.addEventListener('load', function () {
-				player = document.getElementById('player');
+				activePlayer = document.getElementById('player1');
+				inactivePlayer = document.getElementById('player2');
+				
+				document.getElementById('prev-btn').addEventListener('click', prevSong);
+				document.getElementById('play-pause-btn').addEventListener('click', playPauseSong);
+				document.getElementById('next-btn').addEventListener('click', nextSong);
+				
+				activePlayer.addEventListener('ended', nextSong);
+				inactivePlayer.addEventListener('ended', nextSong);
 				
 				loadSongs();
 			});
 			
 			async function loadSongs() {
 				let songsRes = await fetch('/api/songs'),
-					songs = await songsRes.json(),
 					songsTable = document.getElementById('song-list');
 				
+				queue = await songsRes.json();
+				queue = queue.sort((a, b) => a.trackNo < b.trackNo ? -1 : 1);
+				
 				songsTable.innerHTML = '';
-				songs.forEach((song) => {
+				queue.forEach((song, i) => {
 					let songRow = document.createElement('tr'),
 						playBtn = document.createElement('button');
+					
 					songRow.innerHTML = `
 						<td>${song.trackNo}</td>
 						<td>${song.title}</td>
 						<td></td>`;
 					playBtn.innerHTML = '▶️';
-					playBtn.addEventListener('click', () => playSong(song));
+					playBtn.addEventListener('click', () => playSong(i));
 					songRow.querySelector('td:last-of-type').appendChild(playBtn);
 					songsTable.appendChild(songRow);
 				});
 			}
 			
-			function playSong(song) {
+			function loadSong(player, i) {
+				if (i >= queue.length) {
+					return;
+				}
+				let song = queue[i];
+				
 				player.innerHTML = '' +
 					song.gDriveFLAC ? `<source src="${toGDriveURL(song.gDriveFLAC)}" type="audio/flac" />` : '' +
 					song.gDriveM4A  ? `<source src="${toGDriveURL(song.gDriveM4A)}"  type="audio/x-m4a"  />` : '' +
 					song.gDriveMP3  ? `<source src="${toGDriveURL(song.gDriveMP3)}"  type="audio/mp3"  />` : '' +
 					song.gDriveOGG  ? `<source src="${toGDriveURL(song.gDriveOGG)}"  type="audio/ogg"  />` : '';
 				player.load();
-				player.play();
+			}
+			
+			function swapPlayers() {
+				let temp = activePlayer;
+				activePlayer = inactivePlayer;
+				inactivePlayer = temp;
+			}
+			
+			async function playSong(i) {
+				loadSong(activePlayer, i);
+				if (i < queue.length - 1) {
+					loadSong(inactivePlayer, i + 1);
+				}
+				await activePlayer.play();
+				playing = true;
+				queuePosition = i;
+			}
+			
+			async function playPauseSong() {
+				if (playing) {
+					await activePlayer.pause();
+					playing = false;
+				} else {
+					await activePlayer.play();
+					playing = true;
+				}
+			}
+			async function prevSong() {
+				swapPlayers();
+				queuePosition--;
+				loadSong(activePlayer, queuePosition);
+				await inactivePlayer.pause();
+				inactivePlayer.currentTime = 0;
+				await activePlayer.play();
+			}
+			async function nextSong() {
+				swapPlayers();
+				await activePlayer.play();
+				queuePosition++;
+				loadSong(inactivePlayer, queuePosition + 1);
 			}
 		</script>
 	</head>
@@ -101,7 +168,13 @@
 				</tbody>
 			</table>
 			<br />
-			<audio id="player" controls="controls"></audio>
+			<button id="prev-btn">⏮</button>
+			<button id="play-pause-btn">⏯</button>
+			<button id="next-btn">⏭</button>
+			<br />
+			<audio id="player1" controls="controls"></audio>
+			<br />
+			<audio id="player2" controls="controls"></audio>
 		</section>
 	</body>
 </html>
