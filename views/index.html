@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>SongZ</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<style>
+			label {
+				display: block;
+			}
+		</style>
+		<script>
+			let player;
+			
+			function toGDriveURL(gDriveId) {
+				return `https://drive.google.com/uc?export=view&id=${gDriveId}`;
+			}
+			
+			window.addEventListener('load', function () {
+				player = document.getElementById('player');
+				
+				loadSongs();
+			});
+			
+			async function loadSongs() {
+				let songsRes = await fetch('/api/songs'),
+					songs = await songsRes.json(),
+					songsTable = document.getElementById('song-list');
+				
+				songsTable.innerHTML = '';
+				songs.forEach((song) => {
+					let songRow = document.createElement('tr'),
+						playBtn = document.createElement('button');
+					songRow.innerHTML = `
+						<td>${song.trackNo}</td>
+						<td>${song.title}</td>
+						<td></td>`;
+					playBtn.innerHTML = '▶️';
+					playBtn.addEventListener('click', () => playSong(song.gDriveId));
+					songRow.querySelector('td:last-of-type').appendChild(playBtn);
+					songsTable.appendChild(songRow);
+				});
+			}
+			
+			function playSong(gDriveId) {
+				player.src = toGDriveURL(gDriveId);
+				player.play();
+			}
+		</script>
+	</head>
+	<body>
+		<h1>It works?</h1>
+		<section>
+			<h2>Add song</h2>
+			<form method="POST" action="/api/songs">
+				<label>
+					GDrive ID:
+					<input type="text" name="gdrive-id" />
+				</label>
+				<label>
+					Title:
+					<input type="text" name="title" />
+				</label>
+				<label>
+					Track #:
+					<input type="number" name="track-no" />
+				</label>
+				<button type="submit">Submit</button>
+			</form>
+		</section>
+		<section>
+			<h2>Play song</h2>
+			<table>
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Title</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody id="song-list">
+					<tr>
+						<td colspan="3">Loading...</td>
+					</tr>
+				</tbody>
+			</table>
+			<br />
+			<audio id="player" controls="controls"></audio>
+		</section>
+	</body>
+</html>
