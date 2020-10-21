@@ -72,12 +72,7 @@
 				});
 			}
 			
-			function loadSong(player, i) {
-				if (i >= queue.length) {
-					return;
-				}
-				let song = queue[i];
-				
+			function loadSong(player, song) {
 				player.innerHTML = '' +
 					song.gDriveFLAC ? `<source src="${toGDriveURL(song.gDriveFLAC)}" type="audio/flac" />` : '' +
 					song.gDriveM4A  ? `<source src="${toGDriveURL(song.gDriveM4A)}"  type="audio/x-m4a"  />` : '' +
@@ -93,9 +88,9 @@
 			}
 			
 			async function playSong(i) {
-				loadSong(activePlayer, i);
+				loadSong(activePlayer, queue[i]);
 				if (i < queue.length - 1) {
-					loadSong(inactivePlayer, i + 1);
+					loadSong(inactivePlayer, queue[i + 1]);
 				}
 				await activePlayer.play();
 				navigator.mediaSession.playbackState = 'playing';
@@ -122,9 +117,12 @@
 				navigator.mediaSession.playbackState = 'paused';
 			}
 			async function prevSong() {
+				if (queuePosition - 1 < 0) {
+					return;
+				}
 				swapPlayers();
 				queuePosition--;
-				loadSong(activePlayer, queuePosition);
+				loadSong(activePlayer, queue[queuePosition]);
 				await inactivePlayer.pause();
 				await resumeSong();
 				inactivePlayer.currentTime = 0;
@@ -136,7 +134,7 @@
 				swapPlayers();
 				await resumeSong();
 				queuePosition++;
-				loadSong(inactivePlayer, queuePosition + 1);
+				loadSong(inactivePlayer, queue[queuePosition + 1]);
 			}
 		</script>
 	</head>
