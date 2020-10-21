@@ -20,8 +20,7 @@
 			let activePlayer,
 				inactivePlayer,
 				queue = [],
-				queuePosition = -1,
-				playing = false;
+				queuePosition = -1;
 			
 			function toGDriveURL(gDriveId) {
 				return `https://drive.google.com/uc?export=view&id=${gDriveId}`;
@@ -37,6 +36,15 @@
 				
 				activePlayer.addEventListener('ended', nextSong);
 				inactivePlayer.addEventListener('ended', nextSong);
+				
+				navigator.mediaSession.setActionHandler('play', resumeSong);
+				navigator.mediaSession.setActionHandler('pause', pauseSong);
+				navigator.mediaSession.setActionHandler('stop', stopSong);
+				navigator.mediaSession.setActionHandler('previoustrack', prevSong);
+				navigator.mediaSession.setActionHandler('nexttrack', nextSong);
+				navigator.mediaSession.setActionHandler('seekto', function (details) {
+					activePlayer.currentTime = details.seekTime;
+				});
 				
 				loadSongs();
 			});
@@ -90,30 +98,43 @@
 					loadSong(inactivePlayer, i + 1);
 				}
 				await activePlayer.play();
-				playing = true;
+				navigator.mediaSession.playbackState = 'playing';
 				queuePosition = i;
 			}
 			
 			async function playPauseSong() {
-				if (playing) {
-					await activePlayer.pause();
-					playing = false;
+				if (navigator.mediaSession.playbackState === 'playing') {
+					pauseSong();
 				} else {
-					await activePlayer.play();
-					playing = true;
+					resumeSong();
 				}
+			}
+			async function resumeSong() {
+				await activePlayer.play();
+				navigator.mediaSession.playbackState = 'playing';
+			}
+			async function pauseSong() {
+				await activePlayer.pause();
+				navigator.mediaSession.playbackState = 'paused';
+			}
+			async function stopSong() {
+				await activePlayer.pause();
+				navigator.mediaSession.playbackState = 'paused';
 			}
 			async function prevSong() {
 				swapPlayers();
 				queuePosition--;
 				loadSong(activePlayer, queuePosition);
 				await inactivePlayer.pause();
+				await resumeSong();
 				inactivePlayer.currentTime = 0;
-				await activePlayer.play();
 			}
 			async function nextSong() {
+				if (queuePosition + 1 >= queue.length) {
+					return;
+				}
 				swapPlayers();
-				await activePlayer.play();
+				await resumeSong();
 				queuePosition++;
 				loadSong(inactivePlayer, queuePosition + 1);
 			}
