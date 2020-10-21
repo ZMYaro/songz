@@ -28,7 +28,10 @@ router.route('/songs')
 		console.dir(JSON.stringify(req.body));
 		
 		let newSong = new Song({
-			gDriveId: req.body['gdrive-id'],
+			gDriveFLAC: req.body['gdrive-flac'],
+			gDriveM4A: req.body['gdrive-m4a'],
+			gDriveMP3: req.body['gdrive-mp3'],
+			gDriveOGG: req.body['gdrive-ogg'],
 			title: req.body['title'],
 			trackNo: req.body['track-no']
 		});
