@@ -31,6 +31,9 @@ db.once('open', function () {
 // Set up routes.
 app.use(express.static('static'));
 app.use('/api', apiRouter);
+app.get('/import', (req, res) => {
+	res.sendFile(path.join(__dirname, '/views/gpm_import.html'));
+});
 app.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, '/views/index.html'));
 });

@@ -1,0 +1,9 @@
+h1,
+section {
+	max-width: 600px;
+	margin: auto;
+}
+
+#log p {
+	margin: 0;
+}
