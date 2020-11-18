@@ -1,5 +1,10 @@
 'use strict';
 
+// Using unpkg for now in place of transforming bare module specifiers.
+//import '@polymer/app-layout'; // Needed for <app-drawer> and <app-drawer-layout>.
+import 'https://unpkg.com/@polymer/app-layout@3.1.0/app-layout.js?module';
+
+
 let activePlayer,
 	inactivePlayer,
 	queue = [],
@@ -75,9 +80,9 @@ async function playSong(i) {
 	if (i < queue.length - 1) {
 		loadSong(inactivePlayer, queue[i + 1]);
 	}
-	await activePlayer.play();
 	navigator.mediaSession.playbackState = 'playing';
 	queuePosition = i;
+	await activePlayer.play();
 }
 
 async function playPauseSong() {
@@ -88,8 +93,8 @@ async function playPauseSong() {
 	}
 }
 async function resumeSong() {
-	await activePlayer.play();
 	navigator.mediaSession.playbackState = 'playing';
+	await activePlayer.play();
 }
 async function pauseSong() {
 	await activePlayer.pause();
