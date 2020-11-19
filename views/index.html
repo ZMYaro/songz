@@ -25,69 +25,9 @@
 				font-size: 200%;
 			}
 		</style>
-		<script type="module" src="scripts/app.js"></script>
+		<script type="module" src="components/songz-app.js"></script>
 	</head>
 	<body>
-		<app-drawer-layout>
-			<app-drawer slot="drawer" align="end" swipe-open>
-				<h2>Queue</h2>
-				<table>
-					<thead>
-						<tr>
-							<th>#</th>
-							<th>Title</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody id="song-list">
-						<tr>
-							<td colspan="3">Loading...</td>
-						</tr>
-					</tbody>
-				</table>
-			</app-drawer>
-			<main>
-				<h1>It works?</h1>
-				<section>
-					<h2>Add song</h2>
-					<form method="POST" action="/api/songs">
-						<label>
-							GDrive FLAC:
-							<input type="text" name="gdrive-flac" />
-						</label>
-						<label>
-							GDrive M4A:
-							<input type="text" name="gdrive-m4a" />
-						</label>
-						<label>
-							GDrive MP3:
-							<input type="text" name="gdrive-mp3" />
-						</label>
-						<label>
-							GDrive OGG:
-							<input type="text" name="gdrive-ogg" />
-						</label>
-						<label>
-							Title:
-							<input type="text" name="title" />
-						</label>
-						<label>
-							Track #:
-							<input type="number" name="track-no" />
-						</label>
-						<button type="submit">Submit</button>
-					</form>
-				</section>
-				<section>
-					<button id="prev-btn">⏮</button>
-					<button id="play-pause-btn">⏯</button>
-					<button id="next-btn">⏭</button>
-					<br />
-					<audio id="player1" controls="controls"></audio>
-					<br />
-					<audio id="player2" controls="controls"></audio>
-				</section>
-			</main>
-		</app-drawer-layout>
+		<songz-app></songz-app>
 	</body>
 </html>
