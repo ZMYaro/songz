@@ -5,6 +5,7 @@ import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.4.0/lit-ele
 //import '@polymer/app-layout'; // Needed for <app-drawer> and <app-drawer-layout>.
 import 'https://unpkg.com/@polymer/app-layout@3.1.0/app-layout.js?module';
 
+import './songz-player.js';
 import {toGDriveURL} from '../scripts/utils.js';
 
 export class SongZApp extends LitElement {
@@ -14,16 +15,21 @@ export class SongZApp extends LitElement {
 	queue = [];
 	queuePosition = -1;
 	
+	static get properties() {
+		return {
+			status: { type: String, attribute: false },
+			currentTime: { type: Number, attribute: false },
+			duration: { type: Number, attribute: false }
+		};
+	}
+	
 	firstUpdated() {
-		this.activePlayer = this.querySelector('#player1');
-		this.inactivePlayer = this.querySelector('#player2');
-		
-		//document.getElementById('prev-btn').addEventListener('click', prevSong);
-		//document.getElementById('play-pause-btn').addEventListener('click', playPauseSong);
-		//document.getElementById('next-btn').addEventListener('click', nextSong);
-		
-		//this.activePlayer.addEventListener('ended', nextSong);
-		//this.inactivePlayer.addEventListener('ended', nextSong);
+		this.activePlayer = new Audio();
+		this.inactivePlayer = new Audio();
+		this.activePlayer.addEventListener('timeupdate', this.updateCurrentTime.bind(this));
+		this.inactivePlayer.addEventListener('timeupdate', this.updateCurrentTime.bind(this));
+		this.activePlayer.addEventListener('ended', this.nextSong.bind(this));
+		this.inactivePlayer.addEventListener('ended', this.nextSong.bind(this));
 		
 		navigator.mediaSession.setActionHandler('play', this.resumeSong.bind(this));
 		navigator.mediaSession.setActionHandler('pause', this.pauseSong.bind(this));
@@ -80,30 +86,38 @@ export class SongZApp extends LitElement {
 		if (i < this.queue.length - 1) {
 			this.loadSong(this.inactivePlayer, this.queue[i + 1]);
 		}
-		navigator.mediaSession.playbackState = 'playing';
 		this.queuePosition = i;
-		await this.activePlayer.play();
+		await this.resumeSong();
 	}
 
 	async playPauseSong() {
-		if (navigator.mediaSession.playbackState === 'playing') {
-			this.pauseSong();
-		} else {
+		if (this.status === 'paused') {
 			this.resumeSong();
+		} else {
+			this.pauseSong();
 		}
 	}
 	async resumeSong() {
-		navigator.mediaSession.playbackState = 'playing';
+		navigator.mediaSession.playbackState = 'none';
+		this.status = 'buffering';
+		this.duration = null;
 		await this.activePlayer.play();
+		navigator.mediaSession.playbackState = 'playing';
+		this.currentTime = this.activePlayer.currentTime;
+		this.duration = this.activePlayer.duration;
+		this.updatePositionState();
+		this.status = 'playing';
 	}
 	async pauseSong() {
 		await this.activePlayer.pause();
 		navigator.mediaSession.playbackState = 'paused';
+		this.status = 'paused';
 	}
 	async stopSong() {
 		await this.activePlayer.pause();
 		this.activePlayer.currentTime = 0;
 		navigator.mediaSession.playbackState = 'paused';
+		this.status = 'paused';
 	}
 	async prevSong() {
 		if (this.queuePosition - 1 < 0) {
@@ -124,6 +138,22 @@ export class SongZApp extends LitElement {
 		await this.resumeSong();
 		this.queuePosition++;
 		this.loadSong(this.inactivePlayer, this.queue[this.queuePosition + 1]);
+	}
+	
+	handleSeek(ev) {
+		this.activePlayer.currentTime = ev.currentTarget.currentTime;
+	}
+	
+	updateCurrentTime(ev) {
+		this.currentTime = ev.currentTarget.currentTime;
+	}
+	
+	updatePositionState() {
+		navigator.mediaSession.setPositionState({
+			duration: this.activePlayer.duration,
+			playbackRate: this.activePlayer.playbackRate,
+			position: this.activePlayer.currentTime
+		});
 	}
 	
 	render() {
@@ -178,17 +208,20 @@ export class SongZApp extends LitElement {
 							<button type="submit">Submit</button>
 						</form>
 					</section>
-					<section>
-						<button id="prev-btn" @click="${this.prevSong}">⏮</button>
-						<button id="play-pause-btn" @click="${this.playPauseSong}">⏯</button>
-						<button id="next-btn" @click="${this.nextSong}">⏭</button>
-						<br />
-						<audio id="player1" controls="controls" @ended="${this.nextSong}"></audio>
-						<br />
-						<audio id="player2" controls="controls" @ended="${this.nextSong}"></audio>
-					</section>
 				</main>
 			</app-drawer-layout>
+			<songz-player
+				playing="${navigator.mediaSession.playbackState === 'playing'}"
+				status="${this.status}"
+				currenttime="${this.currentTime}"
+				duration="${this.duration}"
+				@previous="${this.prevSong}"
+				@stepback="${() => alert('Not yet implemented.')}"
+				@playpause="${this.playPauseSong}"
+				@stepforward="${() => alert('Not yet implemented.')}"
+				@next="${this.nextSong}"
+				@seek="${this.handleSeek}">
+			</songz-player>
 		`;
 	}
 	
