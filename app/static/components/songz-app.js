@@ -26,8 +26,8 @@ export class SongZApp extends LitElement {
 	firstUpdated() {
 		this.activePlayer = new Audio();
 		this.inactivePlayer = new Audio();
-		this.activePlayer.addEventListener('timeupdate', this.handlePlayerTimeChange.bind(this););
-		this.inactivePlayer.addEventListener('timeupdate', this.handlePlayerTimeChange.bind(this););
+		this.activePlayer.addEventListener('timeupdate', this.handlePlayerTimeChange.bind(this));
+		this.inactivePlayer.addEventListener('timeupdate', this.handlePlayerTimeChange.bind(this));
 		this.activePlayer.addEventListener('ended', this.nextSong.bind(this));
 		this.inactivePlayer.addEventListener('ended', this.nextSong.bind(this));
 		
