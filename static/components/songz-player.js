@@ -75,8 +75,8 @@ export class SongZPlayer extends LitElement {
 	sendPrevious() {
 		this.dispatchEvent(new CustomEvent('previous'));
 	}
-	sendStepBack() {
-		this.dispatchEvent(new CustomEvent('stepback'));
+	sendStepBackward() {
+		this.dispatchEvent(new CustomEvent('stepbackward'));
 	}
 	sendPlayPause() {
 		this.dispatchEvent(new CustomEvent('playpause'));
@@ -105,7 +105,7 @@ export class SongZPlayer extends LitElement {
 			<div><!-- TODO: Song metadata --></div>
 			<div class="controls">
 				<mwc-icon-button icon="skip_previous" @click="${this.sendPrevious}"></mwc-icon-button>
-				<mwc-icon-button icon="replay_10" @click="${this.sendStepBack}"></mwc-icon-button>
+				<mwc-icon-button icon="replay_10" @click="${this.sendStepBackward}"></mwc-icon-button>
 				<mwc-fab
 					?mini=${this.narrowWindow}
 					icon="${this.status === 'buffering' ? 'refresh' :

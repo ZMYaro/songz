@@ -34,6 +34,8 @@ export class SongZApp extends LitElement {
 		navigator.mediaSession.setActionHandler('play', this.resumeSong.bind(this));
 		navigator.mediaSession.setActionHandler('pause', this.pauseSong.bind(this));
 		navigator.mediaSession.setActionHandler('stop', this.stopSong.bind(this));
+		navigator.mediaSession.setActionHandler('seekbackward', this.stepBackward.bind(this));
+		navigator.mediaSession.setActionHandler('seekforward', this.stepForward.bind(this));
 		navigator.mediaSession.setActionHandler('previoustrack', this.prevSong.bind(this));
 		navigator.mediaSession.setActionHandler('nexttrack', this.nextSong.bind(this));
 		navigator.mediaSession.setActionHandler('seekto', (details) => {
@@ -118,6 +120,12 @@ export class SongZApp extends LitElement {
 		this.activePlayer.currentTime = 0;
 		navigator.mediaSession.playbackState = 'paused';
 		this.status = 'paused';
+	}
+	stepBackward() {
+		this.activePlayer.currentTime -= 10;
+	}
+	stepForward() {
+		this.activePlayer.currentTime += 10;
 	}
 	async prevSong() {
 		if (this.queuePosition - 1 < 0) {
@@ -216,9 +224,9 @@ export class SongZApp extends LitElement {
 				currenttime="${this.currentTime}"
 				duration="${this.duration}"
 				@previous="${this.prevSong}"
-				@stepback="${() => alert('Not yet implemented.')}"
+				@stepbackward="${this.stepBackward}"
 				@playpause="${this.playPauseSong}"
-				@stepforward="${() => alert('Not yet implemented.')}"
+				@stepforward="${this.stepForward}"
 				@next="${this.nextSong}"
 				@seek="${this.handleSeek}">
 			</songz-player>
