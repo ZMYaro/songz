@@ -12,7 +12,7 @@ import {NARROW_WINDOW_THRESHOLD} from '../scripts/constants.js';
 
 export class SongZPlayer extends LitElement {
 	
-	boundCheckNarrowWindow = this.checkNarrowWindow.bind(this);
+	boundNarrowWindowCheck = this.checkNarrowWindow.bind(this);
 	
 	static get styles() {
 		return css`
@@ -53,14 +53,14 @@ export class SongZPlayer extends LitElement {
 	connectedCallback() {
 		super.connectedCallback();
 		this.checkNarrowWindow();
-		window.addEventListener('resize', this.boundCheckNarrowWindow);
+		window.addEventListener('resize', this.boundNarrowWindowCheck);
 	}
 	
 	/**
 	 * @override
 	 */
 	disconnectedCallback() {
-		window.removeEventListener('resize', this.boundCheckNarrowWindow);
+		window.removeEventListener('resize', this.boundNarrowWindowCheck);
 		super.disconnectedCallback();
 	}
 	

@@ -26,8 +26,8 @@ export class SongZApp extends LitElement {
 	firstUpdated() {
 		this.activePlayer = new Audio();
 		this.inactivePlayer = new Audio();
-		this.activePlayer.addEventListener('timeupdate', this.updateCurrentTime.bind(this));
-		this.inactivePlayer.addEventListener('timeupdate', this.updateCurrentTime.bind(this));
+		this.activePlayer.addEventListener('timeupdate', this.handlePlayerTimeChange.bind(this););
+		this.inactivePlayer.addEventListener('timeupdate', this.handlePlayerTimeChange.bind(this););
 		this.activePlayer.addEventListener('ended', this.nextSong.bind(this));
 		this.inactivePlayer.addEventListener('ended', this.nextSong.bind(this));
 		
@@ -40,6 +40,7 @@ export class SongZApp extends LitElement {
 		navigator.mediaSession.setActionHandler('nexttrack', this.nextSong.bind(this));
 		navigator.mediaSession.setActionHandler('seekto', (details) => {
 			this.activePlayer.currentTime = details.seekTime;
+			this.updatePositionState();
 		});
 		
 		this.loadSongs();
@@ -123,9 +124,11 @@ export class SongZApp extends LitElement {
 	}
 	stepBackward() {
 		this.activePlayer.currentTime -= 10;
+		this.updatePositionState();
 	}
 	stepForward() {
 		this.activePlayer.currentTime += 10;
+		this.updatePositionState();
 	}
 	async prevSong() {
 		if (this.queuePosition - 1 < 0) {
@@ -150,13 +153,18 @@ export class SongZApp extends LitElement {
 	
 	handleSeek(ev) {
 		this.activePlayer.currentTime = ev.currentTarget.currentTime;
+		this.updatePositionState();
 	}
 	
-	updateCurrentTime(ev) {
+	handlePlayerTimeChange(ev) {
 		this.currentTime = ev.currentTarget.currentTime;
+		this.updatePositionState();
 	}
 	
 	updatePositionState() {
+		if (!this.activePlayer.duration) {
+			return;
+		}
 		navigator.mediaSession.setPositionState({
 			duration: this.activePlayer.duration,
 			playbackRate: this.activePlayer.playbackRate,
