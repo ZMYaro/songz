@@ -5,6 +5,7 @@ import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.4.0/lit-ele
 //import '@polymer/app-layout'; // Needed for <app-drawer> and <app-drawer-layout>.
 import 'https://unpkg.com/@polymer/app-layout@3.1.0/app-layout.js?module';
 
+import './songz-queue.js';
 import './songz-player.js';
 import {toGDriveURL} from '../scripts/utils.js';
 
@@ -12,15 +13,22 @@ export class SongZApp extends LitElement {
 	
 	activePlayer;
 	inactivePlayer;
-	queue = [];
-	queuePosition = -1;
 	
 	static get properties() {
 		return {
 			status: { type: String, attribute: false },
 			currentTime: { type: Number, attribute: false },
-			duration: { type: Number, attribute: false }
+			duration: { type: Number, attribute: false },
+			queue: { type: Array, attribute: false },
+			queuePosition: { type: Number, attribute: false }
 		};
+	}
+	
+	constructor() {
+		super();
+		
+		this.queue = [];
+		this.queuePosition = -1;
 	}
 	
 	firstUpdated() {
@@ -47,26 +55,11 @@ export class SongZApp extends LitElement {
 	}
 
 	async loadSongs() {
-		let songsRes = await fetch('/api/songs'),
-			songsTable = this.querySelector('#song-list');
+		let songsRes = await fetch('/api/songs');
 		
+		// For now, just put all the songs in the queue.
 		this.queue = await songsRes.json();
 		this.queue = this.queue.sort((a, b) => a.trackNo < b.trackNo ? -1 : 1);
-		
-		songsTable.innerHTML = '';
-		this.queue.forEach((song, i) => {
-			let songRow = document.createElement('tr'),
-				playBtn = document.createElement('button');
-			
-			songRow.innerHTML = `
-				<td>${song.trackNo}</td>
-				<td>${song.title}</td>
-				<td></td>`;
-			playBtn.innerHTML = '▶️';
-			playBtn.addEventListener('click', () => this.playSong(i));
-			songRow.querySelector('td:last-of-type').appendChild(playBtn);
-			songsTable.appendChild(songRow);
-		});
 	}
 
 	loadSong(player, song) {
@@ -177,20 +170,11 @@ export class SongZApp extends LitElement {
 			<app-drawer-layout>
 				<app-drawer slot="drawer" align="end" swipe-open>
 					<h2>Queue</h2>
-					<table>
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>Title</th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody id="song-list">
-							<tr>
-								<td colspan="3">Loading...</td>
-							</tr>
-						</tbody>
-					</table>
+					<songz-queue
+						.songs="${this.queue}"
+						.activeIndex="${this.queuePosition}"
+						@queue-play-now="${(ev) => this.playSong(ev.detail)}">
+					</songz-queue>
 				</app-drawer>
 				<main>
 					<h1>It works?</h1>

@@ -27,6 +27,22 @@
 				--app-drawer-width: min(320px, calc(100% - 48px));
 				flex-grow: 1;
 			}
+			app-drawer {
+				top: 0;
+				padding-top: 0;
+				bottom: 64px; /* PLAYER_HEIGHT_SMALL */
+			}
+				app-drawer h2 {
+					position: absolute;
+					margin: 0;
+					top: 0.5em;
+					left: 0.125em;
+				}
+			@media (min-width: 640px) {
+				app-drawer {
+					bottom: 96px; /* PLAYER_HEIGHT_LARGE */
+				}
+			}
 			label {
 				display: block;
 			}
@@ -39,6 +55,7 @@
 				font-size: 200%;
 			}
 		</style>
+		<script src="/scripts/mwc_duplicate_define_fix_hack.js"></script>
 		<script type="module" src="/components/songz-app.js"></script>
 	</head>
 	<body>

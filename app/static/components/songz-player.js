@@ -8,7 +8,7 @@ import 'https://unpkg.com/@material/mwc-fab@0.19.1/mwc-fab.js?module';
 import 'https://unpkg.com/@material/mwc-icon-button@0.19.1/mwc-icon-button.js?module';
 
 import './songz-seek-bar.js';
-import {NARROW_WINDOW_THRESHOLD} from '../scripts/constants.js';
+import {NARROW_WINDOW_THRESHOLD, PLAYER_HEIGHT_SMALL, PLAYER_HEIGHT_LARGE} from '../scripts/constants.js';
 
 export class SongZPlayer extends LitElement {
 	
@@ -21,14 +21,15 @@ export class SongZPlayer extends LitElement {
 				justify-content: space-between;
 				align-items: center;
 				flex-wrap: wrap;
-				height: 64px;
+				height: ${unsafeCSS(`${PLAYER_HEIGHT_SMALL}px`)};
 				
+				background-color: var(--mdc-theme-surface, #fff);
 				box-shadow: rgba(0, 0, 0, 0.2) 0 8px 17px 0, rgba(0, 0, 0, 0.19) 0 6px 20px 0;
 				z-index: 2;
 			}
 			@media (min-width: ${unsafeCSS(`${NARROW_WINDOW_THRESHOLD}px`)}) {
 				:host {
-					height: 96px;
+					height: ${unsafeCSS(`${PLAYER_HEIGHT_LARGE}px`)};
 				}
 			}
 			.controls {
