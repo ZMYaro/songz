@@ -2,8 +2,9 @@
 
 const bodyParser = require('body-parser'),
 	express = require('express'),
-	router = express.Router(),
 	Song = require('../models/song.js');
+
+const router = express.Router();
 
 function handleError(res, message, code) {
 	console.error(message);

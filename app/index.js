@@ -11,8 +11,12 @@ const PORT = process.env.PORT || 8080,
 	MONGODB_URI = process.env.MONGDB_URI || `mongodb://localhost:27017/${DB_NAME}`;
 
 // Set up Express.
-let app = express();
+const app = express();
 app.set('port', PORT);
+app.use(express.static('static'));
+app.use('/api', apiRouter);
+app.get('/import', (req, res) => res.sendFile(path.join(__dirname, '/views/gpm_import.html')));
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, '/views/index.html')));
 
 // Set up DB connection.
 mongoose.connect(MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true});
@@ -26,14 +30,4 @@ db.once('open', function () {
 	app.listen(PORT, () => {
 		console.log(`Listening on port ${PORT}...`);
 	});
-});
-
-// Set up routes.
-app.use(express.static('static'));
-app.use('/api', apiRouter);
-app.get('/import', (req, res) => {
-	res.sendFile(path.join(__dirname, '/views/gpm_import.html'));
-});
-app.get('/', (req, res) => {
-	res.sendFile(path.join(__dirname, '/views/index.html'));
 });
