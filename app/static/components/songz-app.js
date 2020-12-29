@@ -208,6 +208,10 @@ export class SongZApp extends LitElement {
 								<input type="text" name="gdrive-ogg" />
 							</label>
 							<label>
+								GDrive Art:
+								<input type="text" name="gdrive-art" />
+							</label>
+							<label>
 								Title:
 								<input type="text" name="title" />
 							</label>

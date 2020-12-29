@@ -37,6 +37,7 @@ router.route('/songs')
 			gDriveM4A: req.body['gdrive-m4a'],
 			gDriveMP3: req.body['gdrive-mp3'],
 			gDriveOGG: req.body['gdrive-ogg'],
+			gDriveArt: req.body['gdrive-art'],
 			title: req.body['title'],
 			trackNo: req.body['track-no']
 		});

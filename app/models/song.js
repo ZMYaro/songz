@@ -11,6 +11,7 @@ const songSchema = new Schema({
 	gDriveM4A: String,
 	gDriveMP3: String,
 	gDriveOGG: String,
+	gDriveArt: String,
 	title: String,
 	trackNo: Number,
 	discNo: Number,
