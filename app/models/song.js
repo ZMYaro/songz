@@ -14,15 +14,19 @@ const songSchema = new Schema({
 	title: String,
 	trackNo: Number,
 	discNo: Number,
+	artist: [{
+		type: Schema.Types.ObjectId,
+		ref: Artist.modelName
+	}],
+	composer: [{
+		type: Schema.Types.ObjectId,
+		ref: Artist.modelName
+	}],
 	album: {
 		type: Schema.Types.ObjectId,
 		ref: Album.modelName
 	},
-	artist: {
-		type: Schema.Types.ObjectId,
-		ref: Artist.modelName
-	},
-	composer: {
+	albumArtist: {
 		type: Schema.Types.ObjectId,
 		ref: Artist.modelName
 	},

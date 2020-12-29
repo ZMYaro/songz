@@ -212,6 +212,10 @@ export class SongZApp extends LitElement {
 								<input type="text" name="title" />
 							</label>
 							<label>
+								Artist:
+								<input type="text" name="artist" />
+							</label>
+							<label>
 								Track #:
 								<input type="number" name="track-no" />
 							</label>
