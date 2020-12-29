@@ -79,7 +79,7 @@ export class SongZApp extends LitElement {
 
 	async playSong(i) {
 		this.loadSong(this.activePlayer, this.queue[i]);
-		if (i < this.queue.length - 1) {
+		if (i + 1 < this.queue.length) {
 			this.loadSong(this.inactivePlayer, this.queue[i + 1]);
 		}
 		this.queuePosition = i;
@@ -125,23 +125,33 @@ export class SongZApp extends LitElement {
 	}
 	async prevSong() {
 		if (this.queuePosition - 1 < 0) {
+			// Abort if there is no previous song.
 			return;
 		}
+		// Stop the current song and switch players so it is ready if the queue steps forward.
+		await this.stopSong();
 		this.swapPlayers();
+		// Step the queue position back.
 		this.queuePosition--;
+		// Load the now-current song and play when ready.
 		this.loadSong(this.activePlayer, this.queue[this.queuePosition]);
-		await this.inactivePlayer.pause();
 		await this.resumeSong();
-		this.inactivePlayer.currentTime = 0;
 	}
 	async nextSong() {
 		if (this.queuePosition + 1 >= this.queue.length) {
+			// Abort if there is no next song.
 			return;
 		}
+		// Stop the current song and switch to the player where the next song is preloaded.
+		await this.pauseSong();
 		this.swapPlayers();
-		await this.resumeSong();
+		// Step the queue position forward.
 		this.queuePosition++;
-		this.loadSong(this.inactivePlayer, this.queue[this.queuePosition + 1]);
+		// Start preloading the next song (if any) and play the now-current one.
+		if (this.queuePosition + 1 < this.queue.length) {
+			this.loadSong(this.inactivePlayer, this.queue[this.queuePosition + 1]);
+		}
+		await this.resumeSong();
 	}
 	
 	handleSeek(ev) {
