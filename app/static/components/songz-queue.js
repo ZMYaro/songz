@@ -28,13 +28,13 @@ export class SongZQueue extends LitElement {
 				bottom: 0;
 				overflow-y: auto;
 			}
-			mwc-list-item {
+			.queue-list mwc-list-item {
 				padding-left: 0;
 				padding-right: 0;
 			}
-			mwc-list-item.current {
-				font-weight: bold;
-			}
+				.queue-list mwc-list-item.current {
+					font-weight: bold;
+				}
 			.album-art {
 				width: 3em;
 				height: 3em;
@@ -101,7 +101,7 @@ export class SongZQueue extends LitElement {
 	
 	render() {
 		return html`
-			<mwc-list>
+			<mwc-list class="queue-list">
 				${(this.songs || []).map((song, i) => html`
 					<mwc-list-item graphic="small" hasMeta class="${i === this.activeIndex ? 'current' : ''}" data-index="${i}">
 						<img slot="graphic" class="album-art" src="${song?.album?.art || '/images/unknown_album.svg'}" alt="" />
@@ -112,29 +112,29 @@ export class SongZQueue extends LitElement {
 				`)}
 			</mwc-list>
 			<mwc-menu fixed wrapFocus>
-				<mwc-list-item graphic="medium" data-action="queue-play-now" @click=${this.handleMenuItemSelect}>
+				<mwc-list-item graphic="icon" data-action="queue-play-now" @click=${this.handleMenuItemSelect}>
 					<mwc-icon slot="graphic">play_arrow</mwc-icon>
 					Play now
 				</mwc-list-item>
-				<mwc-list-item graphic="medium" @click=${() => alert('Not yet implemented.')}>
+				<mwc-list-item graphic="icon" @click=${() => alert('Not yet implemented.')}>
 					<mwc-icon slot="graphic">playlist_play</mwc-icon>
 					Play next
 				</mwc-list-item>
-				<mwc-list-item graphic="medium" @click=${() => alert('Not yet implemented.')}>
+				<mwc-list-item graphic="icon" @click=${() => alert('Not yet implemented.')}>
 					<mwc-icon slot="graphic">remove_circle</mwc-icon>
 					Remove from queue
 				</mwc-list-item>
 				<li divider role="separator"></li>
-				<mwc-list-item graphic="medium" @click=${() => alert('Not yet implemented.')}>
+				<mwc-list-item graphic="icon" @click=${() => alert('Not yet implemented.')}>
 					<mwc-icon slot="graphic">album</mwc-icon>
 					Go to album
 				</mwc-list-item>
-				<mwc-list-item graphic="medium" @click=${() => alert('Not yet implemented.')}>
+				<mwc-list-item graphic="icon" @click=${() => alert('Not yet implemented.')}>
 					<mwc-icon slot="graphic">person</mwc-icon>
 					<!--<mwc-icon slot="graphic">account_music</mwc-icon>-->
 					Go to artist
 				</mwc-list-item>
-				<mwc-list-item graphic="medium" @click=${() => alert('Not yet implemented.')}>
+				<mwc-list-item graphic="icon" @click=${() => alert('Not yet implemented.')}>
 					<mwc-icon slot="graphic">playlist_add</mwc-icon>
 					Add to playlist
 				</mwc-list-item>
