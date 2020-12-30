@@ -8,11 +8,11 @@ const artistSchema = new Schema({
 });
 
 /**
- * Find an artist with the given name or create it if it does not exist in the database.
+ * Find an artist with the given name, or create it if it does not exist in the database.
  * @param {String} name - The exact name of the artist
  * @returns {Artist}
  */
-artistSchema.statics.findOrCreateOneByName = async function (name) {
+artistSchema.statics.findOrCreateOne = async function (name) {
 	name = name.trim();
 	var artist = await this.findOneAndUpdate({name: name}, {name: name}, {
 		new: true,

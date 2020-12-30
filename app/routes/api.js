@@ -24,7 +24,12 @@ router.all((req, res, next) => {
 
 router.route('/songs')
 	.get(async function (req, res) {
-		var songs = await Song.find({});
+		var songs = await Song.find({})
+			.populate('album')
+			.populate('album.artist')
+			.populate('artist')
+			.populate('composer')
+			.populate('genre');
 		res.json(songs);
 	})
 	.post(async function (req, res) {
@@ -39,15 +44,31 @@ router.route('/songs')
 			gDriveOGG: req.body['gdrive-ogg'],
 			gDriveArt: req.body['gdrive-art'],
 			title: req.body['title'],
-			trackNo: req.body['track-no']
+			trackNo: req.body['track-no'],
+			discNo: req.body['disc-no']
 		});
 		
-		var artistNames = req.body['artist'].split(';');
+		var artistNames = req.body['artist']?.split(';') || [];
 		for (let artistName of artistNames) {
-			let artist = await Artist.findOrCreateOneByName(artistName);
+			let artist = await Artist.findOrCreateOne(artistName);
 			newSong.artist.push(artist._id);
 		}
 		
+		var composerNames = req.body['composer']?.split(';') || [];
+		for (let composerName of composerNames) {
+			let composer = await Artist.findOrCreateOne(composerName);
+			newSong.composer.push(composer._id);
+		}
+		
+		var genreName = req.body['genre'];
+		if (genreName) {
+			let genre = await Genre.findOrCreateOne(genreName);
+			newSong.genre = genre._id;
+		}
+		
+		var albumTitle = req.body['album-title'],
+			albumArtist = req.body['album-artist']?.split(';') || [];
+		newSong.album = await Album.findOrCreateOne(albumTitle, albumArtist);
 		
 		await newSong.save();
 		res.json(newSong);

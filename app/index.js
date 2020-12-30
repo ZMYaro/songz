@@ -19,7 +19,11 @@ app.get('/import', (req, res) => res.sendFile(path.join(__dirname, '/views/gpm_i
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, '/views/index.html')));
 
 // Set up DB connection.
-mongoose.connect(MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(MONGODB_URI, {
+	useFindAndModify: false,
+	useNewUrlParser: true,
+	useUnifiedTopology: true
+});
 let db = mongoose.connection;
 db.on('error', (err) => {
 	console.error(err);

@@ -27,10 +27,6 @@ const songSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: Album.modelName
 	},
-	albumArtist: {
-		type: Schema.Types.ObjectId,
-		ref: Artist.modelName
-	},
 	genre: {
 		type: Schema.Types.ObjectId,
 		ref: Genre.modelName
