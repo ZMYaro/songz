@@ -201,66 +201,6 @@ export class SongZApp extends LitElement {
 				</app-drawer>
 				<main>
 					<h1>It works?</h1>
-					<section>
-						<h2>Add song</h2>
-						<form method="POST" action="/api/songs">
-							<label>
-								GDrive FLAC:
-								<input type="text" name="gdrive-flac" />
-							</label>
-							<label>
-								GDrive M4A:
-								<input type="text" name="gdrive-m4a" />
-							</label>
-							<label>
-								GDrive MP3:
-								<input type="text" name="gdrive-mp3" />
-							</label>
-							<label>
-								GDrive OGG:
-								<input type="text" name="gdrive-ogg" />
-							</label>
-							<label>
-								GDrive Art:
-								<input type="text" name="gdrive-art" />
-							</label>
-							<label>
-								Title:
-								<input type="text" name="title" />
-							</label>
-							<label>
-								Genre:
-								<input type="text" name="genre" />
-							</label>
-							<label>
-								Artist(s):
-								<small>Semicolon-separated</small>
-								<input type="text" name="artist" />
-							</label>
-							<label>
-								Composer(s):
-								<small>Semicolon-separated</small>
-								<input type="text" name="composer" />
-							</label>
-							<label>
-								Album title:
-								<input type="text" name="album-title" />
-							</label>
-							<label>
-								Album artist:
-								<input type="text" name="album-artist" />
-							</label>
-							<label>
-								Track #:
-								<input type="number" name="track-no" />
-							</label>
-							<label>
-								Disc #:
-								<input type="number" name="disc-no" />
-							</label>
-							<button type="submit">Submit</button>
-						</form>
-					</section>
 				</main>
 			</app-drawer-layout>
 			<songz-player

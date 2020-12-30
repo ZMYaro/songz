@@ -15,6 +15,7 @@ const app = express();
 app.set('port', PORT);
 app.use(express.static('static'));
 app.use('/api', apiRouter);
+app.get('/add', (req, res) => res.sendFile(path.join(__dirname, '/views/add_song.html')));
 app.get('/import', (req, res) => res.sendFile(path.join(__dirname, '/views/gpm_import.html')));
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, '/views/index.html')));
 

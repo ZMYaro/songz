@@ -1,0 +1,16 @@
+h1,
+section {
+	max-width: 600px;
+	margin: auto;
+}
+
+label > small,
+input[type="text"],
+input[type="number"] {
+	display: block;
+	min-width: calc(100% - 1em);
+}
+
+#log p {
+	margin: 0;
+}
