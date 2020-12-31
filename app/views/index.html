@@ -54,6 +54,18 @@
 			#next-btn {
 				font-size: 200%;
 			}
+			
+			@media (prefers-color-scheme: dark) {
+				body {
+					background: #212121;
+					color: #efefef;
+					--mdc-theme-surface: #323232;
+					--mdc-theme-text-primary-on-background: rgba(255, 255, 255, 0.87);
+					--mdc-theme-text-secondary-on-background: rgba(255, 255, 255, 0.54);
+					--mdc-theme-text-hint-on-background: rgba(255, 255, 255, 0.38);
+					--mdc-theme-text-icon-on-background: rgba(255, 255, 255, 0.38);
+				}
+			}
 		</style>
 		<script src="/scripts/mwc_duplicate_define_fix_hack.js"></script>
 		<script type="module" src="/components/songz-app.js"></script>

@@ -32,6 +32,10 @@ export class SongZApp extends LitElement {
 	}
 	
 	firstUpdated() {
+		// Apply theming to old Polymer drawer.
+		this.querySelector('app-drawer').shadowRoot.getElementById('contentContainer').style.backgroundColor = 'var(--mdc-theme-surface)';
+		
+		// Set up audio players.
 		this.activePlayer = new Audio();
 		this.inactivePlayer = new Audio();
 		this.activePlayer.addEventListener('timeupdate', this.handlePlayerTimeChange.bind(this));
@@ -39,6 +43,7 @@ export class SongZApp extends LitElement {
 		this.activePlayer.addEventListener('ended', this.nextSong.bind(this));
 		this.inactivePlayer.addEventListener('ended', this.nextSong.bind(this));
 		
+		// Set up media session handlers.
 		navigator.mediaSession.setActionHandler('play', this.resumeSong.bind(this));
 		navigator.mediaSession.setActionHandler('pause', this.pauseSong.bind(this));
 		navigator.mediaSession.setActionHandler('stop', this.stopSong.bind(this));
