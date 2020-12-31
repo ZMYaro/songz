@@ -22,6 +22,7 @@ export class SongZPlayer extends LitElement {
 				align-items: center;
 				flex-wrap: wrap;
 				height: ${unsafeCSS(`${PLAYER_HEIGHT_SMALL}px`)};
+				overflow: hidden;
 				
 				background-color: var(--mdc-theme-surface, #fff);
 				box-shadow: rgba(0, 0, 0, 0.2) 0 8px 17px 0, rgba(0, 0, 0, 0.19) 0 6px 20px 0;
@@ -35,6 +36,17 @@ export class SongZPlayer extends LitElement {
 			.controls {
 				display: flex;
 				align-items: center;
+			}
+			mwc-fab.spin {
+				animation: spin 1s linear infinite;
+			}
+			@keyframes spin {
+				0% {
+					transform: rotate(0deg);
+				}
+				100% {
+					transform: rotate(360deg);
+				}
 			}
 		`;
 	}
@@ -112,6 +124,7 @@ export class SongZPlayer extends LitElement {
 					icon="${this.status === 'buffering' ? 'refresh' :
 						this.status === 'playing' ? 'pause' :
 						'play_arrow'}"
+					class="${this.status === 'buffering' ? 'spin' : ''}"
 					@click="${this.sendPlayPause}">
 				</mwc-fab>
 				<mwc-icon-button icon="forward_10" @click="${this.sendStepForward}"></mwc-icon-button>
