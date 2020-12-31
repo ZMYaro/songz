@@ -4,6 +4,7 @@
 import {LitElement, html, css, unsafeCSS} from 'https://unpkg.com/lit-element@2.4.0/lit-element.js?module';
 
 import {NARROW_WINDOW_THRESHOLD} from '../scripts/constants.js';
+import {formatDuration, toGDriveURL} from '../scripts/utils.js';
 
 export class SongZSeekBar extends LitElement {
 	
@@ -38,18 +39,6 @@ export class SongZSeekBar extends LitElement {
 		}
 	}
 	
-	formatTime(time) {
-		if (isNaN(time)) {
-			return '\u2212\u2212:\u2212\u2212';
-		}
-		var minutes = Math.floor(time / 60),
-			seconds = Math.floor(time - (minutes * 60));
-		if (seconds < 10) {
-			seconds = '0' + seconds;
-		}
-		return (minutes + ':' + seconds);
-	}
-	
 	sendSeek(ev) {
 		this.currentTime = ev.currentTarget.value;
 		this.dispatchEvent(new CustomEvent('seek'), {
@@ -60,12 +49,12 @@ export class SongZSeekBar extends LitElement {
 	
 	render() {
 		return html`
-			${this.formatTime(this.currentTime)}
+			${formatDuration(this.currentTime)}
 			${!this.duration ?
 				html`<input type="range" value="0" disabled />` :
 				html`<input type="range" step="0.5" min="0" max="${this.duration}" value="${this.currentTime}" @input="${this.sendSeek}" />`
 			}
-			${this.formatTime(this.duration)}
+			${formatDuration(this.duration)}
 		`;
 	}
 }

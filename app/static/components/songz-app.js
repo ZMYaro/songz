@@ -7,7 +7,8 @@ import 'https://unpkg.com/@polymer/app-layout@3.1.0/app-layout.js?module';
 
 import './songz-queue.js';
 import './songz-player.js';
-import {toGDriveURL} from '../scripts/utils.js';
+import './songz-song-list.js';
+import {formatArtist, toGDriveURL} from '../scripts/utils.js';
 
 export class SongZApp extends LitElement {
 	
@@ -175,7 +176,7 @@ export class SongZApp extends LitElement {
 		
 		navigator.mediaSession.metadata = new MediaMetadata({
 			title: song.title,
-			artist: song.artist.map((artist) => artist.name).join('; '),
+			artist: formatArtist(song, true),
 			artwork: [{
 				src: (song.gDriveArt ? toGDriveURL(song.gDriveArt) : '/images/unknown_album.svg') 
 			}]
@@ -206,6 +207,7 @@ export class SongZApp extends LitElement {
 				</app-drawer>
 				<main>
 					<h1>It works?</h1>
+					<songz-song-list .songs="${this.queue}"></songz-song-list>
 				</main>
 			</app-drawer-layout>
 			<songz-player
