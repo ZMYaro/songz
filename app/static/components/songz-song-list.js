@@ -37,11 +37,12 @@ export class SongZSongList extends LitElement {
 			<table>
 				<thead>
 					<tr>
-						<th>#</th>
+						${this.type === 'album' ? html`<th title="Track number">#</th>` : ''}
+						${this.type === 'playlist' ? html`<th title="List index">#</th>` : ''}
 						<th>Title</th>
 						<th><mwc-icon title="Duration">schedule</mwc-icon></th>
-						${this.type === 'artist' ? '' : html`<th>Artist</th>`}
-						${this.type === 'album' ? '' : html`<th>Album</th>`}
+						${this.type !== 'artist' ? html`<th>Artist</th>` : ''}
+						${this.type !== 'album' ? html`<th>Album</th>`: ''}
 						<th><mwc-icon title="Playthroughs" aria-label="Playthroughs">music_note</mwc-icon></th>
 						<th><mwc-icon title="Rating" aria-label="Rating">thumbs_up_down</mwc-icon></th>
 					</tr>
@@ -49,12 +50,12 @@ export class SongZSongList extends LitElement {
 				<tbody>
 					${(this.songs || []).map((song) => html`
 						<tr>
-							<!-- Show the playlist index, if specified; else show track number. -->
-							<td class="index">${song.listIndex}</td>
-							<td class="title">${song.title}</td>
+							${this.type === 'album' ? html`<td class="index">${song.trackNo}</td>` : ''}
+							${this.type === 'playlist' ? html`<td class="index">${song.listIndex}</td>` : ''}
+							<td class="title" title="${song.title}">${song.title}</td>
 							<td class="duration">${formatDuration(song.duration)}</td>
-							${this.type === 'artist' ? '' : html`<td class="artist">${unsafeHTML(formatArtist(song, false))}</td>`}
-							${this.type === 'album' ? '' : html`<td class="album">${unsafeHTML(formatAlbum(song))}</td>`}
+							${this.type !== 'artist' ? html`<td class="artist" title="${formatArtist(song, true)}">${unsafeHTML(formatArtist(song, false))}</td>` : ''}
+							${this.type !== 'album' ? html`<td class="album" title="${formatAlbum(song, true)}">${unsafeHTML(formatAlbum(song))}</td>` : ''}
 							<td class="playthroughs"></td>
 							<td class="rating"></td>
 						</tr>
