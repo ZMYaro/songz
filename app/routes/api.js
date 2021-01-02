@@ -25,8 +25,7 @@ router.all((req, res, next) => {
 router.route('/songs')
 	.get(async function (req, res) {
 		var songs = await Song.find({})
-			.populate('album')
-			.populate('album.artist')
+			.populate({path: 'album', populate: {path: 'artist'}})
 			.populate('artist')
 			.populate('composer')
 			.populate('genre');
