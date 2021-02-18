@@ -14,3 +14,19 @@ input[type="number"] {
 #log p {
 	margin: 0;
 }
+
+@media (prefers-color-scheme: dark) {
+	body {
+		background: #101010;
+		color: #f0f0f0;
+	}
+	a {
+		color: #8080ff;
+	}
+		a:active {
+			color: #ff8080;
+		}
+	button {
+		filter: invert();
+	}
+}
