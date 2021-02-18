@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Import from Google Play Music Takeout</title>
+		<title>Import from Google Play Music Takeout - SongZ</title>
 		<link rel="stylesheet" type="text/css" href="styles/standalone_page.css" />
-		<script src="scripts/gpm_import.js" defer="defer"></script>
+		<script src="/node_modules/papaparse/papaparse.min.js" defer="defer"></script>
+		<script src="/scripts/gpm_import.js" type="module"></script>
 	</head>
 	<body>
 		<h1>Import from Google Play Music Takeout</h1>
 		<section id="log">
 			<p>Select the &ldquo;Google Play Music&rdquo; folder from your <a href="https://takeout.google.com/takeout/custom/play_music" target="_blank">Takeout</a>.</p>
-			<button id="folder-select-button">Select folder</button>
+			<button id="folder-select-button" disabled="disabled">Select folder</button>
 		</section>
 	</body>
 </html>

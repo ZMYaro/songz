@@ -14,6 +14,7 @@ const PORT = process.env.PORT || 8080,
 const app = express();
 app.set('port', PORT);
 app.use(express.static('static'));
+app.use('/node_modules', express.static('node_modules'));
 app.use('/api', apiRouter);
 app.get('/add', (req, res) => res.sendFile(path.join(__dirname, '/views/add_song.html')));
 app.get('/import', (req, res) => res.sendFile(path.join(__dirname, '/views/gpm_import.html')));
