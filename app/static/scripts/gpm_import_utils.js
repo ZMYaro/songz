@@ -56,7 +56,7 @@ export function getCSVNameFromTitle(title) {
 			fileName = startText + featMatch[1];
 			console.warn(`File name with feat. bit changed to ${fileName} with length ${fileName.length}...`);
 		} else if (fileName.match(/.{50}\.\)/)) {
-			// I am too tired to properly code this edge case right now.
+			// I am too tired to reverse engineer this case right now.
 			fileName = fileName.substring(0, CSV_NAME_MAX_LENGTH) + ')';
 		} else {
 			// Any other name too long just gets truncated.
@@ -119,6 +119,8 @@ export function checkID3CSVMatch(tags, csvData) {
 		(tags.album == csvPlainAlbum || (!tags.album && !csvData.Album)) &&
 		(tags.artist == csvPlainArtist || (!tags.artist && !csvData.Artist)));
 }
+
+// EVERYTHING BELOW THIS POINT IS NO LONGER USED AND WILL PROBABLY GET DELETED.
 
 /**
  * Get the file name Google Takeout might have generated for the track's MP3.

@@ -154,61 +154,6 @@ export async function uploadTrackMetadata(trackCSVs, tracksDir) {
 }
 
 /**
- * Get all the metadata for a given track.
- * @param {FileSystemFileHandle} trackCSVHandle - The handle for the track's CSV
- * @param {FileSystemDirectoryHandle} tracksDir
- * @returns {Promise<Object>}
- */
-//async function getTrackMetadata(trackCSVHandle, tracksDir) {
-//	var trackCSVFile = await trackCSVHandle.getFile(),
-//		trackData = (await Utils.parseCSV(trackCSVFile, { header: true })).data[0],
-//		trackMP3Name = Utils.getMP3NameFromData(trackData),
-//		trackMP3;
-//	console.log(trackMP3Name);
-//	debugger;
-//	
-//	
-//	// Check whether the file exists.
-//	try {
-//		trackMP3 = await tracksDir.getFileHandle(trackMP3Name);
-//		// TODO: Parse tags and return if correct file.
-//		console.log(`Found \u201c${trackMP3Name}\u201d`);
-//		return;
-//	} catch (err) {}
-//	
-//	// Check whether the file exists with each track number and contains matching title.
-//	for (let i = 0; i < Utils.MAX_TRACK_TO_TRY; i++) {
-//		let	attemptTrackNo = Utils.pad3Digits(i),
-//			attemptName = trackMP3Name.replace(Utils.TRACK_NO_PLACEHOLDER, `(${attemptTrackNo})`);
-//		
-//		try {
-//			trackMP3 = await tracksDir.getFileHandle(attemptName);
-//			// TODO: Parse tags and return if correct file.
-//			console.log(`Found \u201c${attemptName}\u201d`);
-//			return;
-//		} catch (err) {}
-//	}
-//	
-//	// Check whether the file exists with each track number and disc number and contains matching title.
-//	for (let i = 0; i < Utils.MAX_TRACK_TO_TRY; i++) {
-//		let	attemptTrackNo = Utils.pad3Digits(i),
-//			attemptName = trackMP3Name.replace(Utils.TRACK_NO_PLACEHOLDER, `(${attemptTrackNo})`);
-//		
-//		try {
-//			trackMP3 = await tracksDir.getFileHandle(attemptName);
-//			// TODO: Parse tags and return if correct file.
-//			console.log(`Found \u201c${attemptName}\u201d`);
-//			return;
-//		} catch (err) {}
-//	}
-//	
-//	
-//	//	trackTags = 
-//	//	formData = new FormData();
-//}
- 
-
-/**
  * Fetch the playlist directories from the Playlists directory.
  * @param {FileSystemDirectoryHandle} playlistsDir
  */

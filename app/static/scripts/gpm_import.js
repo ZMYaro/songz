@@ -50,22 +50,20 @@ async function selectGPMFolder() {
 		Utils.logMessage('Failed to load tracks.  Aborting.');
 		return;
 	}
-//	var trackCSVs = await readTrackList(tracksDir);
-//	if (!trackCSVs) {
-//		return;
-//	}
 	
 	Utils.logMessage(`Found ${trackMP3s.length} tracks.  This should match the number listed under Google Play Music on your <a href="https://myaccount.google.com/dashboard" target="_blank">Google Dashboard</a>.`);
 	await Utils.showContinueButton();
 	
 	// Parse out song data.
-//	try {
+	try {
 		var trackMetadataList = await getAllTrackMetadata(trackMP3s, tracksDir);
-/*	} catch (err) {
+	} catch (err) {
 		Utils.logMessage('Failed to get track metadata.');
 		throw err;
 		return;
-	}*/
+	}
+	
+	Utils.logMessage(`Consolidated metadata for ${trackMetadataList.length} tracks.  Beginning upload...`);
 	
 	debugger;
 	// TODO: Parse and upload song data.
