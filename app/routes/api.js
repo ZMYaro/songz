@@ -37,36 +37,36 @@ router.route('/songs')
 		
 		// Put all the text fields in the new song.
 		var newSong = new Song({
-			gDriveFLAC: req.body['gdrive-flac'],
-			gDriveM4A: req.body['gdrive-m4a'],
-			gDriveMP3: req.body['gdrive-mp3'],
-			gDriveOGG: req.body['gdrive-ogg'],
-			gDriveArt: req.body['gdrive-art'],
-			title: req.body['title'],
-			trackNo: req.body['track-no'],
-			discNo: req.body['disc-no']
+			gDriveFLAC: req.body['gdrive-flac']?.trim(),
+			gDriveM4A: req.body['gdrive-m4a']?.trim(),
+			gDriveMP3: req.body['gdrive-mp3']?.trim(),
+			gDriveOGG: req.body['gdrive-ogg']?.trim(),
+			gDriveArt: req.body['gdrive-art']?.trim(),
+			title: req.body['title']?.trim(),
+			trackNo: Math.floor(parseInt(req.body['track-no'])),
+			discNo: Math.floor(parseInt(req.body['disc-no'])),
 		});
 		
-		var artistNames = req.body['artist']?.split(';') || [];
+		var artistNames = req.body['artist']?.trim().split(';') || [];
 		for (let artistName of artistNames) {
 			let artist = await Artist.findOrCreateOne(artistName);
 			newSong.artist.push(artist._id);
 		}
 		
-		var composerNames = req.body['composer']?.split(';') || [];
+		var composerNames = req.body['composer']?.trim().split(';') || [];
 		for (let composerName of composerNames) {
 			let composer = await Artist.findOrCreateOne(composerName);
 			newSong.composer.push(composer._id);
 		}
 		
-		var genreName = req.body['genre'];
+		var genreName = req.body['genre']?.trim();
 		if (genreName) {
 			let genre = await Genre.findOrCreateOne(genreName);
 			newSong.genre = genre._id;
 		}
 		
-		var albumTitle = req.body['album-title'],
-			albumArtist = req.body['album-artist']?.split(';') || [];
+		var albumTitle = req.body['album-title']?.trim(),
+			albumArtist = req.body['album-artist']?.trim().split(';') || [];
 		newSong.album = await Album.findOrCreateOne(albumTitle, albumArtist);
 		
 		await newSong.save();
