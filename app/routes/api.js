@@ -43,8 +43,10 @@ router.route('/songs')
 			gDriveOGG: req.body['gdrive-ogg']?.trim(),
 			gDriveArt: req.body['gdrive-art']?.trim(),
 			title: req.body['title']?.trim(),
+			duration: Math.ceil(parseInt(req.body['duration'])),
 			trackNo: Math.floor(parseInt(req.body['track-no'])),
 			discNo: Math.floor(parseInt(req.body['disc-no'])),
+			year: Math.floor(parseInt(req.body['year']))
 		});
 		
 		var artistNames = req.body['artist']?.trim().split(';') || [];

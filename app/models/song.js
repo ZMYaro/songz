@@ -13,8 +13,10 @@ const songSchema = new Schema({
 	gDriveOGG: String,
 	gDriveArt: String,
 	title: String,
+	duration: Number, // In milliseconds
 	trackNo: Number,
 	discNo: Number,
+	year: Number,
 	artist: [{
 		type: Schema.Types.ObjectId,
 		ref: Artist.modelName
