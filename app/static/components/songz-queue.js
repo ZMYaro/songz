@@ -68,7 +68,7 @@ export class SongZQueue extends LitElement {
 	static get properties() {
 		return {
 			songs: { type: Array, attribute: false },
-			activeIndex: { type: Number, attribute: false }
+			activeIndex: { type: Number, attribute: true }
 		};
 	}
 	
@@ -101,11 +101,17 @@ export class SongZQueue extends LitElement {
 		}));
 	}
 	
+	handleDblClick(ev) {
+		this.dispatchEvent(new CustomEvent('queue-play-now', {
+			detail: ev.currentTarget.dataset.index
+		}));
+	}
+	
 	render() {
 		return html`
 			<mwc-list class="queue-list">
 				${(this.songs || []).map((song, i) => html`
-					<mwc-list-item graphic="small" hasMeta class="${i === this.activeIndex ? 'current' : ''}" data-index="${i}">
+					<mwc-list-item graphic="small" hasMeta class="${i === this.activeIndex ? 'current' : ''}" data-index="${i}" @dblclick="${this.handleDblClick}">
 						<img slot="graphic" class="album-art" src="${song.gDriveArt ? toGDriveURL(song.gDriveArt) : '/images/unknown_album.svg'}" alt="" />
 						<span class="song-title">${song.title}</span>
 						<span class="artist">${formatDuration(song.duration)} &middot; ${formatArtist(song, true)}</span>

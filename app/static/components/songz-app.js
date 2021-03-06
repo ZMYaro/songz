@@ -201,7 +201,7 @@ export class SongZApp extends LitElement {
 					<h2>Queue</h2>
 					<songz-queue
 						.songs="${this.queue}"
-						.activeIndex="${this.queuePosition}"
+						activeIndex="${this.queuePosition}"
 						@queue-play-now="${(ev) => this.playSong(ev.detail)}">
 					</songz-queue>
 				</app-drawer>
