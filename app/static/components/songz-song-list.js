@@ -4,9 +4,11 @@
 import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.4.0/lit-element.js?module';
 //import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import {unsafeHTML} from 'https://unpkg.com/lit-html@1.3.0/directives/unsafe-html.js?module';
+//import '@material/mwc-icon-button';
+import 'https://unpkg.com/@material/mwc-icon-button@0.20.0/mwc-icon-button.js?module';
 
 //import '@material/mwc-icon';
-import 'https://unpkg.com/@material/mwc-icon@0.19.1/mwc-icon.js?module';
+import 'https://unpkg.com/@material/mwc-icon@0.20.0/mwc-icon.js?module';
 
 import {formatAlbum, formatArtist, formatDuration} from '../scripts/utils.js';
 
