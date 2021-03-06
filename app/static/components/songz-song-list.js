@@ -22,6 +22,9 @@ export class SongZSongList extends LitElement {
 				:host a:focus {
 					text-decoration: underline;
 				}
+			td {
+				cursor: default;
+			}
 		`;
 	}
 	
@@ -48,8 +51,8 @@ export class SongZSongList extends LitElement {
 					</tr>
 				</thead>
 				<tbody>
-					${(this.songs || []).map((song) => html`
-						<tr>
+					${(this.songs || []).map((song, i) => html`
+						<tr data-index="${i}">
 							${this.type === 'album' ? html`<td class="index">${song.trackNo}</td>` : ''}
 							${this.type === 'playlist' ? html`<td class="index">${song.listIndex}</td>` : ''}
 							<td class="title" title="${song.title}">${song.title}</td>

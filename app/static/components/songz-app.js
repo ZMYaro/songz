@@ -20,6 +20,7 @@ export class SongZApp extends LitElement {
 			status: { type: String, attribute: false },
 			currentTime: { type: Number, attribute: false },
 			duration: { type: Number, attribute: false },
+			songList: { type: Array, attribute: false },
 			queue: { type: Array, attribute: false },
 			queuePosition: { type: Number, attribute: false }
 		};
@@ -28,6 +29,7 @@ export class SongZApp extends LitElement {
 	constructor() {
 		super();
 		
+		this.songList = [];
 		this.queue = [];
 		this.queuePosition = -1;
 	}
@@ -63,9 +65,9 @@ export class SongZApp extends LitElement {
 	async loadSongs() {
 		let songsRes = await fetch('/api/songs');
 		
-		// For now, just put all the songs in the queue.
-		this.queue = await songsRes.json();
-		this.queue = this.queue.sort((a, b) => a.trackNo < b.trackNo ? -1 : 1);
+		// For now, just put entire library in the list.
+		this.songList = await songsRes.json();
+		this.songList = this.songList.sort((a, b) => a.trackNo < b.trackNo ? -1 : 1);
 	}
 
 	loadSong(player, song) {
@@ -207,7 +209,9 @@ export class SongZApp extends LitElement {
 				</app-drawer>
 				<main>
 					<h1>It works?</h1>
-					<songz-song-list .songs="${this.queue}"></songz-song-list>
+					<songz-song-list
+						.songs="${this.songList}"
+					</songz-song-list>
 				</main>
 			</app-drawer-layout>
 			<songz-player
