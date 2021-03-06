@@ -62,8 +62,8 @@ export class SongZSongList extends LitElement {
 						<tr data-index="${i}">
 							${this.type === 'album' ? html`<td class="index">${song.trackNo}</td>` : ''}
 							${this.type === 'playlist' ? html`<td class="index">${song.listIndex}</td>` : ''}
-							<td class="duration">${formatDuration(song.duration)}</td>
 							<td class="title" title="${song.title}" @dblclick="${this.handleDblClick}">${song.title}</td>
+							<td class="duration">${formatDuration(song.duration / 1000)}</td>
 							${this.type !== 'artist' ? html`<td class="artist" title="${formatArtist(song, true)}">${unsafeHTML(formatArtist(song, false))}</td>` : ''}
 							${this.type !== 'album' ? html`<td class="album" title="${formatAlbum(song, true)}">${unsafeHTML(formatAlbum(song))}</td>` : ''}
 							<td class="playthroughs"></td>

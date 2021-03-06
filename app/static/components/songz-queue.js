@@ -114,7 +114,7 @@ export class SongZQueue extends LitElement {
 					<mwc-list-item graphic="small" hasMeta class="${i === this.activeIndex ? 'current' : ''}" data-index="${i}" @dblclick="${this.handleDblClick}">
 						<img slot="graphic" class="album-art" src="${song.gDriveArt ? toGDriveURL(song.gDriveArt) : '/images/unknown_album.svg'}" alt="" />
 						<span class="song-title">${song.title}</span>
-						<span class="artist">${formatDuration(song.duration)} &middot; ${formatArtist(song, true)}</span>
+						<span class="artist">${formatDuration(song.duration / 1000)} &middot; ${formatArtist(song, true)}</span>
 						<mwc-icon-button slot="meta" icon="more_vert" @click=${this.handleMenuButton}></mwc-icon-button>
 					</mwc-list-item>
 				`)}
