@@ -86,6 +86,11 @@ export class SongZApp extends LitElement {
 	}
 
 	async playSong(i) {
+		if (this.queuePosition === i) {
+			// Do not reload if the selected song is already playing.
+			await this.resumeSong();
+			return;
+		}
 		this.loadSong(this.activePlayer, this.queue[i]);
 		if (i + 1 < this.queue.length) {
 			this.loadSong(this.inactivePlayer, this.queue[i + 1]);
@@ -211,6 +216,7 @@ export class SongZApp extends LitElement {
 					<h1>It works?</h1>
 					<songz-song-list
 						.songs="${this.songList}"
+						@play-now="${(ev) => {this.queue = this.songList; this.queuePosition = -1; this.playSong(ev.detail);}}">
 					</songz-song-list>
 				</main>
 			</app-drawer-layout>
