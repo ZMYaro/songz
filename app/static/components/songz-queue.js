@@ -72,12 +72,6 @@ export class SongZQueue extends LitElement {
 		};
 	}
 	
-	constructor() {
-		super();
-		
-		this.songs = [];
-	}
-	
 	/**
 	 * @override
 	 * Get a reference to the song menu when the element is first updated.
