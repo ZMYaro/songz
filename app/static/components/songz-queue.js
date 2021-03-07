@@ -78,10 +78,18 @@ export class SongZQueue extends LitElement {
 		this.songs = [];
 	}
 	
+	/**
+	 * @override
+	 * Get a reference to the song menu when the element is first updated.
+	 */
 	firstUpdated() {
 		this.songMenu = this.shadowRoot.querySelector('mwc-menu');
 	}
 	
+	/**
+	 * Open the menu next to a song when its menu button is clicked.
+	 * @param {MouseEvent} ev
+	 */
 	handleMenuButton(ev) {
 		ev.stopPropagation();
 		// Tell the menu which song it is open for.
@@ -91,6 +99,10 @@ export class SongZQueue extends LitElement {
 		this.songMenu.show();
 	}
 	
+	/**
+	 * Send an event from the queue in response to a song menu item being clicked.
+	 * @param {MouseEvent} ev
+	 */
 	handleMenuItemSelect(ev) {
 		// Get the action and song index recorded in data attributes.
 		var action = ev.currentTarget.dataset.action,
@@ -101,12 +113,19 @@ export class SongZQueue extends LitElement {
 		}));
 	}
 	
+	/**
+	 * Play a song when it is double-clicked.
+	 * @param {MouseEvent} ev
+	 */
 	handleDblClick(ev) {
 		this.dispatchEvent(new CustomEvent('queue-play-now', {
 			detail: ev.currentTarget.dataset.index
 		}));
 	}
 	
+	/**
+	 * @override
+	 */
 	render() {
 		return html`
 			<mwc-list class="queue-list">

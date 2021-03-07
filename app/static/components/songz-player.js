@@ -100,6 +100,10 @@ export class SongZPlayer extends LitElement {
 	sendNext() {
 		this.dispatchEvent(new CustomEvent('next'));
 	}
+	/**
+	 * Send an event when the seek bar is moved.
+	 * @param {Event} ev
+	 */
 	sendSeek(ev) {
 		this.currentTime = ev.currentTarget.currentTime;
 		this.dispatchEvent(new CustomEvent('seek'), {
@@ -108,6 +112,9 @@ export class SongZPlayer extends LitElement {
 		});
 	}
 	
+	/**
+	 * @override
+	 */
 	render() {
 		return html`
 			<songz-seek-bar

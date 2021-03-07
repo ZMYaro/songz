@@ -39,6 +39,10 @@ export class SongZSeekBar extends LitElement {
 		}
 	}
 	
+	/**
+	 * Send an event when the seek bar is moved.
+	 * @param {Event} ev
+	 */
 	sendSeek(ev) {
 		this.currentTime = ev.currentTarget.value;
 		this.dispatchEvent(new CustomEvent('seek'), {
@@ -47,6 +51,9 @@ export class SongZSeekBar extends LitElement {
 		});
 	}
 	
+	/**
+	 * @override
+	 */
 	render() {
 		return html`
 			${formatDuration(this.currentTime)}

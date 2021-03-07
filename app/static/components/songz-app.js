@@ -34,6 +34,10 @@ export class SongZApp extends LitElement {
 		this.queuePosition = -1;
 	}
 	
+	/**
+	 * @override
+	 * Set up audio player elements when the component is first updated.
+	 */
 	firstUpdated() {
 		// Apply theming to old Polymer drawer.
 		this.querySelector('app-drawer').shadowRoot.getElementById('contentContainer').style.backgroundColor = 'var(--mdc-theme-surface)';
@@ -56,12 +60,16 @@ export class SongZApp extends LitElement {
 		navigator.mediaSession.setActionHandler('nexttrack', this.nextSong.bind(this));
 		navigator.mediaSession.setActionHandler('seekto', (details) => {
 			this.activePlayer.currentTime = details.seekTime;
-			this.updatePositionState();
+			this.updateSessionPositionState();
 		});
 		
 		this.loadSongs();
 	}
-
+	
+	/**
+	 * TEMPORARY
+	 * @returns {Promise}
+	 */
 	async loadSongs() {
 		let songsRes = await fetch('/api/songs');
 		
@@ -69,7 +77,12 @@ export class SongZApp extends LitElement {
 		this.songList = await songsRes.json();
 		this.songList = this.songList.sort((a, b) => a.trackNo < b.trackNo ? -1 : 1);
 	}
-
+	
+	/**
+	 * Load a song's audio to play.
+	 * @param {HTMLAudioELement} player - The player to load the song in
+	 * @param {Object} song - The song's metadata
+	 */
 	loadSong(player, song) {
 		player.innerHTML = '' +
 			song.gDriveFLAC ? `<source src="${toGDriveURL(song.gDriveFLAC)}" type="audio/flac" />` : '' +
@@ -78,13 +91,21 @@ export class SongZApp extends LitElement {
 			song.gDriveOGG  ? `<source src="${toGDriveURL(song.gDriveOGG)}"  type="audio/ogg"  />` : '';
 		player.load();
 	}
-
+	
+	/**
+	 * Swap the active and inactive players.
+	 */
 	swapPlayers() {
 		let temp = this.activePlayer;
 		this.activePlayer = this.inactivePlayer;
 		this.inactivePlayer = temp;
 	}
-
+	
+	/**
+	 * Play a song from the queue if it is not already playing.
+	 * @param {Number} i - The index from the queue to play
+	 * @returns {Promise} Resolves when the song starts playing
+	 */
 	async playSong(i) {
 		if (this.queuePosition === i) {
 			// Do not reload if the selected song is already playing.
@@ -98,14 +119,21 @@ export class SongZApp extends LitElement {
 		this.queuePosition = i;
 		await this.resumeSong();
 	}
-
-	async playPauseSong() {
+	
+	/**
+	 * Play the song if it is paused, or vice versa.
+	 */
+	playPauseSong() {
 		if (this.status === 'paused') {
 			this.resumeSong();
 		} else {
 			this.pauseSong();
 		}
 	}
+	/**
+	 * Play the current player.
+	 * @returns {Promise} Resolves when the song starts playing
+	 */
 	async resumeSong() {
 		navigator.mediaSession.playbackState = 'none';
 		this.status = 'buffering';
@@ -114,29 +142,47 @@ export class SongZApp extends LitElement {
 		navigator.mediaSession.playbackState = 'playing';
 		this.currentTime = this.activePlayer.currentTime;
 		this.duration = this.activePlayer.duration;
-		this.updateMetadata();
-		this.updatePositionState();
+		this.updateSessionMetadata();
+		this.updateSessionPositionState();
 		this.status = 'playing';
 	}
+	/**
+	 * Pause the current player.
+	 * @returns {Promise} Resolves when the song is paused.
+	 */
 	async pauseSong() {
 		await this.activePlayer.pause();
 		navigator.mediaSession.playbackState = 'paused';
 		this.status = 'paused';
 	}
+	/**
+	 * Pause the current player and return to the start of the song.
+	 * @returns {Promise} Resolves when the song is stopped and back at the start.
+	 */
 	async stopSong() {
 		await this.activePlayer.pause();
 		this.activePlayer.currentTime = 0;
 		navigator.mediaSession.playbackState = 'paused';
 		this.status = 'paused';
 	}
+	/**
+	 * Seek backward 10 seconds in the current song.
+	 */
 	stepBackward() {
 		this.activePlayer.currentTime -= 10;
-		this.updatePositionState();
+		this.updateSessionPositionState();
 	}
+	/**
+	 * Seek forward 10 seconds in the current song.
+	 */
 	stepForward() {
 		this.activePlayer.currentTime += 10;
-		this.updatePositionState();
+		this.updateSessionPositionState();
 	}
+	/**
+	 * Move to the previous song in the queue, if any.
+	 * @returns {Promise} Resolves when the previous song starts playing, or immediately if there is no previous song.
+	 */
 	async prevSong() {
 		if (this.queuePosition - 1 < 0) {
 			// Abort if there is no previous song.
@@ -151,6 +197,10 @@ export class SongZApp extends LitElement {
 		this.loadSong(this.activePlayer, this.queue[this.queuePosition]);
 		await this.resumeSong();
 	}
+	/**
+	 * Move to the next song in the queue, if any.
+	 * @returns {Promise} Resolves when the next song starts playing, or immediately if ithere is no next song.
+	 */
 	async nextSong() {
 		if (this.queuePosition + 1 >= this.queue.length) {
 			// Abort if there is no next song.
@@ -168,17 +218,26 @@ export class SongZApp extends LitElement {
 		await this.resumeSong();
 	}
 	
+	/**
+	 * Update the player and media session in response to the seek bar being moved.
+	 * @param {Event} ev
+	 */
 	handleSeek(ev) {
 		this.activePlayer.currentTime = ev.currentTarget.currentTime;
-		this.updatePositionState();
+		this.updateSessionPositionState();
 	}
-	
+	/**
+	 * Update the UI and media session in response to the player playing.
+	 * @param {Event} ev
+	 */
 	handlePlayerTimeChange(ev) {
 		this.currentTime = ev.currentTarget.currentTime;
-		this.updatePositionState();
+		this.updateSessionPositionState();
 	}
-	
-	updateMetadata() {
+	/**
+	 * Update the media session with the current song's metadata.
+	 */
+	updateSessionMetadata() {
 		var song = this.queue[this.queuePosition];
 		
 		navigator.mediaSession.metadata = new MediaMetadata({
@@ -189,8 +248,10 @@ export class SongZApp extends LitElement {
 			}]
 		});
 	}
-	
-	updatePositionState() {
+	/**
+	 * Update the media session's position state with the player's state.
+	 */
+	updateSessionPositionState() {
 		if (!this.activePlayer.duration) {
 			return;
 		}
@@ -201,6 +262,9 @@ export class SongZApp extends LitElement {
 		});
 	}
 	
+	/**
+	 * @override
+	 */
 	render() {
 		return html`
 			<app-drawer-layout>
@@ -235,8 +299,11 @@ export class SongZApp extends LitElement {
 		`;
 	}
 	
+	/**
+	 * @override
+	 * Prevent the component having a shadow root.
+	 */
 	createRenderRoot() {
-		// No shadow root.
 		return this;
 	}
 }

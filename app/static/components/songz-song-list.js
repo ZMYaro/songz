@@ -37,6 +37,10 @@ export class SongZSongList extends LitElement {
 		};
 	}
 	
+	/**
+	 * Play a song when it is double-clicked.
+	 * @param {MouseEvent} ev
+	 */
 	handleDblClick(ev) {
 		ev.preventDefault();
 		this.dispatchEvent(new CustomEvent('play-now', {
@@ -44,6 +48,9 @@ export class SongZSongList extends LitElement {
 		}));
 	}
 	
+	/**
+	 * @override
+	 */
 	render() {
 		return html`
 			<table>
