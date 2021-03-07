@@ -14,6 +14,8 @@ import {formatAlbum, formatArtist, formatDuration} from '../scripts/utils.js';
 
 export class SongZSongList extends LitElement {
 	
+	songMenu = undefined;
+	
 	static get styles() {
 		return css`
 			:host a {
@@ -38,6 +40,41 @@ export class SongZSongList extends LitElement {
 	}
 	
 	/**
+	 * @override
+	 * Get a reference to the song menu when the element is first updated.
+	 */
+	firstUpdated() {
+		this.songMenu = this.shadowRoot.querySelector('mwc-menu');
+	}
+	
+	/**
+	 * Open the menu next to a song when its menu button is clicked.
+	 * @param {MouseEvent} ev
+	 */
+	handleMenuButton(ev) {
+		ev.stopPropagation();
+		// Tell the menu which song it is open for.
+		this.songMenu.dataset.index = ev.currentTarget.parentElement.parentElement.dataset.index;
+		// Open the menu from the button.
+		this.songMenu.anchor = ev.currentTarget;
+		this.songMenu.show();
+	}
+	
+	/**
+	 * Send an event from the song list in response to a song menu item being clicked.
+	 * @param {MouseEvent} ev
+	 */
+	handleMenuItemSelect(ev) {
+		// Get the action and song index recorded in data attributes.
+		var action = ev.currentTarget.dataset.action,
+			index = parseInt(ev.currentTarget.parentElement.dataset.index);
+		// Send them to the app as an event from the component.
+		this.dispatchEvent(new CustomEvent(action, {
+			detail: index
+		}));
+	}
+	
+	/**
 	 * Play a song when it is double-clicked.
 	 * @param {MouseEvent} ev
 	 */
@@ -58,7 +95,7 @@ export class SongZSongList extends LitElement {
 					<tr>
 						${this.type === 'album' ? html`<th title="Track number">#</th>` : ''}
 						${this.type === 'playlist' ? html`<th title="List index">#</th>` : ''}
-						<th>Title</th>
+						<th colspan="2">Title</th>
 						<th><mwc-icon title="Duration">schedule</mwc-icon></th>
 						${this.type !== 'artist' ? html`<th>Artist</th>` : ''}
 						${this.type !== 'album' ? html`<th>Album</th>`: ''}
@@ -72,6 +109,7 @@ export class SongZSongList extends LitElement {
 							${this.type === 'album' ? html`<td class="index">${song.trackNo}</td>` : ''}
 							${this.type === 'playlist' ? html`<td class="index">${song.listIndex}</td>` : ''}
 							<td class="title" title="${song.title}" @dblclick="${this.handleDblClick}">${song.title}</td>
+							<td><mwc-icon-button slot="meta" icon="more_vert" @click=${this.handleMenuButton}></mwc-icon-button></td>
 							<td class="duration">${formatDuration(song.duration / 1000)}</td>
 							${this.type !== 'artist' ? html`<td class="artist" title="${formatArtist(song, true)}">${unsafeHTML(formatArtist(song, false))}</td>` : ''}
 							${this.type !== 'album' ? html`<td class="album" title="${formatAlbum(song, true)}">${unsafeHTML(formatAlbum(song))}</td>` : ''}
@@ -81,6 +119,34 @@ export class SongZSongList extends LitElement {
 					`)}
 				</tbody>
 			</table>
+			<mwc-menu fixed wrapFocus>
+				<mwc-list-item graphic="icon" data-action="play-now" @click=${this.handleMenuItemSelect}>
+					<mwc-icon slot="graphic">play_arrow</mwc-icon>
+					Play now
+				</mwc-list-item>
+				<mwc-list-item graphic="icon" @click=${() => alert('Not yet implemented.')}>
+					<mwc-icon slot="graphic">playlist_play</mwc-icon>
+					Play next
+				</mwc-list-item>
+				<mwc-list-item graphic="icon" @click=${() => alert('Not yet implemented.')}>
+					<mwc-icon slot="graphic">queue_music</mwc-icon>
+					Add to queue
+				</mwc-list-item>
+				<li divider role="separator"></li>
+				<mwc-list-item graphic="icon" @click=${() => alert('Not yet implemented.')}>
+					<mwc-icon slot="graphic">playlist_add</mwc-icon>
+					Add to playlist
+				</mwc-list-item>
+				<mwc-list-item graphic="icon" @click=${() => alert('Not yet implemented.')}>
+					<mwc-icon slot="graphic">album</mwc-icon>
+					Go to album
+				</mwc-list-item>
+				<mwc-list-item graphic="icon" @click=${() => alert('Not yet implemented.')}>
+					<mwc-icon slot="graphic">person</mwc-icon>
+					<!--<mwc-icon slot="graphic">account_music</mwc-icon>-->
+					Go to artist
+				</mwc-list-item>
+			</mwc-menu>
 		`;
 	}
 }

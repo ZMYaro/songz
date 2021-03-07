@@ -271,14 +271,14 @@ export class SongZApp extends LitElement {
 					<songz-queue
 						.songs="${this.queue}"
 						activeIndex="${this.queuePosition}"
-						@queue-play-now="${(ev) => this.playSong(ev.detail)}">
+						@queue-play-now="${(ev) => this.playSong(parseInt(ev.detail))}">
 					</songz-queue>
 				</app-drawer>
 				<main>
 					<h1>It works?</h1>
 					<songz-song-list
 						.songs="${this.songList}"
-						@play-now="${(ev) => {this.queue = this.songList; this.queuePosition = -1; this.playSong(ev.detail);}}">
+						@play-now="${(ev) => {this.queue = this.songList; this.queuePosition = -1; this.playSong(parseInt(ev.detail));}}">
 					</songz-song-list>
 				</main>
 			</app-drawer-layout>
