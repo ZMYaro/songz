@@ -160,10 +160,8 @@ export class SongZApp extends LitElement {
 	 * @returns {Promise} Resolves when the song is stopped and back at the start.
 	 */
 	async stopSong() {
-		await this.activePlayer.pause();
+		await this.pauseSong();
 		this.activePlayer.currentTime = 0;
-		navigator.mediaSession.playbackState = 'paused';
-		this.status = 'paused';
 	}
 	/**
 	 * Seek backward 10 seconds in the current song.
