@@ -15,6 +15,19 @@ function handleError(res, message, code) {
 	res.json({ error: message });
 }
 
+/**
+ * Populate all the fields in a song query.
+ * @param {Query} songs - The song query to populate
+ * @returns {Query} The populated query
+ */
+function populateSongQuery(songs) {
+	return songs
+		.populate({path: 'album', populate: {path: 'artist'}})
+		.populate('artist')
+		.populate('composer')
+		.populate('genre');
+}
+
 router.use(bodyParser.urlencoded({ extended: false }));
 
 router.all((req, res, next) => {
@@ -24,11 +37,7 @@ router.all((req, res, next) => {
 
 router.route('/songs')
 	.get(async function (req, res) {
-		var songs = await Song.find({})
-			.populate({path: 'album', populate: {path: 'artist'}})
-			.populate('artist')
-			.populate('composer')
-			.populate('genre');
+		var songs = await populateSongQuery(Song.find({}));
 		res.json(songs);
 	})
 	.post(async function (req, res) {
@@ -74,5 +83,22 @@ router.route('/songs')
 		await newSong.save();
 		res.json(newSong);
 	});
+
+router.route('/albums/:albumId')
+	.get(async function (req, res) {
+		var albumId = req.params.albumId,
+			album = await Album.findById(albumId),
+			songs = await populateSongQuery(Song.find({ album: album }));
+		res.json(songs);
+	});
+
+router.route('/artists/:artistId')
+	.get(async function (req, res) {
+		var artistId = req.params.artistId,
+			artist = await Artist.findById(artistId),
+			songs = await populateSongQuery(Song.find({ artist: artist }));
+		res.json(songs);
+	});
+
 
 module.exports = router;
