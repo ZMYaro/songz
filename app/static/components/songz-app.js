@@ -17,7 +17,8 @@ export class SongZApp extends LitElement {
 	
 	static get properties() {
 		return {
-			status: { type: String, attribute: false },
+			mainView: { type: String, attribute: false },
+			playStatus: { type: String, attribute: false },
 			currentTime: { type: Number, attribute: false },
 			duration: { type: Number, attribute: false },
 			songList: { type: Array, attribute: false },
@@ -63,19 +64,49 @@ export class SongZApp extends LitElement {
 			this.updateSessionPositionState();
 		});
 		
-		this.loadSongs();
+		window.addEventListener('hashchange', this.handleRouting.bind(this));
+		this.handleRouting();
 	}
 	
 	/**
-	 * TEMPORARY
-	 * @returns {Promise}
+	 * Handle routing based on the hash.
 	 */
-	async loadSongs() {
-		let songsRes = await fetch('/api/songs');
+	async handleRouting() {
+		this.mainView = 'loading';
 		
-		// For now, just put entire library in the list.
-		this.songList = await songsRes.json();
-		this.songList = this.songList.sort((a, b) => a.trackNo < b.trackNo ? -1 : 1);
+		if (location.hash === '#home') {
+			this.songList = await this.loadSongs('songs');
+			this.mainView = 'songs'; // TODO: Replace this once home view exists
+			
+		} else if (location.hash.match(/^#albums\/[0-9a-f]+$/)) {
+			let albumId = location.hash.match(/^#albums\/([0-9a-f]+)$/)[1];
+			this.songList = await this.loadSongs(`albums/${albumId}`);
+			this.mainView = 'songs'; // TODO: Replace this once album view exists
+			
+		} else if (location.hash.match(/^#artists\/[0-9a-f]+$/)) {
+			let artistsId = location.hash.match(/^#artists\/([0-9a-f]+)$/)[1];
+			this.songList = await this.loadSongs(`artists/${artistsId}`);
+			this.mainView = 'songs'; // TODO: Replace this once artist view exists
+			
+		} else if (location.hash === '#songs') {
+			this.mainView = 'songs';
+			
+		} else {
+			// If there is no valid route, send the user to the home view.
+			location.hash = '#home';
+		}
+	}
+	
+	/**
+	 * Load the song list from a given API endpoint.
+	 * @param {String} url - The URL for the API endpoint
+	 * @returns {Promise<Array<Object>>} Resolves with the sorted list of songs
+	 */
+	async loadSongs(url) {
+		let songsRes = await fetch(`/api/${url}`),
+			songs = await songsRes.json();
+		// TODO: Default sorting – album, then disc #, then track #
+		return songs;
 	}
 	
 	/**
@@ -124,7 +155,7 @@ export class SongZApp extends LitElement {
 	 * Play the song if it is paused, or vice versa.
 	 */
 	playPauseSong() {
-		if (this.status === 'paused') {
+		if (this.playStatus === 'paused') {
 			this.resumeSong();
 		} else {
 			this.pauseSong();
@@ -136,7 +167,7 @@ export class SongZApp extends LitElement {
 	 */
 	async resumeSong() {
 		navigator.mediaSession.playbackState = 'none';
-		this.status = 'buffering';
+		this.playStatus = 'buffering';
 		this.duration = null;
 		await this.activePlayer.play();
 		navigator.mediaSession.playbackState = 'playing';
@@ -144,7 +175,7 @@ export class SongZApp extends LitElement {
 		this.duration = this.activePlayer.duration;
 		this.updateSessionMetadata();
 		this.updateSessionPositionState();
-		this.status = 'playing';
+		this.playStatus = 'playing';
 	}
 	/**
 	 * Pause the current player.
@@ -153,7 +184,7 @@ export class SongZApp extends LitElement {
 	async pauseSong() {
 		await this.activePlayer.pause();
 		navigator.mediaSession.playbackState = 'paused';
-		this.status = 'paused';
+		this.playStatus = 'paused';
 	}
 	/**
 	 * Pause the current player and return to the start of the song.
@@ -264,6 +295,22 @@ export class SongZApp extends LitElement {
 	 * @override
 	 */
 	render() {
+		var mainViewContents;
+		
+		switch (this.mainView) {
+			case 'songs':
+				mainViewContents = html`
+					<songz-song-list
+						.songs="${this.songList}"
+						@play-now="${(ev) => {this.queue = this.songList; this.queuePosition = -1; this.playSong(parseInt(ev.detail));}}">
+					</songz-song-list>
+				`;
+				break;
+			default:
+				mainViewContents = html`Loading...`;
+				break;
+		}
+		
 		return html`
 			<app-drawer-layout>
 				<app-drawer slot="drawer" align="end" swipe-open>
@@ -275,16 +322,12 @@ export class SongZApp extends LitElement {
 					</songz-queue>
 				</app-drawer>
 				<main>
-					<h1>It works?</h1>
-					<songz-song-list
-						.songs="${this.songList}"
-						@play-now="${(ev) => {this.queue = this.songList; this.queuePosition = -1; this.playSong(parseInt(ev.detail));}}">
-					</songz-song-list>
+					${mainViewContents}
 				</main>
 			</app-drawer-layout>
 			<songz-player
 				playing="${navigator.mediaSession.playbackState === 'playing'}"
-				status="${this.status}"
+				status="${this.playStatus}"
 				currenttime="${this.currentTime}"
 				duration="${this.duration}"
 				@previous="${this.prevSong}"

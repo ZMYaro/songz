@@ -13,7 +13,7 @@ export function formatAlbum(song, returnPlainText) {
 	if (returnPlainText) {
 		return song.album.title;
 	}
-	return `<a href="#/album/${song.album._id}">${song.album.title}</a>`;
+	return `<a href="#albums/${song.album._id}">${song.album.title}</a>`;
 }
 
 /**
@@ -29,7 +29,7 @@ export function formatArtist(song, returnPlainText) {
 	if (returnPlainText) {
 		return song.artist.map((artist) => artist.name).join('; ');
 	}
-	return song.artist.map((artist) => `<a href="#/artist/${artist._id}">${artist.name}</a>`).join('; ');
+	return song.artist.map((artist) => `<a href="#artists/${artist._id}">${artist.name}</a>`).join('; ');
 }
 
 /**
