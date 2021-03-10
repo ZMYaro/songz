@@ -135,7 +135,7 @@ export class SongZQueue extends LitElement {
 			<mwc-menu fixed wrapFocus>
 				<mwc-list-item graphic="icon" data-action="queue-play-now" @click=${this.handleMenuItemSelect}>
 					<mwc-icon slot="graphic">play_arrow</mwc-icon>
-					Play now
+					Play
 				</mwc-list-item>
 				<mwc-list-item graphic="icon" data-action="queue-play-next" @click=${this.handleMenuItemSelect}>
 					<mwc-icon slot="graphic">playlist_play</mwc-icon>

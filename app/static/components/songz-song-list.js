@@ -126,7 +126,7 @@ export class SongZSongList extends LitElement {
 			<mwc-menu fixed wrapFocus>
 				<mwc-list-item graphic="icon" data-action="play-now" @click=${this.handleMenuItemSelect}>
 					<mwc-icon slot="graphic">play_arrow</mwc-icon>
-					Play now
+					Play
 				</mwc-list-item>
 				<mwc-list-item graphic="icon" @click=${() => alert('Not yet implemented.')}>
 					<mwc-icon slot="graphic">playlist_play</mwc-icon>
