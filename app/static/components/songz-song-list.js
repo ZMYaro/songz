@@ -83,7 +83,7 @@ export class SongZSongList extends LitElement {
 	handleDblClick(ev) {
 		ev.preventDefault();
 		this.dispatchEvent(new CustomEvent('play-now', {
-			detail: ev.currentTarget.parentElement.dataset.index,
+			detail: parseInt(ev.currentTarget.parentElement.dataset.index),
 			bubbles: true,
 			composed: true
 		}));

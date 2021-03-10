@@ -297,13 +297,13 @@ export class SongZApp extends LitElement {
 					<songz-queue
 						.songs="${this.queue}"
 						activeIndex="${this.queuePosition}"
-						@queue-play-now="${(ev) => this.playSong(parseInt(ev.detail))}"
-						@queue-play-next="${(ev) => this.moveSongNext(parseInt(ev.detail))}"
-						@queue-remove="${(ev) => this.removeSongFromQueue(parseInt(ev.detail))}">
+						@queue-play-now="${(ev) => this.playSong(ev.detail)}"
+						@queue-play-next="${(ev) => this.moveSongNext(ev.detail)}"
+						@queue-remove="${(ev) => this.removeSongFromQueue(ev.detail)}">
 					</songz-queue>
 				</app-drawer>
 				<songz-main-view
-					@play-now="${(ev) => {this.queue = this.mainView.songList; this.queuePosition = -1; this.playSong(parseInt(ev.detail));}}">
+					@play-now="${(ev) => {this.queue = this.mainView.songList; this.queuePosition = -1; this.playSong(ev.detail);}}"
 				</songz-main-view>
 			</app-drawer-layout>
 			<songz-player

@@ -113,7 +113,7 @@ export class SongZQueue extends LitElement {
 	 */
 	handleDblClick(ev) {
 		this.dispatchEvent(new CustomEvent('queue-play-now', {
-			detail: ev.currentTarget.dataset.index
+			detail: parseInt(ev.currentTarget.dataset.index)
 		}));
 	}
 	
