@@ -7,21 +7,20 @@ import 'https://unpkg.com/@polymer/app-layout@3.1.0/app-layout.js?module';
 
 import './songz-queue.js';
 import './songz-player.js';
-import './songz-song-list.js';
+import './songz-main-view.js';
 import {formatArtist, toGDriveURL} from '../scripts/utils.js';
 
 export class SongZApp extends LitElement {
 	
 	activePlayer;
 	inactivePlayer;
+	mainView;
 	
 	static get properties() {
 		return {
-			mainView: { type: String, attribute: false },
 			playStatus: { type: String, attribute: false },
 			currentTime: { type: Number, attribute: false },
 			duration: { type: Number, attribute: false },
-			songList: { type: Array, attribute: false },
 			queue: { type: Array, attribute: false },
 			queuePosition: { type: Number, attribute: false }
 		};
@@ -30,7 +29,6 @@ export class SongZApp extends LitElement {
 	constructor() {
 		super();
 		
-		this.songList = [];
 		this.queue = [];
 		this.queuePosition = -1;
 	}
@@ -42,6 +40,9 @@ export class SongZApp extends LitElement {
 	firstUpdated() {
 		// Apply theming to old Polymer drawer.
 		this.querySelector('app-drawer').shadowRoot.getElementById('contentContainer').style.backgroundColor = 'var(--mdc-theme-surface)';
+		
+		// Get reference to main view.
+		this.mainView = this.querySelector('songz-main-view');
 		
 		// Set up audio players.
 		this.activePlayer = new Audio();
@@ -63,50 +64,6 @@ export class SongZApp extends LitElement {
 			this.activePlayer.currentTime = details.seekTime;
 			this.updateSessionPositionState();
 		});
-		
-		window.addEventListener('hashchange', this.handleRouting.bind(this));
-		this.handleRouting();
-	}
-	
-	/**
-	 * Handle routing based on the hash.
-	 */
-	async handleRouting() {
-		this.mainView = 'loading';
-		
-		if (location.hash === '#home') {
-			this.songList = await this.loadSongs('songs');
-			this.mainView = 'songs'; // TODO: Replace this once home view exists
-			
-		} else if (location.hash.match(/^#albums\/[0-9a-f]+$/)) {
-			let albumId = location.hash.match(/^#albums\/([0-9a-f]+)$/)[1];
-			this.songList = await this.loadSongs(`albums/${albumId}`);
-			this.mainView = 'songs'; // TODO: Replace this once album view exists
-			
-		} else if (location.hash.match(/^#artists\/[0-9a-f]+$/)) {
-			let artistsId = location.hash.match(/^#artists\/([0-9a-f]+)$/)[1];
-			this.songList = await this.loadSongs(`artists/${artistsId}`);
-			this.mainView = 'songs'; // TODO: Replace this once artist view exists
-			
-		} else if (location.hash === '#songs') {
-			this.mainView = 'songs';
-			
-		} else {
-			// If there is no valid route, send the user to the home view.
-			location.hash = '#home';
-		}
-	}
-	
-	/**
-	 * Load the song list from a given API endpoint.
-	 * @param {String} url - The URL for the API endpoint
-	 * @returns {Promise<Array<Object>>} Resolves with the sorted list of songs
-	 */
-	async loadSongs(url) {
-		let songsRes = await fetch(`/api/${url}`),
-			songs = await songsRes.json();
-		// TODO: Default sorting – album, then disc #, then track #
-		return songs;
 	}
 	
 	/**
@@ -295,22 +252,6 @@ export class SongZApp extends LitElement {
 	 * @override
 	 */
 	render() {
-		var mainViewContents;
-		
-		switch (this.mainView) {
-			case 'songs':
-				mainViewContents = html`
-					<songz-song-list
-						.songs="${this.songList}"
-						@play-now="${(ev) => {this.queue = this.songList; this.queuePosition = -1; this.playSong(parseInt(ev.detail));}}">
-					</songz-song-list>
-				`;
-				break;
-			default:
-				mainViewContents = html`Loading...`;
-				break;
-		}
-		
 		return html`
 			<app-drawer-layout>
 				<app-drawer slot="drawer" align="end" swipe-open>
@@ -321,9 +262,9 @@ export class SongZApp extends LitElement {
 						@queue-play-now="${(ev) => this.playSong(parseInt(ev.detail))}">
 					</songz-queue>
 				</app-drawer>
-				<main>
-					${mainViewContents}
-				</main>
+				<songz-main-view
+					@play-now="${(ev) => {this.queue = this.mainView.songList; this.queuePosition = -1; this.playSong(parseInt(ev.detail));}}">
+				</songz-main-view>
 			</app-drawer-layout>
 			<songz-player
 				playing="${navigator.mediaSession.playbackState === 'playing'}"

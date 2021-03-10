@@ -70,7 +70,9 @@ export class SongZSongList extends LitElement {
 			index = parseInt(ev.currentTarget.parentElement.dataset.index);
 		// Send them to the app as an event from the component.
 		this.dispatchEvent(new CustomEvent(action, {
-			detail: index
+			detail: index,
+			bubbles: true,
+			composed: true
 		}));
 	}
 	
@@ -81,7 +83,9 @@ export class SongZSongList extends LitElement {
 	handleDblClick(ev) {
 		ev.preventDefault();
 		this.dispatchEvent(new CustomEvent('play-now', {
-			detail: ev.currentTarget.parentElement.dataset.index
+			detail: ev.currentTarget.parentElement.dataset.index,
+			bubbles: true,
+			composed: true
 		}));
 	}
 	
