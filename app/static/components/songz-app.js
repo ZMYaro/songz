@@ -205,6 +205,22 @@ export class SongZApp extends LitElement {
 	}
 	
 	/**
+	 * Move a song ahead of the currently playing song in the queue.
+	 * @param {NUmber} i - The index from the queue to move
+	 */
+	moveSongNext(i) {
+		// Pull the song out of the queue.
+		var song = this.queue.splice(i, 1)[0];
+		// Insert it at the new position.
+		this.queue.splice(this.queuePosition + 1, 0, song);
+		// Load it as the next song.
+		this.loadSong(this.inactivePlayer, this.queue[this.queuePosition + 1]);
+		
+		// Reassign the array so it will rerender.
+		this.queue = [...this.queue];
+	}
+	
+	/**
 	 * Remove a song from the queue and play the next song if it was playing.
 	 * @param {Number} i - The index from the queue to remove
 	 * @returns {Promise} Resolves when the removed song has been removed and is not playing, but does not wait for the next song to begin playing
@@ -280,6 +296,7 @@ export class SongZApp extends LitElement {
 						.songs="${this.queue}"
 						activeIndex="${this.queuePosition}"
 						@queue-play-now="${(ev) => this.playSong(parseInt(ev.detail))}"
+						@queue-play-next="${(ev) => this.moveSongNext(parseInt(ev.detail))}"
 						@queue-remove="${(ev) => this.removeSongFromQueue(parseInt(ev.detail))}">
 					</songz-queue>
 				</app-drawer>
