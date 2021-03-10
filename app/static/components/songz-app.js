@@ -205,6 +205,26 @@ export class SongZApp extends LitElement {
 	}
 	
 	/**
+	 * Remove a song from the queue and play the next song if it was playing.
+	 * @param {Number} i - The index from the queue to remove
+	 * @returns {Promise} Resolves when the removed song has been removed and is not playing, but does not wait for the next song to begin playing
+	 */
+	async removeSongFromQueue(i) {
+		// Remove the song.
+		this.queue.splice(i, 1);
+		
+		// If the song was playing, go to the next song.
+		if (i === this.queuePosition) {
+			await this.pauseSong();
+			this.queuePosition--;
+			this.nextSong();
+		}
+		
+		// Rerender after modifying the array.
+		this.requestUpdate();
+	}
+	
+	/**
 	 * Update the player and media session in response to the seek bar being moved.
 	 * @param {Event} ev
 	 */
@@ -259,7 +279,8 @@ export class SongZApp extends LitElement {
 					<songz-queue
 						.songs="${this.queue}"
 						activeIndex="${this.queuePosition}"
-						@queue-play-now="${(ev) => this.playSong(parseInt(ev.detail))}">
+						@queue-play-now="${(ev) => this.playSong(parseInt(ev.detail))}"
+						@queue-remove="${(ev) => this.removeSongFromQueue(parseInt(ev.detail))}">
 					</songz-queue>
 				</app-drawer>
 				<songz-main-view

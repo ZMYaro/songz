@@ -141,7 +141,7 @@ export class SongZQueue extends LitElement {
 					<mwc-icon slot="graphic">playlist_play</mwc-icon>
 					Play next
 				</mwc-list-item>
-				<mwc-list-item graphic="icon" @click=${() => alert('Not yet implemented.')}>
+				<mwc-list-item graphic="icon" data-action="queue-remove" @click=${this.handleMenuItemSelect}>
 					<mwc-icon slot="graphic">remove_circle</mwc-icon>
 					Remove from queue
 				</mwc-list-item>
