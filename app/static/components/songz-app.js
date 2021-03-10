@@ -228,13 +228,25 @@ export class SongZApp extends LitElement {
 	async removeSongFromQueue(i) {
 		// Remove the song.
 		this.queue.splice(i, 1);
-		if (i === this.queuePosition) {
+		
+		// If the song was removed before the queue position, decrement the queue position.
+		var oldQueuePosition = this.queuePosition;
+		if (i <= this.queuePosition) {
+			this.queuePosition--;
+		}
+		
+		if (i === oldQueuePosition) {
 			// If the song was playing, go to the next song.
 			await this.pauseSong();
-			this.queuePosition--;
 			this.nextSong();
-		} else if (i === this.queuePosition + 1 && this.queuePosition + 1 < this.queue.length) {
-			// If the song was next, and not last, queue up the new next song.
+		} else if (i === oldQueuePosition + 1 && this.queuePosition + 1 < this.queue.length) {
+			// If the song was next, and not last, preload the new next song.
+			this.loadSong(this.inactivePlayer, this.queue[this.queuePosition + 1]);
+		}
+		
+		// Reassign the array so it will rerender.
+		this.queue = [...this.queue];
+	}
 	
 	/**
 	 * Add a song to the queue.
