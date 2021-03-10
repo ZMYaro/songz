@@ -128,11 +128,11 @@ export class SongZSongList extends LitElement {
 					<mwc-icon slot="graphic">play_arrow</mwc-icon>
 					Play
 				</mwc-list-item>
-				<mwc-list-item graphic="icon" @click=${() => alert('Not yet implemented.')}>
+				<mwc-list-item graphic="icon" data-action="play-next" @click=${this.handleMenuItemSelect}>
 					<mwc-icon slot="graphic">playlist_play</mwc-icon>
 					Play next
 				</mwc-list-item>
-				<mwc-list-item graphic="icon" @click=${() => alert('Not yet implemented.')}>
+				<mwc-list-item graphic="icon" data-action="add-to-queue" @click=${this.handleMenuItemSelect}>
 					<mwc-icon slot="graphic">queue_music</mwc-icon>
 					Add to queue
 				</mwc-list-item>

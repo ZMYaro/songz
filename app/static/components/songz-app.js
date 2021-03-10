@@ -213,7 +213,7 @@ export class SongZApp extends LitElement {
 		var song = this.queue.splice(i, 1)[0];
 		// Insert it at the new position.
 		this.queue.splice(this.queuePosition + 1, 0, song);
-		// Load it as the next song.
+		// Preload it as the next song.
 		this.loadSong(this.inactivePlayer, this.queue[this.queuePosition + 1]);
 		
 		// Reassign the array so it will rerender.
@@ -235,6 +235,20 @@ export class SongZApp extends LitElement {
 			this.nextSong();
 		} else if (i === this.queuePosition + 1 && this.queuePosition + 1 < this.queue.length) {
 			// If the song was next, and not last, queue up the new next song.
+	
+	/**
+	 * Add a song to the queue.
+	 * @param {Object} i - The index from the main view list to add
+	 * @param {Boolean} next - Whether the song should be added next, rather than at the end.
+	 */
+	addSongToQueue(i, next) {
+		// Insert the song at the appropriate position.
+		var insertionIndex = (next ? this.queuePosition + 1 : this.queue.length),
+			song = this.mainView.songList[i];
+		this.queue.splice(insertionIndex, 0, song);
+		
+		// If it was added next (explicitly or not), preload it.
+		if (insertionIndex === this.queuePosition + 1) {
 			this.loadSong(this.inactivePlayer, this.queue[this.queuePosition + 1]);
 		}
 		
@@ -304,6 +318,8 @@ export class SongZApp extends LitElement {
 				</app-drawer>
 				<songz-main-view
 					@play-now="${(ev) => {this.queue = this.mainView.songList; this.queuePosition = -1; this.playSong(ev.detail);}}"
+					@play-next="${(ev) => this.addSongToQueue(ev.detail, true)}"
+					@add-to-queue="${(ev) => this.addSongToQueue(ev.detail, false)}">
 				</songz-main-view>
 			</app-drawer-layout>
 			<songz-player
