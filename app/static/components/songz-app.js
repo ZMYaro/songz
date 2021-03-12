@@ -325,13 +325,17 @@ export class SongZApp extends LitElement {
 						activeIndex="${this.queuePosition}"
 						@queue-play-now="${(ev) => this.playSong(ev.detail)}"
 						@queue-play-next="${(ev) => this.moveSongNext(ev.detail)}"
-						@queue-remove="${(ev) => this.removeSongFromQueue(ev.detail)}">
+						@queue-remove="${(ev) => this.removeSongFromQueue(ev.detail)}"
+						@open-album="${(ev) => location.hash = 'albums/' + this.queue[ev.detail].album._id}"
+						@open-artist="${(ev) => location.hash = 'artists/' + this.queue[ev.detail].artist[0]._id}">
 					</songz-queue>
 				</app-drawer>
 				<songz-main-view
 					@play-now="${(ev) => {this.queue = this.mainView.songList; this.queuePosition = -1; this.playSong(ev.detail);}}"
 					@play-next="${(ev) => this.addSongToQueue(ev.detail, true)}"
-					@add-to-queue="${(ev) => this.addSongToQueue(ev.detail, false)}">
+					@add-to-queue="${(ev) => this.addSongToQueue(ev.detail, false)}"
+					@open-album="${(ev) => location.hash = 'albums/' + this.mainView.songList[ev.detail].album._id}"
+					@open-artist="${(ev) => location.hash = 'artists/' + this.mainView.songList[ev.detail].artist[0]._id}">
 				</songz-main-view>
 			</app-drawer-layout>
 			<songz-player

@@ -131,11 +131,11 @@ export class SongZSongList extends LitElement {
 					<mwc-icon slot="graphic">playlist_add</mwc-icon>
 					Add to playlist
 				</mwc-list-item>
-				<mwc-list-item graphic="icon" @click=${() => alert('Not yet implemented.')}>
+				<mwc-list-item graphic="icon" value="open-album">
 					<mwc-icon slot="graphic">album</mwc-icon>
 					Go to album
 				</mwc-list-item>
-				<mwc-list-item graphic="icon" @click=${() => alert('Not yet implemented.')}>
+				<mwc-list-item graphic="icon" value="open-artist">
 					<mwc-icon slot="graphic">person</mwc-icon>
 					<!--<mwc-icon slot="graphic">account_music</mwc-icon>-->
 					Go to artist
