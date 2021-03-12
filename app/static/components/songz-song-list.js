@@ -10,7 +10,7 @@ import 'https://unpkg.com/@material/mwc-icon-button@0.20.0/mwc-icon-button.js?mo
 //import '@material/mwc-icon';
 import 'https://unpkg.com/@material/mwc-icon@0.20.0/mwc-icon.js?module';
 
-import {formatAlbum, formatArtist, formatDuration} from '../scripts/utils.js';
+import {formatAlbum, formatArtist, formatDuration, handleMenuButton, handleMenuItemSelect} from '../scripts/utils.js';
 
 export class SongZSongList extends LitElement {
 	
@@ -52,28 +52,18 @@ export class SongZSongList extends LitElement {
 	 * @param {MouseEvent} ev
 	 */
 	handleMenuButton(ev) {
-		ev.stopPropagation();
 		// Tell the menu which song it is open for.
 		this.songMenu.dataset.index = ev.currentTarget.parentElement.parentElement.dataset.index;
-		// Open the menu from the button.
-		this.songMenu.anchor = ev.currentTarget;
-		this.songMenu.show();
+		
+		handleMenuButton(ev, this.songMenu);
 	}
 	
 	/**
 	 * Send an event from the song list in response to a song menu item being clicked.
-	 * @param {MouseEvent} ev
+	 * @param {CustomEvent} ev - The onselected event from the menu
 	 */
 	handleMenuItemSelect(ev) {
-		// Get the action and song index recorded in data attributes.
-		var action = ev.currentTarget.dataset.action,
-			index = parseInt(ev.currentTarget.parentElement.dataset.index);
-		// Send them to the app as an event from the component.
-		this.dispatchEvent(new CustomEvent(action, {
-			detail: index,
-			bubbles: true,
-			composed: true
-		}));
+		handleMenuItemSelect(ev, this);
 	}
 	
 	/**
@@ -123,16 +113,16 @@ export class SongZSongList extends LitElement {
 					`)}
 				</tbody>
 			</table>
-			<mwc-menu fixed wrapFocus>
-				<mwc-list-item graphic="icon" data-action="play-now" @click=${this.handleMenuItemSelect}>
+			<mwc-menu fixed wrapFocus @action="${this.handleMenuItemSelect}">
+				<mwc-list-item graphic="icon" value="play-now">
 					<mwc-icon slot="graphic">play_arrow</mwc-icon>
 					Play
 				</mwc-list-item>
-				<mwc-list-item graphic="icon" data-action="play-next" @click=${this.handleMenuItemSelect}>
+				<mwc-list-item graphic="icon" value="play-next">
 					<mwc-icon slot="graphic">playlist_play</mwc-icon>
 					Play next
 				</mwc-list-item>
-				<mwc-list-item graphic="icon" data-action="add-to-queue" @click=${this.handleMenuItemSelect}>
+				<mwc-list-item graphic="icon" value="add-to-queue">
 					<mwc-icon slot="graphic">queue_music</mwc-icon>
 					Add to queue
 				</mwc-list-item>

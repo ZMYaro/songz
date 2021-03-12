@@ -66,3 +66,42 @@ export function formatDuration(duration) {
 export function toGDriveURL(gDriveId) {
 	return `https://drive.google.com/uc?export=view&id=${gDriveId}`;
 }
+
+/**
+ * Open a menu when its menu button is clicked.
+ * @param {MouseEvent} ev
+ * @param {Menu} menu - The menu to be opened by the button
+ */
+export function handleMenuButton(ev, menu) {
+	ev.stopPropagation();
+	
+	// Open the menu from the button.
+	menu.anchor = ev.currentTarget;
+	menu.show();
+}
+
+/**
+ * Send an event from the queue in response to a song menu item being clicked.
+ * @param {CustomEvent} ev - The onselected event from the menu
+ * @param {HTMLElement} component - The custom element to emit the event from
+ */
+export function handleMenuItemSelect(ev, component) {
+	if (!ev.currentTarget.selected) {
+		return;
+	}
+	
+	// Get the action and song index recorded in data attributes.
+	var action = ev.currentTarget.selected.value,
+		index = parseInt(ev.currentTarget.dataset.index);
+	
+	if (!action) {
+		return;
+	}
+	
+	// Send them to the app as an event from the component.
+	component.dispatchEvent(new CustomEvent(action, {
+		detail: index,
+		bubbles: true,
+		composed: true
+	}));
+}
