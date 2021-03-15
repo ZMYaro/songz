@@ -5,6 +5,7 @@ import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.4.0/lit-ele
 //import '@polymer/app-layout'; // Needed for <app-drawer> and <app-drawer-layout>.
 import 'https://unpkg.com/@polymer/app-layout@3.1.0/app-layout.js?module';
 
+import './songz-playlist-list.js';
 import './songz-song-list.js';
 
 export class SongZMainView extends LitElement {
@@ -66,6 +67,9 @@ export class SongZMainView extends LitElement {
 		} else if (location.hash === '#songs') {
 			this.mainView = 'search';
 			
+		} else if (location.hash === '#playlists') {
+			this.mainView = 'playlists';
+			
 		} else {
 			// If there is no valid route, send the user to the home view.
 			location.hash = '#home';
@@ -91,6 +95,11 @@ export class SongZMainView extends LitElement {
 		var mainViewContents;
 		
 		switch (this.mainView) {
+			case 'playlists':
+				mainViewContents = html`
+					<songz-playlist-list></songz-playlist-list>
+				`;
+				break;
 			case 'search':
 				mainViewContents = html`
 					<songz-song-list

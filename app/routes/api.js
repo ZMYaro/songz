@@ -5,14 +5,17 @@ const bodyParser = require('body-parser'),
 	Album = require('../models/album.js'),
 	Artist = require('../models/artist.js'),
 	Genre = require('../models/genre.js'),
+	Playlist = require('../models/playlist.js'),
+	PlaylistItem = require('../models/playlist_item.js'),
 	Song = require('../models/song.js');
 
 const router = express.Router();
 
 function handleError(res, message, code) {
-	console.error(message);
-	res.status(code || 500);
-	res.json({ error: message });
+	code = code ?? 500;
+	console.error(`Error ${code}: ${message}`);
+	res.status(code);
+	res.json({ status: code, error: message });
 }
 
 /**
@@ -123,5 +126,33 @@ router.route('/artists/:artistId')
 		res.json(resData);
 	});
 
+router.route('/playlists')
+	/** Get all playlists. */
+	.get(async function (req, res) {
+		var playlists = await Playlist.find({});
+		res.json(playlists);
+	})
+	/**
+	 * Create a new playlist.
+	 * title - The title of the playlist
+	 * [description] - Description for the playlist
+	 */
+	.post(async function (req, res) {
+		console.log('Creating playlist...', req.body);
+		var title = req.body['title']?.trim(),
+			description = req.body['description']?.trim();
+		
+		if (!title) {
+			handleError(res, 'Missing title.', 422);
+			return;
+		}
+		
+		var newPlaylist = new Playlist({
+			title: title,
+			description: description
+		});
+		await newPlaylist.save();
+		res.json(newPlaylist);
+	});
 
 module.exports = router;
