@@ -48,17 +48,19 @@ export class SongZMainView extends LitElement {
 		this.mainView = 'loading';
 		
 		if (location.hash === '#home') {
-			this.songList = await this.loadSongs('songs');
+			this.songList = await this.getAPI('songs');
 			this.mainView = 'search'; // TODO: Replace this once home view exists
 			
 		} else if (location.hash.match(/^#albums\/[0-9a-f]+$/)) {
-			let albumId = location.hash.match(/^#albums\/([0-9a-f]+)$/)[1];
-			this.songList = await this.loadSongs(`albums/${albumId}`);
+			let albumId = location.hash.match(/^#albums\/([0-9a-f]+)$/)[1],
+				album = await this.getAPI(`albums/${albumId}`);
+			this.songList = album.songs;
 			this.mainView = 'search'; // TODO: Replace this once album view exists
 			
 		} else if (location.hash.match(/^#artists\/[0-9a-f]+$/)) {
-			let artistsId = location.hash.match(/^#artists\/([0-9a-f]+)$/)[1];
-			this.songList = await this.loadSongs(`artists/${artistsId}`);
+			let artistId = location.hash.match(/^#artists\/([0-9a-f]+)$/)[1],
+				artist = await this.getAPI(`artists/${artistId}`);
+			this.songList = artist.songs;
 			this.mainView = 'search'; // TODO: Replace this once artist view exists
 			
 		} else if (location.hash === '#songs') {
@@ -71,15 +73,15 @@ export class SongZMainView extends LitElement {
 	}
 	
 	/**
-	 * Load the song list from a given API endpoint.
+	 * Get from a given API endpoint.
 	 * @param {String} url - The URL for the API endpoint
-	 * @returns {Promise<Array<Object>>} Resolves with the sorted list of songs
+	 * @returns {Promise<Array<Object>>} Resolves with the data and sorted list of songs
 	 */
-	async loadSongs(url) {
-		let songsRes = await fetch(`/api/${url}`),
-			songs = await songsRes.json();
+	async getAPI(url) {
+		let apiRes = await fetch(`/api/${url}`),
+			data = await apiRes.json();
 		// TODO: Default sorting – album, then disc #, then track #
-		return songs;
+		return data;
 	}
 	
 	/**

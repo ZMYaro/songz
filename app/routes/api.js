@@ -108,8 +108,9 @@ router.route('/albums/:albumId')
 	.get(async function (req, res) {
 		var albumId = req.params.albumId,
 			album = await Album.findById(albumId),
-			songs = await populateSongQuery(Song.find({ album: album }));
-		res.json(songs);
+			songs = await populateSongQuery(Song.find({ album: album })),
+			resData = Object.assign({ songs: songs }, album);
+		res.json(resData);
 	});
 
 router.route('/artists/:artistId')
@@ -117,8 +118,9 @@ router.route('/artists/:artistId')
 	.get(async function (req, res) {
 		var artistId = req.params.artistId,
 			artist = await Artist.findById(artistId),
-			songs = await populateSongQuery(Song.find({ artist: artist }));
-		res.json(songs);
+			songs = await populateSongQuery(Song.find({ artist: artist })),
+			resData = Object.assign({ songs: songs }, artist);
+		res.json(resData);
 	});
 
 
