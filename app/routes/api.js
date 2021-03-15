@@ -36,10 +36,29 @@ router.all((req, res, next) => {
 });
 
 router.route('/songs')
+	/** Get the list of songs in the library. */
 	.get(async function (req, res) {
 		var songs = await populateSongQuery(Song.find({}));
 		res.json(songs);
 	})
+	/**
+	 * Add a new song to the library.
+	 * [gdrive-flac] - The GDrive ID of the song's FLAC audio file
+	 * [gdrive-m4a] - The GDrive ID of the song's M4A audio file
+	 * [gdrive-mp3] - The GDrive ID of the song's MP3 audio file
+	 * [gdrive-ogg] - The GDrive ID of the song's OGG audio file
+	 * [gdrive-art] - The GDrive ID of the song's album art file
+	 * title - The song's title
+	 * [duration] - The duration of the song, in milliseconds
+	 * [track-no] - The track number of the song on its disc
+	 * [disc-no] - The disc number of the song
+	 * [year] - The year the song was released
+	 * [genre] - The name of the song's genre
+	 * [artist] - The name(s) of the song's artist(s), semicolon-separated
+	 * [composer] - The name(s) of the song's composer(s), semicolon-separated
+	 * [album-title] - The title of the album the song belongs to
+	 * [album-artist] - The album artist of the album the song belongs to
+	 */
 	.post(async function (req, res) {
 		console.log('\nAdding new song:');
 		console.dir(JSON.stringify(req.body));
@@ -85,6 +104,7 @@ router.route('/songs')
 	});
 
 router.route('/albums/:albumId')
+	/** Get the album and its songs. */
 	.get(async function (req, res) {
 		var albumId = req.params.albumId,
 			album = await Album.findById(albumId),
@@ -93,6 +113,7 @@ router.route('/albums/:albumId')
 	});
 
 router.route('/artists/:artistId')
+	/** Get the artist and all songs by or contributed to by xem. */
 	.get(async function (req, res) {
 		var artistId = req.params.artistId,
 			artist = await Artist.findById(artistId),
