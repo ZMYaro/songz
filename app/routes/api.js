@@ -123,9 +123,7 @@ router.route('/playlists')
 		var title = req.body['title']?.trim(),
 			description = req.body['description']?.trim();
 		
-		if (!title) {
-			return handleError(res, 'Missing title.', 422);
-		}
+		if (!title) { return handleError(res, 'Missing title.', 422); }
 		
 		var newPlaylist = new Playlist({
 			title: title,
@@ -139,16 +137,10 @@ router.route('/playlists/:playlistId')
 	/** Get a playlist's songs. */
 	.get(async function (req, res) {
 		var playlistId = req.params.playlistId;
-		
-		if (!mongoose.Types.ObjectId.isValid(playlistId)) {
-			return handleError(res, 'Playlist not found.', 404);
-		}
+		if (!mongoose.Types.ObjectId.isValid(playlistId)) { return handleError(res, 'Playlist not found.', 404); }
 		
 		var playlist = await Playlist.findByIdWithSongs(playlistId);
-		
-		if (!playlist) {
-			return handleError(res, 'Playlist not found.', 404);
-		}
+		if (!playlist) { return handleError(res, 'Playlist not found.', 404); }
 		
 		res.json(playlist);
 	})
@@ -160,25 +152,15 @@ router.route('/playlists/:playlistId')
 		var playlistId = req.params.playlistId,
 			songId = req.body['song-id'];
 		
-		if (!songId) {
-			return handleError(res, 'Missing song ID.', 422);
-		}
-		if (!mongoose.Types.ObjectId.isValid(songId)) {
-			return handleError(res, 'Song not found.', 404);
-		}
-		if (!mongoose.Types.ObjectId.isValid(playlistId)) {
-			return handleError(res, 'Playlist not found.', 404);
-		}
+		if (!songId) { return handleError(res, 'Missing song ID.', 422); }
+		if (!mongoose.Types.ObjectId.isValid(songId)) { return handleError(res, 'Song not found.', 404); }
+		if (!mongoose.Types.ObjectId.isValid(playlistId)) { return handleError(res, 'Playlist not found.', 404); }
 		
 		var playlist = await Playlist.findById(playlistId).exec(),
 			song = await Song.findById(songId).exec();
 		
-		if (!playlist) {
-			return handleError(res, 'Playlist not found.', 404);
-		}
-		if (!song) {
-			return handleError(res, 'Song not found.', 404);
-		}
+		if (!playlist) { return handleError(res, 'Playlist not found.', 404); }
+		if (!song) { return handleError(res, 'Song not found.', 404); }
 		
 		var lastItem = await PlaylistItem.findOne({ playlist: playlist, nextItem: null }),
 			newItem = new PlaylistItem({ playlist: playlist._id, song: song._id });
