@@ -1,10 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose'),
-	Schema = mongoose.Schema,
-	Album = require('./album'),
-	Artist = require('./artist'),
-	Genre = require('./genre');
+	Schema = mongoose.Schema;
 
 const songSchema = new Schema({
 	gDriveFLAC: String,
@@ -19,19 +16,19 @@ const songSchema = new Schema({
 	year: Number,
 	artist: [{
 		type: Schema.Types.ObjectId,
-		ref: Artist.modelName
+		ref: 'Artist'
 	}],
 	composer: [{
 		type: Schema.Types.ObjectId,
-		ref: Artist.modelName
+		ref: 'Artist'
 	}],
 	album: {
 		type: Schema.Types.ObjectId,
-		ref: Album.modelName
+		ref: 'Album'
 	},
 	genre: {
 		type: Schema.Types.ObjectId,
-		ref: Genre.modelName
+		ref: 'Genre'
 	}
 });
 

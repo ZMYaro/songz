@@ -17,7 +17,7 @@ const playlistSchema = new Schema({
 /**
  * Find a playlist by its ID and return it with its songs.
  * @param {String} id - The playlist's ID
- * @returns {Object}
+ * @returns {Promise<Object>} Resolves with an object containing the playlist's document and a `songs` array of song documents
  */
 playlistSchema.statics.findByIdWithSongs = async function (id) {
 	const MAX_DEPTH = 1024; // TODO: Lower this when things start getting loaded in chunks.
@@ -44,11 +44,9 @@ playlistSchema.statics.findByIdWithSongs = async function (id) {
 	
 	// Get the playlist and make a basic object version to add the items to and return.
 	var playlist = await this.findById(id);
-	if (!playlist) {
-		return;
-	}
-	var returnablePlaylist = playlist.toObject();
-	returnablePlaylist.songs = [];
+	if (!playlist) { return; }
+	
+	var returnablePlaylist = Object.assign({ songs: [] }, playlist);
 	
 	// Load the first item and then start recursively loading the rest of the list.
 	await playlist.populate('firstItem').execPopulate();

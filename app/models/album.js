@@ -2,8 +2,10 @@
 
 const mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
-	Artist = require('./artist'),
-	Genre = require('./genre');
+	Artist = require('./artist.js'),
+	Genre = require('./genre.js'),
+	Song = require('./song.js'),
+	populateSong = require('../utils.js').populateSong;
 
 const albumSchema = new Schema({
 	title: String,
@@ -22,7 +24,7 @@ const albumSchema = new Schema({
  * Find an album with the given title and artist, or create it if it does not exist in the database.
  * @param {String} title - The exact title of the album
  * @param {Array<String>} [artistName] - The exact name of the album artist
- * @returns {Album}
+ * @returns {Promise<Album>}
  */
 albumSchema.statics.findOrCreateOne = async function (title, artistNames) {
 	var fields = {
@@ -37,6 +39,20 @@ albumSchema.statics.findOrCreateOne = async function (title, artistNames) {
 		upsert: true
 	});
 	return album;
+};
+
+/**
+ * Find a album by its ID and return it with its songs.
+ * @param {String} id - The album's ID
+ * @returns {Promise<Object>} Resolves with an object containing the album's document and a `songs` array of song documents
+ */
+albumSchema.statics.findByIdWithSongs = async function (id) {
+	var album = await this.findById(id);
+	if (!album) { return; }
+	
+	var songs = await populateSong(Song.find({ album: album })),
+		returnableAlbum = Object.assign({ songs: songs }, album);
+	return returnableAlbum;
 };
 
 const Album = mongoose.model('Album', albumSchema);

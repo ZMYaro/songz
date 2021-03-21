@@ -91,21 +91,25 @@ router.route('/songs')
 router.route('/albums/:albumId')
 	/** Get the album and its songs. */
 	.get(async function (req, res) {
-		var albumId = req.params.albumId,
-			album = await Album.findById(albumId),
-			songs = await populateSong(Song.find({ album: album })),
-			resData = Object.assign({ songs: songs }, album);
-		res.json(resData);
+		var albumId = req.params.albumId;
+		if (!mongoose.Types.ObjectId.isValid(albumId)) { return handleError(res, 'Album not found.', 404); }
+		
+		var album = await Album.findByIdWithSongs(albumId);
+		if (!album) { return handleError(res, 'Album not found.', 404); }
+		
+		res.json(album);
 	});
 
 router.route('/artists/:artistId')
 	/** Get the artist and all songs by or contributed to by xem. */
 	.get(async function (req, res) {
-		var artistId = req.params.artistId,
-			artist = await Artist.findById(artistId),
-			songs = await populateSong(Song.find({ artist: artist })),
-			resData = Object.assign({ songs: songs }, artist);
-		res.json(resData);
+		var artistId = req.params.artistId;
+		if (!mongoose.Types.ObjectId.isValid(artistId)) { return handleError(res, 'Artist not found.', 404); }
+		
+		var artist = await Artist.findByIdWithSongs(artistId);
+		if (!artist) { return handleError(res, 'Artist not found.', 404); }
+		
+		res.json(artist);
 	});
 
 router.route('/playlists')
