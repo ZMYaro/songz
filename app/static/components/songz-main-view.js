@@ -9,6 +9,11 @@ export class SongZMainView extends LitElement {
 	
 	static get styles() {
 		return css`
+			@media (min-width: 640px) {
+				:host {
+					--mdc-top-app-bar-width: calc(100% - var(--app-drawer-width));
+				}
+			}
 			songz-playlists-list,
 			songz-playlist {
 				display: block;

@@ -56,14 +56,13 @@ export class SongZPlaylist extends LitElement {
 	 */
 	render() {
 		return html`
-			<a href="#playlists" aria-label="Back">&larr;</a>
-			<button @click="${this.addSongToPlaylist}">Add song</button>
-			<br />
-			<h1>${this.playlist?.title}</h1>
+			<mwc-top-app-bar-fixed>
+				<mwc-icon-button icon="arrow_back" slot="navigationIcon" @click="${() => location.href = '#playlists'}"></mwc-icon-button>
+				<span role="heading" aria-level="1" slot="title">${this.playlist?.title}</span>
+				<button slot="actionItems" @click="${this.addSongToPlaylist}">Add song</button>
+			</mwc-top-app-bar-fixed>
 			<p>${this.playlist?.description || ''}</p>
-			<songz-song-list
-				.songs="${this.playlist?.songs}"
-			</songz-song-list>
+			<songz-song-list .songs="${this.playlist?.songs}"></songz-song-list>
 		`;
 	}
 }
