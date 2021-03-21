@@ -5,7 +5,8 @@ import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.4.0/lit-ele
 //import '@polymer/app-layout'; // Needed for <app-drawer> and <app-drawer-layout>.
 import 'https://unpkg.com/@polymer/app-layout@3.1.0/app-layout.js?module';
 
-import './songz-playlist-list.js';
+import './songz-playlists-list.js';
+import './songz-playlist.js';
 import './songz-song-list.js';
 
 export class SongZMainView extends LitElement {
@@ -15,6 +16,7 @@ export class SongZMainView extends LitElement {
 	static get properties() {
 		return {
 			view: { type: String, attribute: false },
+			viewContentId: { type: String, attribute: false },
 			songList: { type: Array, attribute: false }
 		};
 	}
@@ -46,29 +48,33 @@ export class SongZMainView extends LitElement {
 	 * Handle routing based on the hash.
 	 */
 	async handleRouting() {
-		this.mainView = 'loading';
+		this.view = 'loading';
 		
 		if (location.hash === '#home') {
 			this.songList = await this.getAPI('songs');
-			this.mainView = 'search'; // TODO: Replace this once home view exists
+			this.view = 'search'; // TODO: Replace this once home view exists
 			
 		} else if (location.hash.match(/^#albums\/[0-9a-f]+$/)) {
 			let albumId = location.hash.match(/^#albums\/([0-9a-f]+)$/)[1],
 				album = await this.getAPI(`albums/${albumId}`);
 			this.songList = album.songs;
-			this.mainView = 'search'; // TODO: Replace this once album view exists
+			this.view = 'search'; // TODO: Replace this once album view exists
 			
 		} else if (location.hash.match(/^#artists\/[0-9a-f]+$/)) {
 			let artistId = location.hash.match(/^#artists\/([0-9a-f]+)$/)[1],
 				artist = await this.getAPI(`artists/${artistId}`);
 			this.songList = artist.songs;
-			this.mainView = 'search'; // TODO: Replace this once artist view exists
+			this.view = 'search'; // TODO: Replace this once artist view exists
 			
 		} else if (location.hash === '#songs') {
-			this.mainView = 'search';
+			this.view = 'search';
 			
 		} else if (location.hash === '#playlists') {
-			this.mainView = 'playlists';
+			this.view = 'playlists';
+			
+		} else if (location.hash.match(/^#playlists\/[0-9a-f]+$/)) {
+			this.view = 'playlist';
+			this.viewContentId = location.hash.match(/^#playlists\/([0-9a-f]+)$/)[1];
 			
 		} else {
 			// If there is no valid route, send the user to the home view.
@@ -94,18 +100,15 @@ export class SongZMainView extends LitElement {
 	render() {
 		var mainViewContents;
 		
-		switch (this.mainView) {
+		switch (this.view) {
 			case 'playlists':
-				mainViewContents = html`
-					<songz-playlist-list></songz-playlist-list>
-				`;
+				mainViewContents = html`<songz-playlists-list></songz-playlists-list>`;
+				break;
+			case 'playlist':
+				mainViewContents = html`<songz-playlist playlistid="${this.viewContentId}"></songz-playlist>`;
 				break;
 			case 'search':
-				mainViewContents = html`
-					<songz-song-list
-						.songs="${this.songList}"
-					</songz-song-list>
-				`;
+				mainViewContents = html`<songz-song-list .songs="${this.songList}"></songz-song-list>`;
 				break;
 			default:
 				mainViewContents = html`Loading...`;

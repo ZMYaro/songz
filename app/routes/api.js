@@ -2,34 +2,16 @@
 
 const bodyParser = require('body-parser'),
 	express = require('express'),
+	mongoose = require('mongoose'),
 	Album = require('../models/album.js'),
 	Artist = require('../models/artist.js'),
 	Genre = require('../models/genre.js'),
 	Playlist = require('../models/playlist.js'),
 	PlaylistItem = require('../models/playlist_item.js'),
-	Song = require('../models/song.js');
+	Song = require('../models/song.js'),
+	{ handleError, populateSong } = require('../utils.js');
 
 const router = express.Router();
-
-function handleError(res, message, code) {
-	code = code ?? 500;
-	console.error(`Error ${code}: ${message}`);
-	res.status(code);
-	res.json({ status: code, error: message });
-}
-
-/**
- * Populate all the fields in a song query.
- * @param {Query} songs - The song query to populate
- * @returns {Query} The populated query
- */
-function populateSongQuery(songs) {
-	return songs
-		.populate({path: 'album', populate: {path: 'artist'}})
-		.populate('artist')
-		.populate('composer')
-		.populate('genre');
-}
 
 router.use(bodyParser.urlencoded({ extended: false }));
 
@@ -41,7 +23,7 @@ router.all((req, res, next) => {
 router.route('/songs')
 	/** Get the list of songs in the library. */
 	.get(async function (req, res) {
-		var songs = await populateSongQuery(Song.find({}));
+		var songs = await populateSong(Song.find({}));
 		res.json(songs);
 	})
 	/**
@@ -111,7 +93,7 @@ router.route('/albums/:albumId')
 	.get(async function (req, res) {
 		var albumId = req.params.albumId,
 			album = await Album.findById(albumId),
-			songs = await populateSongQuery(Song.find({ album: album })),
+			songs = await populateSong(Song.find({ album: album })),
 			resData = Object.assign({ songs: songs }, album);
 		res.json(resData);
 	});
@@ -121,7 +103,7 @@ router.route('/artists/:artistId')
 	.get(async function (req, res) {
 		var artistId = req.params.artistId,
 			artist = await Artist.findById(artistId),
-			songs = await populateSongQuery(Song.find({ artist: artist })),
+			songs = await populateSong(Song.find({ artist: artist })),
 			resData = Object.assign({ songs: songs }, artist);
 		res.json(resData);
 	});
@@ -138,13 +120,11 @@ router.route('/playlists')
 	 * [description] - Description for the playlist
 	 */
 	.post(async function (req, res) {
-		console.log('Creating playlist...', req.body);
 		var title = req.body['title']?.trim(),
 			description = req.body['description']?.trim();
 		
 		if (!title) {
-			handleError(res, 'Missing title.', 422);
-			return;
+			return handleError(res, 'Missing title.', 422);
 		}
 		
 		var newPlaylist = new Playlist({
@@ -153,6 +133,78 @@ router.route('/playlists')
 		});
 		await newPlaylist.save();
 		res.json(newPlaylist);
+	});
+
+router.route('/playlists/:playlistId')
+	/** Get a playlist's songs. */
+	.get(async function (req, res) {
+		var playlistId = req.params.playlistId;
+		
+		if (!mongoose.Types.ObjectId.isValid(playlistId)) {
+			return handleError(res, 'Playlist not found.', 404);
+		}
+		
+		var playlist = await Playlist.findByIdWithSongs(playlistId);
+		
+		if (!playlist) {
+			return handleError(res, 'Playlist not found.', 404);
+		}
+		
+		res.json(playlist);
+	})
+	/**
+	 * Add a song to the playlist.
+	 * song-id - The ID of the song to add
+	 */
+	.post(async function (req, res) {
+		var playlistId = req.params.playlistId,
+			songId = req.body['song-id'];
+		
+		if (!songId) {
+			return handleError(res, 'Missing song ID.', 422);
+		}
+		if (!mongoose.Types.ObjectId.isValid(songId)) {
+			return handleError(res, 'Song not found.', 404);
+		}
+		if (!mongoose.Types.ObjectId.isValid(playlistId)) {
+			return handleError(res, 'Playlist not found.', 404);
+		}
+		
+		var playlist = await Playlist.findById(playlistId).exec(),
+			song = await Song.findById(songId).exec();
+		
+		if (!playlist) {
+			return handleError(res, 'Playlist not found.', 404);
+		}
+		if (!song) {
+			return handleError(res, 'Song not found.', 404);
+		}
+		
+		var lastItem = await PlaylistItem.findOne({ playlist: playlist, nextItem: null }),
+			newItem = new PlaylistItem({ playlist: playlist._id, song: song._id });
+		
+		if (lastItem) {
+			lastItem.nextItem = newItem._id;
+		} else {
+			// If the playlist is empty, make this the first item.
+			playlist.firstItem = newItem._id;
+		}
+		
+		await Promise.all([
+			(lastItem || playlist).save(),
+			newItem.save()
+		]);
+		
+		await populateSong(song).execPopulate();
+		var returnableSong = song.toObject();
+		returnableSong.itemId = newItem._id;
+		res.json(returnableSong);
+	})
+	.patch(async function (req, res) {
+		// TODO: Move song in playlist.
+	})
+	.delete(async function (req, res) {
+		// TODO: Remove song from playlist.
 	});
 
 module.exports = router;

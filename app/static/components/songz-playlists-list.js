@@ -3,7 +3,7 @@
 //import {LitElement, html} from 'lit-element';
 import {LitElement, html} from 'https://unpkg.com/lit-element@2.4.0/lit-element.js?module';
 
-export class SongZPlaylistList extends LitElement {
+export class SongZPlaylistsList extends LitElement {
 	
 	static get properties() {
 		return {
@@ -31,7 +31,7 @@ export class SongZPlaylistList extends LitElement {
 	// TEMP
 	async createNewPlaylist() {
 		var title = prompt('Playlist title?');
-		if (!title) {
+		if (!title?.trim()) {
 			return;
 		}
 		
@@ -68,4 +68,4 @@ export class SongZPlaylistList extends LitElement {
 	}
 }
 
-window.customElements.define('songz-playlist-list', SongZPlaylistList);
+window.customElements.define('songz-playlists-list', SongZPlaylistsList);
