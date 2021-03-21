@@ -2,12 +2,6 @@
 
 //import {LitElement, html, css} from 'lit-element';
 import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.4.0/lit-element.js?module';
-//import '@polymer/app-layout'; // Needed for <app-drawer> and <app-drawer-layout>.
-import 'https://unpkg.com/@polymer/app-layout@3.1.0/app-layout.js?module';
-
-import './songz-playlists-list.js';
-import './songz-playlist.js';
-import './songz-song-list.js';
 
 export class SongZMainView extends LitElement {
 	

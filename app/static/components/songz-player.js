@@ -2,12 +2,7 @@
 
 //import {LitElement, html, css, unsafeCSS} from 'lit-element';
 import {LitElement, html, css, unsafeCSS} from 'https://unpkg.com/lit-element@2.4.0/lit-element.js?module';
-//import '@material/mwc-fab';
-import 'https://unpkg.com/@material/mwc-fab@0.20.0/mwc-fab.js?module';
-//import '@material/mwc-icon-button';
-import 'https://unpkg.com/@material/mwc-icon-button@0.20.0/mwc-icon-button.js?module';
 
-import './songz-seek-bar.js';
 import {NARROW_WINDOW_THRESHOLD, PLAYER_HEIGHT_SMALL, PLAYER_HEIGHT_LARGE} from '../scripts/constants.js';
 
 export class SongZPlayer extends LitElement {

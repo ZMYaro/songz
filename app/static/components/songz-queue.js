@@ -2,16 +2,6 @@
 
 //import {LitElement, html, css, unsafeCSS}, css from 'lit-element';
 import {LitElement, html, css, unsafeCSS} from 'https://unpkg.com/lit-element@2.4.0/lit-element.js?module';
-//import '@material/mwc-icon';
-import 'https://unpkg.com/@material/mwc-icon@0.20.0/mwc-icon.js?module';
-//import '@material/mwc-icon-button';
-import 'https://unpkg.com/@material/mwc-icon-button@0.20.0/mwc-icon-button.js?module';
-//import '@material/mwc-list';
-//import '@material/mwc-list/mwc-list-item';
-import 'https://unpkg.com/@material/mwc-list@0.20.0/mwc-list.js?module';
-import 'https://unpkg.com/@material/mwc-list@0.20.0/mwc-list-item.js?module';
-//import '@material/mwc-menu';
-import 'https://unpkg.com/@material/mwc-menu@0.20.0/mwc-menu.js?module';
 
 import {formatArtist, formatDuration, toGDriveURL, handleMenuButton, handleMenuItemSelect} from '../scripts/utils.js';
 
