@@ -12,6 +12,8 @@ export class SongZPlayer extends LitElement {
 	static get styles() {
 		return css`
 			:host {
+				flex-shrink: 0;
+				
 				display: flex;
 				justify-content: space-between;
 				align-items: center;

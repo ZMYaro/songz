@@ -27,6 +27,7 @@
 			app-drawer-layout {
 				--app-drawer-width: min(320px, calc(100% - 48px));
 				flex-grow: 1;
+				height: calc(100% - 64px); /* PLAYER_HEIGHT_SMALL */
 			}
 			app-drawer {
 				top: 0;
@@ -40,6 +41,9 @@
 					left: 0.125em;
 				}
 			@media (min-width: 640px) {
+				app-drawer-layout {
+					height: calc(100% - 96px); /* PLAYER_HEIGHT_LARGE */
+				}
 				app-drawer {
 					bottom: 96px; /* PLAYER_HEIGHT_LARGE */
 				}

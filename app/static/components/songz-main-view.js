@@ -7,6 +7,17 @@ export class SongZMainView extends LitElement {
 	
 	boundRoutingHandler = this.handleRouting.bind(this);
 	
+	static get styles() {
+		return css`
+			songz-playlists-list,
+			songz-playlist {
+				display: block;
+				height: 100%;
+				overflow: auto;
+			}
+		`;
+	}
+	
 	static get properties() {
 		return {
 			view: { type: String, attribute: false },
@@ -112,14 +123,6 @@ export class SongZMainView extends LitElement {
 		return html`
 			${mainViewContents}
 		`;
-	}
-	
-	/**
-	 * @override
-	 * Prevent the component having a shadow root.
-	 */
-	createRenderRoot() {
-		return this;
 	}
 }
 

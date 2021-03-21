@@ -48,6 +48,7 @@ export class SongZPlaylistsList extends LitElement {
 	 */
 	render() {
 		return html`
+			<songz-main-top-bar selected="playlists"></songz-main-top-bar>
 			<button @click="${this.createNewPlaylist}">Create new playlist</button>
 			<br />
 			${this.playlists.length === 0 ?

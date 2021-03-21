@@ -15,8 +15,15 @@ import 'https://unpkg.com/@material/mwc-list@0.20.0/mwc-list.js?module';
 import 'https://unpkg.com/@material/mwc-list@0.20.0/mwc-list-item.js?module';
 //import '@material/mwc-menu';
 import 'https://unpkg.com/@material/mwc-menu@0.20.0/mwc-menu.js?module';
+//import '@material/mwc-tab-bar';
+import 'https://unpkg.com/@material/mwc-tab-bar@0.20.0/mwc-tab-bar.js?module';
+//import '@material/mwc-tab';
+import 'https://unpkg.com/@material/mwc-tab@0.20.0/mwc-tab.js?module';
+//import '@material/mwc-top-app-bar-fixed';
+import 'https://unpkg.com/@material/mwc-top-app-bar-fixed@0.20.0/mwc-top-app-bar-fixed.js?module';
 
 import '../components/songz-app.js';
+import '../components/songz-main-top-bar.js';
 import '../components/songz-main-view.js';
 import '../components/songz-player.js';
 import '../components/songz-playlist.js';
