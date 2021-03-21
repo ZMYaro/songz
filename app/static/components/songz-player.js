@@ -1,9 +1,9 @@
 'use strict';
 
-//import {LitElement, html, css, unsafeCSS} from 'lit-element';
-import {LitElement, html, css, unsafeCSS} from 'https://unpkg.com/lit-element@2.4.0/lit-element.js?module';
+//import {LitElement, html, css} from 'lit-element';
+import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.4.0/lit-element.js?module';
 
-import {NARROW_WINDOW_THRESHOLD, PLAYER_HEIGHT_SMALL, PLAYER_HEIGHT_LARGE} from '../scripts/constants.js';
+import {NARROW_WINDOW_THRESHOLD} from '../scripts/constants.js';
 
 export class SongZPlayer extends LitElement {
 	
@@ -18,17 +18,12 @@ export class SongZPlayer extends LitElement {
 				justify-content: space-between;
 				align-items: center;
 				flex-wrap: wrap;
-				height: ${unsafeCSS(`${PLAYER_HEIGHT_SMALL}px`)};
+				height: var(--player-height);
 				overflow: hidden;
 				
 				background-color: var(--mdc-theme-surface, #fff);
 				box-shadow: rgba(0, 0, 0, 0.2) 0 8px 17px 0, rgba(0, 0, 0, 0.19) 0 6px 20px 0;
 				z-index: 2;
-			}
-			@media (min-width: ${unsafeCSS(`${NARROW_WINDOW_THRESHOLD}px`)}) {
-				:host {
-					height: ${unsafeCSS(`${PLAYER_HEIGHT_LARGE}px`)};
-				}
 			}
 			.controls {
 				display: flex;

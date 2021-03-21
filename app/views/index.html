@@ -19,6 +19,12 @@
 			body {
 				font-family: Roboto, 'Helvetica Neue', sans-serif;
 				--mdc-theme-surface: #ffffff;
+				--player-height: 64px; /* PLAYER_HEIGHT_SMALL */
+			}
+			@media (min-width: 640px) {
+				body {
+					--player-height: 96px; /* PLAYER_HEIGHT_LARGE */
+				}
 			}
 			songz-app {
 				display: flex;
@@ -27,12 +33,12 @@
 			app-drawer-layout {
 				--app-drawer-width: min(320px, calc(100% - 48px));
 				flex-grow: 1;
-				height: calc(100% - 64px); /* PLAYER_HEIGHT_SMALL */
+				height: calc(100% - var(--player-height));
 			}
 			app-drawer {
 				top: 0;
 				padding-top: 0;
-				bottom: 64px; /* PLAYER_HEIGHT_SMALL */
+				bottom: var(--player-height);
 			}
 				app-drawer h2 {
 					position: absolute;
@@ -40,14 +46,6 @@
 					top: 0.5em;
 					left: 0.125em;
 				}
-			@media (min-width: 640px) {
-				app-drawer-layout {
-					height: calc(100% - 96px); /* PLAYER_HEIGHT_LARGE */
-				}
-				app-drawer {
-					bottom: 96px; /* PLAYER_HEIGHT_LARGE */
-				}
-			}
 			label {
 				display: block;
 			}
