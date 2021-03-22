@@ -13,7 +13,6 @@ export class SongZPlaylistsList extends LitElement {
 	
 	constructor() {
 		super();
-		
 		this.playlists = [];
 		this.loadPlaylists();
 	}
@@ -23,9 +22,8 @@ export class SongZPlaylistsList extends LitElement {
 	 * @returns {Promise} Resolves when the list of playlists has been loaded and set to display
 	 */
 	async loadPlaylists() {
-		let playlistsRes = await fetch('/api/playlists'),
-			playlists = await playlistsRes.json();
-		this.playlists = playlists;
+		let playlistsRes = await fetch('/api/playlists');
+		this.playlists = await playlistsRes.json();
 	}
 	
 	// TEMP

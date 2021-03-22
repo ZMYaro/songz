@@ -88,6 +88,13 @@ router.route('/songs')
 		res.json(newSong);
 	});
 
+router.route('/albums')
+	/** Get all albums. */
+	.get(async function (req, res) {
+		var albums = await Album.find({}).sort({ title: 'asc', artist: 'asc' });
+		res.json(albums);
+	});
+
 router.route('/albums/:albumId')
 	/** Get the album and its songs. */
 	.get(async function (req, res) {
@@ -98,6 +105,13 @@ router.route('/albums/:albumId')
 		if (!album) { return handleError(res, 'Album not found.', 404); }
 		
 		res.json(album);
+	});
+
+router.route('/artists')
+	/** Get all artists. */
+	.get(async function (req, res) {
+		var artists = await Artist.find({}).sort({ name: 'asc' });
+		res.json(artists);
 	});
 
 router.route('/artists/:artistId')
@@ -115,7 +129,7 @@ router.route('/artists/:artistId')
 router.route('/playlists')
 	/** Get all playlists. */
 	.get(async function (req, res) {
-		var playlists = await Playlist.find({});
+		var playlists = await Playlist.find({}).sort({ title: 'asc' });
 		res.json(playlists);
 	})
 	/**

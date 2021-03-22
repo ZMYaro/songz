@@ -64,11 +64,17 @@ export class SongZMainView extends LitElement {
 			this.songList = await this.getAPI('songs');
 			this.view = 'search'; // TODO: Replace this once home view exists
 			
+		} else if (location.hash === '#albums') {
+			this.view = 'albums';
+			
 		} else if (location.hash.match(/^#albums\/[0-9a-f]+$/)) {
 			let albumId = location.hash.match(/^#albums\/([0-9a-f]+)$/)[1],
 				album = await this.getAPI(`albums/${albumId}`);
 			this.songList = album.songs;
 			this.view = 'search'; // TODO: Replace this once album view exists
+			
+		} else if (location.hash === '#artists') {
+			this.view = 'artists';
 			
 		} else if (location.hash.match(/^#artists\/[0-9a-f]+$/)) {
 			let artistId = location.hash.match(/^#artists\/([0-9a-f]+)$/)[1],
@@ -111,6 +117,12 @@ export class SongZMainView extends LitElement {
 		var mainViewContents;
 		
 		switch (this.view) {
+			case 'albums':
+				mainViewContents = html`<songz-albums-list></songz-albums-list>`;
+				break;
+			case 'artists':
+				mainViewContents = html`<songz-artists-list></songz-artists-list>`;
+				break;
 			case 'playlists':
 				mainViewContents = html`<songz-playlists-list></songz-playlists-list>`;
 				break;
