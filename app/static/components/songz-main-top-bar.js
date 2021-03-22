@@ -32,7 +32,7 @@ export class SongZMainTopBar extends LitElement {
 					<mwc-tab icon="person" title="Artists" aria-label="Artists." @click="${() => location.href = '#artists'}"></mwc-tab>
 					<mwc-tab icon="album" title="Albums" aria-label="Albums." @click="${() => location.href = '#albums'}"></mwc-tab>
 					<mwc-tab icon="music_note" title="Songs" aria-label="Songs." @click="${() => location.href = '#songs'}"></mwc-tab>
-					<mwc-tab icon="playlist_play" title="Playlists" aria-label="Playlists." @click="${() => location.href = '#playlists'}"></mwc-tab>
+					<mwc-tab icon="format_list_bulleted" title="Playlists" aria-label="Playlists." @click="${() => location.href = '#playlists'}"></mwc-tab>
 				</mwc-tab-bar>
 			</mwc-top-app-bar-fixed>
 		`;
