@@ -33,3 +33,4 @@ import '../components/songz-playlists-list.js';
 import '../components/songz-queue.js';
 import '../components/songz-seek-bar.js';
 import '../components/songz-song-list.js';
+import '../components/songz-songs-list.js';

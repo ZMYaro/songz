@@ -14,8 +14,11 @@ export class SongZMainView extends LitElement {
 					--mdc-top-app-bar-width: calc(100% - var(--app-drawer-width));
 				}
 			}
+			songz-albums-list,
+			songz-artists-list,
 			songz-playlists-list,
-			songz-playlist {
+			songz-playlist,
+			songz-songs-list {
 				display: block;
 				height: 100%;
 				overflow: auto;
@@ -83,7 +86,7 @@ export class SongZMainView extends LitElement {
 			this.view = 'search'; // TODO: Replace this once artist view exists
 			
 		} else if (location.hash === '#songs') {
-			this.view = 'search';
+			this.view = 'songs';
 			
 		} else if (location.hash === '#playlists') {
 			this.view = 'playlists';
@@ -131,6 +134,9 @@ export class SongZMainView extends LitElement {
 				break;
 			case 'search':
 				mainViewContents = html`<songz-song-list .songs="${this.songList}"></songz-song-list>`;
+				break;
+			case 'songs':
+				mainViewContents = html`<songz-songs-list></songz-songs-list>`;
 				break;
 			default:
 				mainViewContents = html`Loading...`;

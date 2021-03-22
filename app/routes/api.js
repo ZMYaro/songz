@@ -23,7 +23,7 @@ router.all((req, res, next) => {
 router.route('/songs')
 	/** Get the list of songs in the library. */
 	.get(async function (req, res) {
-		var songs = await populateSong(Song.find({}));
+		var songs = await populateSong(Song.find({}).sort({ title: 'asc', artist: 'asc', album: 'asc' }));
 		res.json(songs);
 	})
 	/**
