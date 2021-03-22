@@ -16,6 +16,7 @@ const artistSchema = new Schema({
  */
 artistSchema.statics.findOrCreateOne = async function (name) {
 	name = name.trim();
+	if (!name) { return; }
 	var artist = await this.findOneAndUpdate({name: name}, {name: name}, {
 		new: true,
 		upsert: true

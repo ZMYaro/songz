@@ -14,6 +14,7 @@ const genreSchema = new Schema({
  */
 genreSchema.statics.findOrCreateOne = async function (name) {
 	name = name.trim();
+	if (!name) { return; }
 	var genre = await this.findOneAndUpdate({name: name}, {name: name}, {
 		new: true,
 		upsert: true

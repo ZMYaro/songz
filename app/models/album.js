@@ -27,12 +27,14 @@ const albumSchema = new Schema({
  * @returns {Promise<Album>}
  */
 albumSchema.statics.findOrCreateOne = async function (title, artistNames) {
+	title = title.trim();
+	if (!title) { return; }
 	var fields = {
-		title: title.trim()
+		title: title
 	};
 	for (let artistName of (artistNames || [])) {
 		let artist = await Artist.findOrCreateOne(artistName);
-		fields.artist = artist._id;
+		fields.artist = artist?._id;
 	}
 	var album = await this.findOneAndUpdate(fields, fields, {
 		new: true,

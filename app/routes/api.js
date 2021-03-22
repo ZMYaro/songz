@@ -48,6 +48,9 @@ router.route('/songs')
 		console.log('\nAdding new song:');
 		console.dir(JSON.stringify(req.body));
 		
+		var title = req.body['title']?.trim();
+		if (!title) { return handleError(res, 'Missing title.', 422); }
+		
 		// Put all the text fields in the new song.
 		var newSong = new Song({
 			gDriveFLAC: req.body['gdrive-flac']?.trim(),
@@ -55,7 +58,7 @@ router.route('/songs')
 			gDriveMP3: req.body['gdrive-mp3']?.trim(),
 			gDriveOGG: req.body['gdrive-ogg']?.trim(),
 			gDriveArt: req.body['gdrive-art']?.trim(),
-			title: req.body['title']?.trim(),
+			title: title,
 			duration: Math.ceil(parseInt(req.body['duration'])),
 			trackNo: Math.floor(parseInt(req.body['track-no'])),
 			discNo: Math.floor(parseInt(req.body['disc-no'])),
@@ -65,19 +68,21 @@ router.route('/songs')
 		var artistNames = req.body['artist']?.trim().split(';') || [];
 		for (let artistName of artistNames) {
 			let artist = await Artist.findOrCreateOne(artistName);
+			if (!artist) { continue; }
 			newSong.artist.push(artist._id);
 		}
 		
 		var composerNames = req.body['composer']?.trim().split(';') || [];
 		for (let composerName of composerNames) {
 			let composer = await Artist.findOrCreateOne(composerName);
+			if (!composer) { continue; }
 			newSong.composer.push(composer._id);
 		}
 		
 		var genreName = req.body['genre']?.trim();
 		if (genreName) {
 			let genre = await Genre.findOrCreateOne(genreName);
-			newSong.genre = genre._id;
+			newSong.genre = genre?._id;
 		}
 		
 		var albumTitle = req.body['album-title']?.trim(),
