@@ -62,12 +62,8 @@ export class SongZMainView extends LitElement {
 	 */
 	async handleRouting() {
 		this.view = 'loading';
-		
-		if (location.hash === '#home') {
-			this.songList = await this.getAPI('songs');
-			this.view = 'search'; // TODO: Replace this once home view exists
 			
-		} else if (location.hash === '#albums') {
+		if (location.hash === '#albums') {
 			this.view = 'albums';
 			
 		} else if (location.hash.match(/^#albums\/[0-9a-f]+$/)) {
@@ -92,8 +88,8 @@ export class SongZMainView extends LitElement {
 			this.viewContentId = location.hash.match(/^#playlists\/([0-9a-f]+)$/)[1];
 			
 		} else {
-			// If there is no valid route, send the user to the home view.
-			location.hash = '#home';
+			// If there is no valid route, send the user to the albums view.
+			location.hash = '#albums';
 		}
 	}
 	
