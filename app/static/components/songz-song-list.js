@@ -99,7 +99,7 @@ export class SongZSongList extends LitElement {
 					${(this.songs || []).map((song, i) => html`
 						<tr data-index="${i}">
 							${this.type === 'album' ? html`<td class="index">${song.trackNo}</td>` : ''}
-							${this.type === 'playlist' ? html`<td class="index">${song.listIndex}</td>` : ''}
+							${this.type === 'playlist' ? html`<td class="index">${song.listIndex + 1}</td>` : ''}
 							<td class="title" title="${song.title}" @dblclick="${this.handleDblClick}">${song.title}</td>
 							<td><mwc-icon-button slot="meta" icon="more_vert" @click=${this.handleMenuButton}></mwc-icon-button></td>
 							<td class="duration">${formatDuration(song.duration / 1000)}</td>

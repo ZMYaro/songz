@@ -62,7 +62,7 @@ export class SongZPlaylist extends LitElement {
 				<button slot="actionItems" @click="${this.addSongToPlaylist}">Add song</button>
 			</mwc-top-app-bar-fixed>
 			<p>${this.playlist?.description || ''}</p>
-			<songz-song-list .songs="${this.playlist?.songs}"></songz-song-list>
+			<songz-song-list type="playlist" .songs="${this.playlist?.songs}"></songz-song-list>
 		`;
 	}
 }

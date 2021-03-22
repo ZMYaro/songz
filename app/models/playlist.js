@@ -33,6 +33,7 @@ playlistSchema.statics.findByIdWithSongs = async function (id) {
 		await populateSong(item.song).execPopulate();
 		var song = item.song.toObject();
 		song.itemId = item._id;
+		song.listIndex = songsArr.length;
 		songsArr.push(song);
 		
 		// Get the next item and recurse if there is one.
