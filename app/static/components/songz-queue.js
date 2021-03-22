@@ -86,7 +86,7 @@ export class SongZQueue extends LitElement {
 	 * @param {CustomEvent} ev - The onselected event from the menu
 	 */
 	handleMenuItemSelect(ev) {
-		handleMenuItemSelect(ev, this);
+		handleMenuItemSelect(ev, this.songs, this);
 	}
 	
 	/**
@@ -95,7 +95,10 @@ export class SongZQueue extends LitElement {
 	 */
 	handleDblClick(ev) {
 		this.dispatchEvent(new CustomEvent('queue-play-now', {
-			detail: parseInt(ev.currentTarget.dataset.index)
+			detail: {
+				list: this.songs,
+				index: parseInt(ev.currentTarget.dataset.index)
+			}
 		}));
 	}
 	

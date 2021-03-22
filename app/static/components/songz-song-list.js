@@ -58,7 +58,7 @@ export class SongZSongList extends LitElement {
 	 * @param {CustomEvent} ev - The onselected event from the menu
 	 */
 	handleMenuItemSelect(ev) {
-		handleMenuItemSelect(ev, this);
+		handleMenuItemSelect(ev, this.songs, this);
 	}
 	
 	/**
@@ -68,7 +68,10 @@ export class SongZSongList extends LitElement {
 	handleDblClick(ev) {
 		ev.preventDefault();
 		this.dispatchEvent(new CustomEvent('play-now', {
-			detail: parseInt(ev.currentTarget.parentElement.dataset.index),
+			detail: {
+				list: this.songs,
+				index: parseInt(ev.currentTarget.parentElement.dataset.index)
+			},
 			bubbles: true,
 			composed: true
 		}));

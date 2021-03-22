@@ -245,13 +245,14 @@ export class SongZApp extends LitElement {
 	
 	/**
 	 * Add a song to the queue.
+	 * @param {Array<Object>} songList - The list of songs from which a song is being added
 	 * @param {Object} i - The index from the main view list to add
 	 * @param {Boolean} next - Whether the song should be added next, rather than at the end.
 	 */
-	addSongToQueue(i, next) {
+	addSongToQueue(songList, i, next) {
 		// Insert the song at the appropriate position.
 		var insertionIndex = (next ? this.queuePosition + 1 : this.queue.length),
-			song = this.mainView.songList[i];
+			song = songList[i];
 		this.queue.splice(insertionIndex, 0, song);
 		
 		// If it was added next (explicitly or not), preload it.
@@ -318,19 +319,19 @@ export class SongZApp extends LitElement {
 					<songz-queue
 						.songs="${this.queue}"
 						activeIndex="${this.queuePosition}"
-						@queue-play-now="${(ev) => this.playSong(ev.detail)}"
-						@queue-play-next="${(ev) => this.moveSongNext(ev.detail)}"
-						@queue-remove="${(ev) => this.removeSongFromQueue(ev.detail)}"
-						@open-album="${(ev) => location.hash = 'albums/' + this.queue[ev.detail].album._id}"
-						@open-artist="${(ev) => location.hash = 'artists/' + this.queue[ev.detail].artist[0]._id}">
+						@queue-play-now="${(ev) => this.playSong(ev.detail.index)}"
+						@queue-play-next="${(ev) => this.moveSongNext(ev.detail.index)}"
+						@queue-remove="${(ev) => this.removeSongFromQueue(ev.detail.index)}"
+						@open-album="${(ev) => location.hash = 'albums/' + this.queue[ev.detail.index].album._id}"
+						@open-artist="${(ev) => location.hash = 'artists/' + this.queue[ev.detail.index].artist[0]._id}">
 					</songz-queue>
 				</app-drawer>
 				<songz-main-view
-					@play-now="${(ev) => {this.queue = this.mainView.songList; this.queuePosition = -1; this.playSong(ev.detail);}}"
-					@play-next="${(ev) => this.addSongToQueue(ev.detail, true)}"
-					@add-to-queue="${(ev) => this.addSongToQueue(ev.detail, false)}"
-					@open-album="${(ev) => location.hash = 'albums/' + this.mainView.songList[ev.detail].album._id}"
-					@open-artist="${(ev) => location.hash = 'artists/' + this.mainView.songList[ev.detail].artist[0]._id}">
+					@play-now="${(ev) => {this.queue = ev.detail.list; this.queuePosition = -1; this.playSong(ev.detail.index);}}"
+					@play-next="${(ev) => this.addSongToQueue(ev.detail.list, ev.detail.index, true)}"
+					@add-to-queue="${(ev) => this.addSongToQueue(ev.detail.list, ev.detail.index, false)}"
+					@open-album="${(ev) => location.hash = 'albums/' + ev.detail.list[ev.detail.index].album._id}"
+					@open-artist="${(ev) => location.hash = 'artists/' + ev.detail.list[ev.detail.index].artist[0]._id}">
 				</songz-main-view>
 			</app-drawer-layout>
 			<songz-player

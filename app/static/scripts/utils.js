@@ -83,9 +83,10 @@ export function handleMenuButton(ev, menu) {
 /**
  * Send an event from the queue in response to a song menu item being clicked.
  * @param {CustomEvent} ev - The onselected event from the menu
+ * @param {Array<Object>} songList - The list of songs from which the action was taken
  * @param {HTMLElement} component - The custom element to emit the event from
  */
-export function handleMenuItemSelect(ev, component) {
+export function handleMenuItemSelect(ev, songList, component) {
 	if (!ev.currentTarget.selected) {
 		return;
 	}
@@ -100,7 +101,10 @@ export function handleMenuItemSelect(ev, component) {
 	
 	// Send them to the app as an event from the component.
 	component.dispatchEvent(new CustomEvent(action, {
-		detail: index,
+		detail: {
+			list: songList,
+			index: index
+		},
 		bubbles: true,
 		composed: true
 	}));
