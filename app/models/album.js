@@ -53,7 +53,7 @@ albumSchema.statics.findByIdWithSongs = async function (id) {
 	if (!album) { return; }
 	
 	var songs = await populateSong(Song.find({ album: album })),
-		returnableAlbum = Object.assign({ songs: songs }, album);
+		returnableAlbum = Object.assign({ songs: songs }, album.toObject());
 	return returnableAlbum;
 };
 

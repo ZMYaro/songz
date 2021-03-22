@@ -71,19 +71,15 @@ export class SongZMainView extends LitElement {
 			this.view = 'albums';
 			
 		} else if (location.hash.match(/^#albums\/[0-9a-f]+$/)) {
-			let albumId = location.hash.match(/^#albums\/([0-9a-f]+)$/)[1],
-				album = await this.getAPI(`albums/${albumId}`);
-			this.songList = album.songs;
-			this.view = 'search'; // TODO: Replace this once album view exists
+			this.view = 'album';
+			this.viewContentId = location.hash.match(/^#albums\/([0-9a-f]+)$/)[1];
 			
 		} else if (location.hash === '#artists') {
 			this.view = 'artists';
 			
 		} else if (location.hash.match(/^#artists\/[0-9a-f]+$/)) {
-			let artistId = location.hash.match(/^#artists\/([0-9a-f]+)$/)[1],
-				artist = await this.getAPI(`artists/${artistId}`);
-			this.songList = artist.songs;
-			this.view = 'search'; // TODO: Replace this once artist view exists
+			this.view = 'artist';
+			this.viewContentId = location.hash.match(/^#artists\/([0-9a-f]+)$/)[1];
 			
 		} else if (location.hash === '#songs') {
 			this.view = 'songs';
@@ -120,17 +116,23 @@ export class SongZMainView extends LitElement {
 		var mainViewContents;
 		
 		switch (this.view) {
+			case 'album':
+				mainViewContents = html`<songz-album albumid="${this.viewContentId}"></songz-album>`;
+				break;
 			case 'albums':
 				mainViewContents = html`<songz-albums-list></songz-albums-list>`;
+				break;
+			case 'artist':
+				mainViewContents = html`<songz-artist artistid="${this.viewContentId}"></songz-artist>`;
 				break;
 			case 'artists':
 				mainViewContents = html`<songz-artists-list></songz-artists-list>`;
 				break;
-			case 'playlists':
-				mainViewContents = html`<songz-playlists-list></songz-playlists-list>`;
-				break;
 			case 'playlist':
 				mainViewContents = html`<songz-playlist playlistid="${this.viewContentId}"></songz-playlist>`;
+				break;
+			case 'playlists':
+				mainViewContents = html`<songz-playlists-list></songz-playlists-list>`;
 				break;
 			case 'search':
 				mainViewContents = html`<songz-song-list .songs="${this.songList}"></songz-song-list>`;

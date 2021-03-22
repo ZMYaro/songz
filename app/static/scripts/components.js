@@ -22,8 +22,10 @@ import 'https://unpkg.com/@material/mwc-tab@0.20.0/mwc-tab.js?module';
 //import '@material/mwc-top-app-bar-fixed';
 import 'https://unpkg.com/@material/mwc-top-app-bar-fixed@0.20.0/mwc-top-app-bar-fixed.js?module';
 
+import '../components/songz-album.js';
 import '../components/songz-albums-list.js';
 import '../components/songz-app.js';
+import '../components/songz-artist.js';
 import '../components/songz-artists-list.js';
 import '../components/songz-main-top-bar.js';
 import '../components/songz-main-view.js';

@@ -34,7 +34,7 @@ artistSchema.statics.findByIdWithSongs = async function (id) {
 	if (!artist) { return; }
 	
 	var songs = await populateSong(Song.find({ artist: artist })),
-		returnableArtist = Object.assign({ songs: songs }, artist);
+		returnableArtist = Object.assign({ songs: songs }, artist.toObject());
 	return returnableArtist;
 };
 
