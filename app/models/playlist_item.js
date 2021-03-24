@@ -12,7 +12,6 @@ const playlistItemSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'Song'
 	},
-	isFirst: Boolean,
 	nextItem: {
 		type: Schema.Types.ObjectId,
 		ref: 'PlaylistItem'
