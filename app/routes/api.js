@@ -59,7 +59,7 @@ router.route('/songs')
 			gDriveOGG: req.body['gdrive-ogg']?.trim(),
 			gDriveArt: req.body['gdrive-art']?.trim(),
 			title: title,
-			duration: Math.ceil(parseInt(req.body['duration'])),
+			duration: parseFloat(req.body['duration']) || undefined,
 			trackNo: Math.floor(parseInt(req.body['track-no'])),
 			discNo: Math.floor(parseInt(req.body['disc-no'])),
 			year: Math.floor(parseInt(req.body['year']))
