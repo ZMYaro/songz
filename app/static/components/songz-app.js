@@ -7,9 +7,14 @@ import {formatArtist, toGDriveURL} from '../scripts/utils.js';
 
 export class SongZApp extends LitElement {
 	
+	PLAYTHROUGH_STATUS_NOT_COUNTED = 0;
+	PLAYTHROUGH_STATUS_SUBMITTED_PENDING = 1;
+	PLAYTHROUGH_STATUS_SUBMITTED_SAVED = 2;
+	
 	activePlayer;
 	inactivePlayer;
 	mainView;
+	playthroughStatus = 0;
 	
 	static get properties() {
 		return {
@@ -19,6 +24,23 @@ export class SongZApp extends LitElement {
 			queue: { type: Array, attribute: false },
 			queuePosition: { type: Number, attribute: false }
 		};
+	}
+	
+	/** {Boolean} Whether enough of the song has been played to count it as played */
+	get isActiveSongSufficientlyPlayed() {
+		/** {Number} The amount of the song that has to have been played to count the song as played, in seconds */
+		const PLAYTHROUGH_MIN_TIME = 30;
+		/** {Number} The fraction of the song that has to have been played to count the song as played */
+		const PLAYTHROUGH_MIN_FRACTION = 0.99;
+		
+		var secondsPlayed = 0;
+		for (let i = 0; i < this.activePlayer.played.length; i++) {
+			secondsPlayed = (this.activePlayer.played.end(i) - this.activePlayer.played.start(i));
+		}
+		
+		var enoughTimePlayed = (secondsPlayed > PLAYTHROUGH_MIN_TIME),
+			enoughFractionPlayed = ((secondsPlayed / this.activePlayer.duration) > PLAYTHROUGH_MIN_FRACTION);
+		return (enoughTimePlayed || enoughFractionPlayed);
 	}
 	
 	constructor() {
@@ -100,6 +122,7 @@ export class SongZApp extends LitElement {
 			this.loadSong(this.inactivePlayer, this.queue[i + 1]);
 		}
 		this.queuePosition = i;
+		this.playthroughStatus = this.PLAYTHROUGH_STATUS_NOT_COUNTED;
 		await this.resumeSong();
 	}
 	
@@ -174,8 +197,11 @@ export class SongZApp extends LitElement {
 		this.swapPlayers();
 		// Step the queue position back.
 		this.queuePosition--;
+		// Reset the `played` ranges of the previously playing (now next) song.
+		this.inactivePlayer.load();
 		// Load the now-current song and play when ready.
 		this.loadSong(this.activePlayer, this.queue[this.queuePosition]);
+		this.playthroughStatus = this.PLAYTHROUGH_STATUS_NOT_COUNTED;
 		await this.resumeSong();
 	}
 	/**
@@ -196,6 +222,7 @@ export class SongZApp extends LitElement {
 		if (this.queuePosition + 1 < this.queue.length) {
 			this.loadSong(this.inactivePlayer, this.queue[this.queuePosition + 1]);
 		}
+		this.playthroughStatus = this.PLAYTHROUGH_STATUS_NOT_COUNTED;
 		await this.resumeSong();
 	}
 	
@@ -265,6 +292,25 @@ export class SongZApp extends LitElement {
 	}
 	
 	/**
+	 * Submit the current playthrough to the database if it has not already.
+	 * @param {Object} song - The song whose playthrough to record
+	 * @returns {Promise} Resolves when the playthrough is saved, or immediately if this playthrough has already been saved.
+	 */
+	async savePlaythrough() {
+		if (this.playthroughStatus !== this.PLAYTHROUGH_STATUS_NOT_COUNTED) {
+			return;
+		}
+		var currentSongId = this.queue[this.queuePosition]._id;
+		this.playthroughStatus = this.PLAYTHROUGH_STATUS_SUBMITTED_PENDING;
+		await fetch(`/api/playthroughs/${currentSongId}`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			body: `timestamp=${(new Date()).getTime()}`
+		});
+		this.playthroughStatus = this.PLAYTHORUGH_STATUS_SUBMITTED_SAVED;
+	}
+	
+	/**
 	 * Update the player and media session in response to the seek bar being moved.
 	 * @param {Event} ev
 	 */
@@ -279,6 +325,10 @@ export class SongZApp extends LitElement {
 	handlePlayerTimeChange(ev) {
 		this.currentTime = ev.currentTarget.currentTime;
 		this.updateSessionPositionState();
+		if (this.playthroughStatus === this.PLAYTHROUGH_STATUS_NOT_COUNTED && this.isActiveSongSufficientlyPlayed) {
+			// Start saving the playthrough if it is time; do not await its completion.
+			this.savePlaythrough();
+		}
 	}
 	/**
 	 * Update the media session with the current song's metadata.

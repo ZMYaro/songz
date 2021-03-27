@@ -8,6 +8,7 @@ const bodyParser = require('body-parser'),
 	Genre = require('../models/genre.js'),
 	Playlist = require('../models/playlist.js'),
 	PlaylistItem = require('../models/playlist_item.js'),
+	Playthrough = require('../models/playthrough.js'),
 	Song = require('../models/song.js'),
 	{ handleError, populateSong } = require('../utils.js');
 
@@ -210,6 +211,31 @@ router.route('/playlists/:playlistId')
 	})
 	.delete(async function (req, res) {
 		// TODO: Remove song from playlist.
+	});
+
+router.route('/playthroughs/:songId')
+	/**
+	 * Add a playthrough to a song.
+	 * [timestamp] - The timestamp of the playthrough
+	 */
+	.post(async function (req, res) {
+		var songId = req.params.songId,
+			timestamp = parseInt(req.body['timestamp']);
+		
+		if (!mongoose.Types.ObjectId.isValid(songId)) { return handleError(res, 'Song not found.', 404); }
+		if (isNaN(timestamp)) { return handleError(res, 'Invalid timestamp.', 422); }
+		
+		var song = await Song.findById(songId).exec();
+		
+		if (!song) { return handleError(res, 'Song not found.', 404); }
+		
+		var newPlaythrough = new Playthrough({
+			song: song._id,
+			timestamp: new Date(timestamp)
+		});
+		
+		await newPlaythrough.save();
+		res.json(newPlaythrough);
 	});
 
 module.exports = router;
