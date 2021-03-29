@@ -32,7 +32,7 @@ router.route('/songs')
 	 * [gdrive-flac] - The GDrive ID of the song's FLAC audio file
 	 * [gdrive-m4a] - The GDrive ID of the song's M4A audio file
 	 * [gdrive-mp3] - The GDrive ID of the song's MP3 audio file
-	 * [gdrive-ogg] - The GDrive ID of the song's OGG audio file
+	 * [gdrive-ogg] - The GDrive ID of the song's Ogg audio file
 	 * [gdrive-art] - The GDrive ID of the song's album art file
 	 * title - The song's title
 	 * [duration] - The duration of the song, in milliseconds
@@ -57,7 +57,7 @@ router.route('/songs')
 			gDriveFLAC: req.body['gdrive-flac']?.trim(),
 			gDriveM4A: req.body['gdrive-m4a']?.trim(),
 			gDriveMP3: req.body['gdrive-mp3']?.trim(),
-			gDriveOGG: req.body['gdrive-ogg']?.trim(),
+			gDriveOgg: req.body['gdrive-ogg']?.trim(),
 			gDriveArt: req.body['gdrive-art']?.trim(),
 			title: title,
 			duration: parseFloat(req.body['duration']) || undefined,

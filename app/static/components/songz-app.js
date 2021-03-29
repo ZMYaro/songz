@@ -93,7 +93,7 @@ export class SongZApp extends LitElement {
 			song.gDriveFLAC ? `<source src="${toGDriveURL(song.gDriveFLAC)}" type="audio/flac" />` : '' +
 			song.gDriveM4A  ? `<source src="${toGDriveURL(song.gDriveM4A)}"  type="audio/x-m4a"  />` : '' +
 			song.gDriveMP3  ? `<source src="${toGDriveURL(song.gDriveMP3)}"  type="audio/mp3"  />` : '' +
-			song.gDriveOGG  ? `<source src="${toGDriveURL(song.gDriveOGG)}"  type="audio/ogg"  />` : '';
+			song.gDriveOgg  ? `<source src="${toGDriveURL(song.gDriveOgg)}"  type="audio/ogg"  />` : '';
 		player.load();
 	}
 	

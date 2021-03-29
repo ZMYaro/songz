@@ -7,7 +7,7 @@ const songSchema = new Schema({
 	gDriveFLAC: String,
 	gDriveM4A: String,
 	gDriveMP3: String,
-	gDriveOGG: String,
+	gDriveOgg: String,
 	gDriveArt: String,
 	title: String,
 	duration: Number, // In milliseconds
