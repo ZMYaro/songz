@@ -23,18 +23,18 @@ const albumSchema = new Schema({
 /**
  * Find an album with the given title and artist, or create it if it does not exist in the database.
  * @param {String} title - The exact title of the album
- * @param {Array<String>} [artistName] - The exact name of the album artist
+ @param {String} [artistNamesStr] - The exact name(s) of the artist(s), semicolon-separated
  * @returns {Promise<Album>}
  */
-albumSchema.statics.findOrCreateOne = async function (title, artistNames) {
+albumSchema.statics.findOrCreateOne = async function (title, artistNamesStr) {
 	title = title.trim();
 	if (!title) { return; }
 	var fields = {
 		title: title
 	};
-	for (let artistName of (artistNames || [])) {
-		let artist = await Artist.findOrCreateOne(artistName);
-		fields.artist = artist?._id;
+	if (artistNamesStr) {
+		var artists = await Artist.findFromStrList(artistNamesStr, true);
+		fields.artist = artists.map((artist) => artist._id);
 	}
 	var album = await this.findOneAndUpdate(fields, fields, {
 		new: true,

@@ -66,18 +66,14 @@ router.route('/songs')
 			year: Math.floor(parseInt(req.body['year']))
 		});
 		
-		var artistNames = req.body['artist']?.trim().split(';') || [];
-		for (let artistName of artistNames) {
-			let artist = await Artist.findOrCreateOne(artistName);
-			if (!artist) { continue; }
-			newSong.artist.push(artist._id);
+		if (req.body['artist']) {
+			var artists = await Artist.findFromStrList(req.body['artist'], true);
+			newSong.artist = artists.map((artist) => artist._id);
 		}
 		
-		var composerNames = req.body['composer']?.trim().split(';') || [];
-		for (let composerName of composerNames) {
-			let composer = await Artist.findOrCreateOne(composerName);
-			if (!composer) { continue; }
-			newSong.composer.push(composer._id);
+		if (req.body['composer']) {
+			var composers = await Artist.findFromStrList(req.body['composer'], true);
+			newSong.composer = composers.map((composer) => composer._id);
 		}
 		
 		var genreName = req.body['genre']?.trim();
@@ -87,7 +83,7 @@ router.route('/songs')
 		}
 		
 		var albumTitle = req.body['album-title']?.trim(),
-			albumArtist = req.body['album-artist']?.trim().split(';') || [];
+			albumArtist = req.body['album-artist']?.trim();
 		newSong.album = await Album.findOrCreateOne(albumTitle, albumArtist);
 		
 		await newSong.save();

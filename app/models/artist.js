@@ -25,6 +25,25 @@ artistSchema.statics.findOrCreateOne = async function (name) {
 };
 
 /**
+ * Find or optionally create artists requested in a semicolon-separated list.
+ * @param {String} artistNamesStr - The name(s) of the artist(s), semicolon-separated
+ * @param {Boolean} [createIfNotFound] - Whether to create new artists with names not found
+ * @returns {Promise<Array<Artist>>} Resolves with the array of artists after all have been retrieved
+ */
+artistSchema.statics.findFromStrList = async function (artistNamesStr, createIfNotFound) {
+	var artistNames = artistNamesStr.trim()?.split(';') || [],
+		artists = [];
+	for (let artistName of artistNames) {
+		let artist = await (createIfNotFound ?
+			this.findOrCreateOne(artistName.trim()) :
+			this.findOne({ name: artistName.trim() }));
+		if (!artist) { continue; }
+		artists.push(artist);
+	}
+	return artists;
+}
+
+/**
  * Find an artist by xer ID and return xem with xer songs.
  * @param {String} id - The artist's ID
  * @returns {Promise<Object>} Resolves with an object containing the artist's document and a `songs` array of song documents
