@@ -261,6 +261,40 @@ router.route('/playlists/:playlistId')
 
 router.route('/playthroughs/:songId')
 	/**
+	 * Get the number of playthroughs for a song.
+	 * [before] - The timestamp to get playthroughs before (defaults to infinity)
+	 * [after] - The timestamp to get playthroughs after  (defaults to the epoch)
+	 */
+	.get(async function (req, res) {
+		// TODO: Implement before and after.
+		var params = {},
+			songId = req.params.songId,
+			beforeTimestamp = parseInt(req.query['before']),
+			afterTimestamp = parseInt(req.query['after']);
+		
+		if (!mongoose.Types.ObjectId.isValid(songId)) { return handleError(res, 'Song not found.', 404); }
+		
+		var song = await Song.findById(songId).exec();
+		
+		if (!song) { return handleError(res, 'Song not found.', 404); }
+		
+		params.song = song;
+		
+		if (beforeTimestamp || afterTimestamp) {
+			params.timestamp = {};
+		}
+		if (beforeTimestamp) {
+			if (isNaN(beforeTimestamp)) { return handleError(res, 'Invalid before timestamp.', 422); }
+			params.timestamp.$lt = new Date(beforeTimestamp);
+		}
+		if (afterTimestamp) {
+			if (isNaN(afterTimestamp)) { return handleError(res, 'Invalid after timestamp.', 422); }
+			params.timestamp.$gt = new Date(afterTimestamp);
+		}
+		var playthroughs = await Playthrough.find(params);
+		res.json(playthroughs);
+	})
+	/**
 	 * Add a playthrough to a song.
 	 * [timestamp] - The timestamp of the playthrough
 	 */
