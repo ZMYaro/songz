@@ -44,11 +44,16 @@ export async function readTrackList(tracksDir) {
  * @returns {Promise<Array<Object>>}
  */
 export async function getAllTrackMetadata(trackMP3s, tracksDir) {
-	var metadata = [];
+	var metadata = [],
+		progressBar = document.createElement('progress');
+	
+	progressBar.max = trackMP3s.length;
+	log.insertAdjacentElement('beforeend', progressBar);
 	
 	for await (let trackMP3Handle of trackMP3s) {
 		let trackData = await getTrackMetadata(trackMP3Handle, tracksDir);
 		metadata.push(trackData);
+		progressBar.value++;
 	}
 	
 	return metadata;
@@ -67,8 +72,6 @@ async function getTrackMetadata(trackMP3Handle, tracksDir) {
 	if (!tags) debugger;
 	var csvData = await getCSVData(tags, tracksDir);
 	if (!csvData) debugger;
-	
-	console.log(`${mp3File.name}\n${tags.title}\n${csvData.Title}`);
 	
 	return {
 		title: tags.title,
