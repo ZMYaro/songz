@@ -94,6 +94,7 @@ router.route('/songs')
 	 * [composer] - The name(s) of the song's composer(s), semicolon-separated
 	 * [album-title] - The title of the album the song belongs to
 	 * [album-artist] - The album artist of the album the song belongs to
+	 * [playthroughs] - The number of past playthroughs
 	 */
 	.post(async function (req, res) {
 		console.log('\nAdding new song:');
@@ -137,6 +138,19 @@ router.route('/songs')
 		newSong.album = await Album.findOrCreateOne(albumTitle, albumArtist);
 		
 		await newSong.save();
+		
+		if (req.body['playthroughs'] && !isNaN(parseInt(req.body['playthroughs']))) {
+			let playthroughCount = parseInt(req.body['playthroughs']),
+				playthroughObjects = [];
+			for (let i = 0; i < playthroughCount; i++) {
+				playthroughObjects.push({
+					song: newSong._id,
+					timestamp: new Date(0)
+				});
+			}
+			await Playthrough.insertMany(playthroughObjects);
+		}
+		
 		res.json(newSong);
 	});
 
