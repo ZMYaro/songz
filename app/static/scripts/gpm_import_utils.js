@@ -3,6 +3,8 @@
 export const GPM_DIR_NAME = 'Google Play Music',
 	TRACKS_DIR_NAME = 'Tracks',
 	PLAYLISTS_DIR_NAME = 'Playlists',
+	THUMBS_UP_PLAYLIST_NAME = 'Thumbs Up',
+	PLAYLIST_METADATA_FILE_NAME = 'Metadata.csv',
 	FILE_NAME_ILLEGAL_CHARS = /(&#39;|\\|\/|;|:|%|&|\*|\?|'|"|<|>|\|)+/g,
 	FILE_NAME_MAX_LENGTH = 47,
 	CSV_NAME_MAX_LENGTH = 50,

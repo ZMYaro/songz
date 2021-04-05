@@ -1,6 +1,12 @@
 'use strict';
 
-import {getTrackMP3s, getAllTrackMetadata, uploadTrackMetadata, readPlaylistList} from '/scripts/gpm_import_steps.js';
+import {
+	getTrackMP3s,
+	getAllTrackMetadata,
+	uploadTrackMetadata,
+	readPlaylistList,
+	getAllPlaylistMetadata
+} from '/scripts/gpm_import_steps.js';
 import * as Utils from '/scripts/gpm_import_utils.js';
 
 var folderSelectButton,
@@ -73,13 +79,25 @@ async function selectGPMFolder() {
 		return;
 	}
 	
-	let playlistDirs = await readPlaylistList(gpmDir);
+	Utils.logMessage('Tracks uploaded.  Loading playlist directory...');
+	
+	var playlistDirs = await readPlaylistList(gpmDir);
 	if (!playlistDirs) {
 		return;
 	}
 	
-	Utils.logMessage(`Found ${playlistDirs.length} playlists.  This should be 1 more (because it includes the automatically generated &ldquo;Thumbs Up&rdquo; list) than the number listed under Google Play Music on your <a href="https://myaccount.google.com/dashboard" target="_blank">Google Dashboard</a>.`);
+	Utils.logMessage(`Found ${playlistDirs.length} playlists.  This should match the number listed under Google Play Music on your <a href="https://myaccount.google.com/dashboard" target="_blank">Google Dashboard</a>.`);
 	await Utils.showContinueButton();
+	
+	try {
+		var playlists = await getAllPlaylistMetadata(playlistDirs);
+	} catch (err) {
+		Utils.logMessage('Something went wrong during playlist metadata import.');
+		throw err;
+		return;
+	}
+	
+	Utils.logMessage('Loaded playlists\' metadata.  Loading playlist tracks...');
 	
 	// TODO: Parse playlist dir contents.
 	// TODO: Parse and upload playlist track data.

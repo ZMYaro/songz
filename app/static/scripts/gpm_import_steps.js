@@ -38,7 +38,7 @@ export async function readTrackList(tracksDir) {
 }
 
 /**
- * Parse each CSV to JSON metadata and upload it.
+ * Parse each song's ID3 tags and CSV to JSON metadata.
  * @param {Array<FileSystemFileHandle>} trackMP3s
  * @param {FileSystemDirectoryHandle} tracksDir
  * @returns {Promise<Array<Object>>}
@@ -61,7 +61,7 @@ export async function getAllTrackMetadata(trackMP3s, tracksDir) {
 }
 
 /**
- * Get all the metadata for a given track.
+ * Get the metadata for a given track.
  * @param {FileSystemFileHandle} trackMP3Handle - The handle for the track's MP3
  * @param {FileSystemDirectoryHandle} tracksDir
  * @returns {Promise<Object>}
@@ -163,22 +163,51 @@ export async function uploadTrackMetadata(trackMetadataList, tracksDir) {
 /**
  * Fetch the playlist directories from the Playlists directory.
  * @param {FileSystemDirectoryHandle} playlistsDir
+ * @returns {Promise<Array<FileSystemDirectoryHandle>>}
  */
 export async function readPlaylistList(gpmDir) {
 	try {
 		var playlistsDir = await gpmDir.getDirectoryHandle(Utils.PLAYLISTS_DIR_NAME);
 	} catch (err) {
-		console.error(err);
 		Utils.logMessage('No &ldquo;Playlists&rdquo; directory found.');
+		throw err;
 		return;
 	}
 	
 	var playlistDirs = [];
 	for await (let [name, handle] of playlistsDir) {
-		if (handle.kind !== 'directory') {
+		if (handle.kind !== 'directory' || handle.name === Utils.THUMBS_UP_PLAYLIST_NAME) {
 			continue;
 		}
 		playlistDirs.push(handle);
 	}
 	return playlistDirs;
+}
+
+/**
+ * Parse each playlist's meta CSV to JSON metadata.
+ * @param {Array<FileSystemDirectoryHandle>} playlistDirs
+ * @returns {Promise<Array<Object>>}
+ */
+export async function getAllPlaylistMetadata(playlistDirs) {
+	var playlists = [],
+		progressBar = document.createElement('progress');
+	
+	progressBar.value = 0;
+	progressBar.max = playlists.length;
+	log.insertAdjacentElement('beforeend', progressBar);
+	
+	for (let playlistDir of playlistDirs) {
+		let metadataCSVHandle = await playlistDir.getFileHandle(Utils.PLAYLIST_METADATA_FILE_NAME),
+			metadataCSV = await metadataCSVHandle.getFile(),
+			metadata = (await Utils.parseCSV(metadataCSV, { header: true })).data[0],
+			tracksDirHandle = await playlistDir.getDirectoryHandle(Utils.TRACKS_DIR_NAME);
+		playlists.push({
+			title: metadata['Title'],
+			description: metadata['Description'],
+			tracksDir: tracksDirHandle
+		});
+		progressBar.value++;
+	}
+	return playlists;
 }
