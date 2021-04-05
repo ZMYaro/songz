@@ -65,10 +65,8 @@ async function selectGPMFolder() {
 	
 	Utils.logMessage(`Consolidated metadata for ${trackMetadataList.length} tracks.  Beginning upload...`);
 	
-	debugger;
-	// TODO: Parse and upload song data.
 	try {
-		await uploadTrackMetadata(trackCSVs, tracksDir);
+		await uploadTrackMetadata(trackMetadataList);
 	} catch (err) {
 		Utils.logMessage('Something went wrong during track metadata import.');
 		throw err;

@@ -47,6 +47,7 @@ export async function getAllTrackMetadata(trackMP3s, tracksDir) {
 	var metadata = [],
 		progressBar = document.createElement('progress');
 	
+	progressBar.value = 0;
 	progressBar.max = trackMP3s.length;
 	log.insertAdjacentElement('beforeend', progressBar);
 	
@@ -78,10 +79,14 @@ async function getTrackMetadata(trackMP3Handle, tracksDir) {
 		duration: csvData['Duration (ms)'],
 		trackNo: parseInt(tags.track) ?? undefined,
 		discNo: parseInt(tags['set-part']) ?? undefined,
+		year: tags.year ?? undefined, // NOTE: Right now ID3.js appears to always return this as null ¯\_(ツ)_/¯
 		artist: tags.artist ?? undefined,
 		composer: tags.composer ?? undefined,
-		album: tags.album ?? undefined,
-		genre: tags.genre ?? undefined
+		albumTitle: tags.album ?? undefined,
+		albumArtist: tags.band ?? undefined,
+		genre: tags.genre ?? undefined,
+		year: tags.year ?? undefined,
+		playCount: csvData['Play Count']
 	};
 }
 
@@ -115,45 +120,44 @@ async function getCSVData(trackTags, tracksDir) {
 	}
 	
 	throw new Error(`Unable to find a matching CSV for \u201c${trackTags.title}\u201d with file name \u201c${csvFileName}.csv\u201d.`);
-	debugger;
 }
 
 /**
  * Parse each CSV to JSON metadata and upload it.
- * @param {Array<FileSystemFileHandle>} trackCSVs
+ * @param {Array<Object>} trackMetadataList
  * @param {FileSystemDirectoryHandle} tracksDir
- * @returns {Promise<Array<Promise<Response>>>}
+ * @returns {Promise<Array<Response>>}
  */
-export async function uploadTrackMetadata(trackCSVs, tracksDir) {
-	var requestPromises = [];
+export async function uploadTrackMetadata(trackMetadataList, tracksDir) {
+	var uploadResponses = [],
+		progressBar = document.createElement('progress');
 	
-	for await (let trackCSVHandle of trackCSVs) {
-		//let trackCSVFile = await trackCSVHandle.getFile(),
-		//	trackData = (await Utils.parseCSV(trackCSVFile, { header: true })).data[0],
-		//	trackMP3Name = getMP3NameFromData(trackData),
-		//	trackTags = 
-		let trackData = await getTrackMetadata(trackCSVHandle, tracksDir),
-			formData = new FormData();
+	progressBar.value = 0;
+	progressBar.max = trackMetadataList.length;
+	log.insertAdjacentElement('beforeend', progressBar);
+	
+	for await (let trackData of trackMetadataList) {
+		let formData = new URLSearchParams();
+		formData.append('title', trackData.title);
+		if (trackData.duration   ) { formData.append('duration',     trackData.duration);    }
+		if (trackData.trackNo    ) { formData.append('track-no',     trackData.trackNo);     }
+		if (trackData.discNo     ) { formData.append('disc-no',      trackData.discNo);      }
+		if (trackData.year       ) { formData.append('year',         trackData.year);        }
+		if (trackData.genre      ) { formData.append('genre',        trackData.genre);       }
+		if (trackData.artist     ) { formData.append('artist',       trackData.artist);      }
+		if (trackData.composer   ) { formData.append('composer',     trackData.composer);    }
+		if (trackData.albumTitle ) { formData.append('album-title',  trackData.albumTitle);  }
+		if (trackData.albumArtist) { formData.append('album-artist', trackData.albumArtist); }
+		if (trackData.playCount  ) { formData.append('playthroughs', trackData.playCount);   }
 		
-		//formData.append('album-title', trackData['Album']?.trim());
-		//formData.append('artist', trackData['Artist']?.trim());
-		//formData.append('duration', trackData['Duration (ms)']);
-		// TODO: Include rating
-		//formData.append('rating', trackData['Rating']);
-		//formData.append('title', trackData['Title']?.trim());
-		//formData.append('', trackData['']);
-		//console.log(trackData.Title, Object.keys(trackData));
-		//if (Object.keys(trackData).length > 7 || trackData.Removed)
-		//	console.log(trackData);
-		//debugger;
-		//let trackUpload = fetch('/api/songs', {
-		//	method: 'POST',
-		//	body: formData
-		//});
-		//requestPromises.push(trackUpload);
+		let trackUpload = await fetch('/api/songs', {
+			method: 'POST',
+			body: formData
+		});
+		uploadResponses.push(trackUpload);
+		progressBar.value++;
 	}
-	console.warn('TODO: Play counts not included in upload yet!!!');
-	return requestPromises;
+	return uploadResponses;
 }
 
 /**

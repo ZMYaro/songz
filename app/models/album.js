@@ -27,7 +27,7 @@ const albumSchema = new Schema({
  * @returns {Promise<Album>}
  */
 albumSchema.statics.findOrCreateOne = async function (title, artistNamesStr) {
-	title = title.trim();
+	title = title?.trim();
 	if (!title) { return; }
 	var fields = {
 		title: title

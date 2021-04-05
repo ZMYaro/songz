@@ -45,15 +45,15 @@ router.route('/songs')
 		// Assume any param that was passed is intended to be included,
 		// but trim or parse them to the correct formats before querying.
 		if (req.query['gdrive-flac']) { params.gDriveFLAC = req.query['gdrive-flac'].trim(); }
-		if (req.query['gdrive-m4a']) {  params.gDriveM4A = req.query['gdrive-m4a'].trim(); }
-		if (req.query['gdrive-mp3']) {  params.gDriveMP3 = req.query['gdrive-mp3'].trim(); }
-		if (req.query['gdrive-ogg']) {  params.gDriveOgg = req.query['gdrive-ogg'].trim(); }
-		if (req.query['gdrive-art']) {  params.gDriveArt = req.query['gdrive-art'].trim(); }
-		if (req.query['title']) {       params.title = req.query['title'].trim(); }
-		if (req.query['duration']) {    params.duration = parseFloat(req.query['duration']); }
-		if (req.query['track-no']) {    params.trackNo = Math.floor(parseInt(req.query['track-no'])); }
-		if (req.query['disc-no']) {     params.discNo = Math.floor(parseInt(req.query['disc-no'])); }
-		if (req.query['year']) {        params.year = Math.floor(parseInt(req.query['year'])); }
+		if (req.query['gdrive-m4a'] ) { params.gDriveM4A = req.query['gdrive-m4a'].trim(); }
+		if (req.query['gdrive-mp3'] ) { params.gDriveMP3 = req.query['gdrive-mp3'].trim(); }
+		if (req.query['gdrive-ogg'] ) { params.gDriveOgg = req.query['gdrive-ogg'].trim(); }
+		if (req.query['gdrive-art'] ) { params.gDriveArt = req.query['gdrive-art'].trim(); }
+		if (req.query['title']      ) { params.title = req.query['title'].trim(); }
+		if (req.query['duration']   ) { params.duration = parseFloat(req.query['duration']); }
+		if (req.query['track-no']   ) { params.trackNo = Math.floor(parseInt(req.query['track-no'])); }
+		if (req.query['disc-no']    ) { params.discNo = Math.floor(parseInt(req.query['disc-no'])); }
+		if (req.query['year']       ) { params.year = Math.floor(parseInt(req.query['year'])); }
 		
 		if (req.query['genre']) {
 			params.genre = await Genre.findOne({ name: req.query['genre'].trim() });
@@ -112,9 +112,9 @@ router.route('/songs')
 			gDriveArt: req.body['gdrive-art']?.trim(),
 			title: title,
 			duration: parseFloat(req.body['duration']) || undefined,
-			trackNo: Math.floor(parseInt(req.body['track-no'])),
-			discNo: Math.floor(parseInt(req.body['disc-no'])),
-			year: Math.floor(parseInt(req.body['year']))
+			trackNo: Math.floor(parseInt(req.body['track-no'])) || undefined,
+			discNo: Math.floor(parseInt(req.body['disc-no'])) || undefined,
+			year: Math.floor(parseInt(req.body['year'])) || undefined
 		});
 		
 		if (req.body['artist']) {
