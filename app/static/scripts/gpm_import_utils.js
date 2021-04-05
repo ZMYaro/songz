@@ -39,6 +39,19 @@ export function showContinueButton() {
 }
 
 /**
+ * Show a progress bar.
+ * @param {Number} max
+ * @returns {HTMLProgressElement}
+ */
+export function showProgressBar(max) {
+	var progressBar = document.createElement('progress');
+	progressBar.value = 0;
+	progressBar.max = max;
+	log.insertAdjacentElement('beforeend', progressBar);
+	return progressBar;
+}
+
+/**
  * Get the file name Google Takeout would have generated for the track's CSV.
  * @param {String} title - The title of the track, from its ID3 tag
  * @returns {String}

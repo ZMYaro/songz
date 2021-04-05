@@ -45,11 +45,7 @@ export async function readTrackList(tracksDir) {
  */
 export async function getAllTrackMetadata(trackMP3s, tracksDir) {
 	var metadata = [],
-		progressBar = document.createElement('progress');
-	
-	progressBar.value = 0;
-	progressBar.max = trackMP3s.length;
-	log.insertAdjacentElement('beforeend', progressBar);
+		progressBar = Utils.showProgressBar(trackMP3s.length);
 	
 	for await (let trackMP3Handle of trackMP3s) {
 		let trackData = await getTrackMetadata(trackMP3Handle, tracksDir);
@@ -130,11 +126,7 @@ async function getCSVData(trackTags, tracksDir) {
  */
 export async function uploadTrackMetadata(trackMetadataList, tracksDir) {
 	var uploadResponses = [],
-		progressBar = document.createElement('progress');
-	
-	progressBar.value = 0;
-	progressBar.max = trackMetadataList.length;
-	log.insertAdjacentElement('beforeend', progressBar);
+		progressBar = Utils.showProgressBar(trackMetadataList.length);
 	
 	for await (let trackData of trackMetadataList) {
 		let formData = new URLSearchParams();
@@ -191,11 +183,7 @@ export async function readPlaylistList(gpmDir) {
  */
 export async function getAllPlaylistMetadata(playlistDirs) {
 	var playlists = [],
-		progressBar = document.createElement('progress');
-	
-	progressBar.value = 0;
-	progressBar.max = playlists.length;
-	log.insertAdjacentElement('beforeend', progressBar);
+		progressBar = Utils.showProgressBar(playlists.length);
 	
 	for (let playlistDir of playlistDirs) {
 		let metadataCSVHandle = await playlistDir.getFileHandle(Utils.PLAYLIST_METADATA_FILE_NAME),
