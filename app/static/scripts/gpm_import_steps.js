@@ -191,8 +191,8 @@ export async function getAllPlaylistMetadata(playlistDirs) {
 			metadata = (await Utils.parseCSV(metadataCSV, { header: true })).data[0],
 			tracksDirHandle = await playlistDir.getDirectoryHandle(Utils.TRACKS_DIR_NAME);
 		playlists.push({
-			title: metadata['Title'],
-			description: metadata['Description'],
+			title: Utils.removeHTMLEntities(metadata['Title']),
+			description: Utils.removeHTMLEntities(metadata['Description']),
 			tracksDir: tracksDirHandle
 		});
 		progressBar.value++;
@@ -226,12 +226,100 @@ async function getPlaylistTracks(tracksDir) {
 		let trackCSV = await handle.getFile(),
 			csvData = (await Utils.parseCSV(trackCSV, { header: true })).data[0];
 		tracks.push({
-			title: csvData['Title'],
-			artist: csvData['Artist'],
-			albumTitle: csvData['Album'],
+			title: Utils.removeHTMLEntities(csvData['Title']),
+			artist: Utils.removeHTMLEntities(csvData['Artist']),
+			albumTitle: Utils.removeHTMLEntities(csvData['Album']),
 			index: csvData['Playlist Index']
 		});
 	}
 	tracks = tracks.sort((a, b) => parseInt(a.index) < parseInt(b.index) ? -1 : 1);
 	return tracks;
+}
+
+/**
+ * Upload each playlist and its tracks.
+ * @param {Array<Object>} playlists
+ * @returns {Promise}
+ */
+export async function uploadPlaylists(playlists) {
+	var progressBar = Utils.showProgressBar(playlists.length);
+	
+	for (let playlist of playlists) {
+		// Upload the playlist's metadata.
+		let playlistParams = new URLSearchParams();
+		playlistParams.append('title', playlist.title);
+		playlistParams.append('description', playlist.description);
+		
+		let playlistRes = await fetch('/api/playlists', {
+			method: 'POST',
+			body: playlistParams
+		});
+		
+		let playlistData = await playlistRes.json();
+		playlist.id = playlistData._id;
+		
+		// Now that the playlist exists, add the tracks.
+		await uploadPlaylistTracks(playlist);
+		
+		progressBar.value++;
+	}
+}
+
+/**
+ * Upload each track from a playlist.
+ * @param {Object} playlist
+ * @returns {Promise}
+ */
+async function uploadPlaylistTracks(playlist) {
+	for (let trackData of playlist.tracks) {
+		// Get the ID the song has been assigned in the database.
+		let songId = await getPlaylistSongId(trackData);
+		if (!songId) {
+			continue;
+		}
+		
+		let trackParams = new URLSearchParams();
+		trackParams.append('song-id', songId);
+		
+		let trackAddRes = await fetch(`/api/playlists/${playlist.id}`, {
+			method: 'POST',
+			body: trackParams
+		});
+		
+		if (!trackAddRes.ok) {
+			console.warn(`Error occurred while adding ${trackData.title} for playlist ${playlist.title}.`);
+			debugger;
+		}
+	}
+}
+
+/**
+ * Get the ID for a song from the database.
+ * @param {Object} trackData
+ * @returns {Promise<String>}
+ */
+async function getPlaylistSongId(trackData) {
+	let songParams = new URLSearchParams();
+	songParams.append('title', trackData.title);
+	if (trackData.artist    ) { songParams.append('artist',      trackData.artist);     }
+	if (trackData.albumTitle) { songParams.append('album-title', trackData.albumTitle); }
+	
+	let songRes = await fetch(`/api/songs?${songParams.toString()}`),
+		songData = await songRes.json();
+	
+	if (!songData || songData.length === 0) {
+		// If it was not found, try again without including the album title,
+		// in case there are multiple albums with the same title and different artists.
+		songParams.delete('album-title');
+		songRes = await fetch(`/api/songs?${songParams.toString()}`);
+		songData = await songRes.json();
+	}
+	if (!songData || songData.length === 0) {
+		// If still not found, give up.
+		console.warn(`Unable to find ${trackData.title} for playlist.`);
+		debugger;
+		return;
+	}
+	
+	return songData[0]._id;
 }
