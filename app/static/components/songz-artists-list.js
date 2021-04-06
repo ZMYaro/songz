@@ -1,9 +1,17 @@
 'use strict';
 
-//import {LitElement, html} from 'lit-element';
-import {LitElement, html} from 'https://unpkg.com/lit-element@2.4.0/lit-element.js?module';
+//import {LitElement, html, css} from 'lit-element';
+import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.4.0/lit-element.js?module';
 
 export class SongZArtistsList extends LitElement {
+	
+	static get styles() {
+		return css`
+			a {
+				text-decoration: none;
+			}
+		`;
+	}
 	
 	static get properties() {
 		return {
@@ -35,15 +43,15 @@ export class SongZArtistsList extends LitElement {
 			${this.artists.length === 0 ?
 				'No artists' :
 				html`
-					<ul>
+					<mwc-list>
 						${(this.artists || []).map((artist, i) => html`
-							<li>
-								<a href="#artists/${artist._id}">
+							<a href="#artists/${artist._id}">
+								<mwc-list-item>
 									${artist.name}
-								</a>
-							</li>
+								</mwc-list-item>
+							</a>
 						`)}
-					</ul>
+					</mwc-list>
 				`
 			}
 		`;

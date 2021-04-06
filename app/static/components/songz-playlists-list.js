@@ -1,9 +1,17 @@
 'use strict';
 
-//import {LitElement, html} from 'lit-element';
-import {LitElement, html} from 'https://unpkg.com/lit-element@2.4.0/lit-element.js?module';
+//import {LitElement, html, css} from 'lit-element';
+import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.4.0/lit-element.js?module';
 
 export class SongZPlaylistsList extends LitElement {
+	
+	static get styles() {
+		return css`
+			a {
+				text-decoration: none;
+			}
+		`;
+	}
 	
 	static get properties() {
 		return {
@@ -52,15 +60,15 @@ export class SongZPlaylistsList extends LitElement {
 			${this.playlists.length === 0 ?
 				'No playlists' :
 				html`
-					<ul>
+					<mwc-list>
 						${(this.playlists || []).map((playlist, i) => html`
-							<li>
-								<a href="#playlists/${playlist._id}">
+							<a href="#playlists/${playlist._id}">
+								<mwc-list-item>
 									${playlist.title}
-								</a>
-							</li>
+								</mwc-list-item>
+							</a>
 						`)}
-					</ul>
+					</mwc-list>
 				`
 			}
 		`;
