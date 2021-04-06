@@ -10,6 +10,9 @@ export class SongZArtistsList extends LitElement {
 			a {
 				text-decoration: none;
 			}
+			p {
+				text-align: center;
+			}
 		`;
 	}
 	
@@ -21,7 +24,6 @@ export class SongZArtistsList extends LitElement {
 	
 	constructor() {
 		super();
-		this.artists = [];
 		this.loadArtists();
 	}
 	
@@ -30,6 +32,7 @@ export class SongZArtistsList extends LitElement {
 	 * @returns {Promise} Resolves when the list of artists has been loaded and set to display
 	 */
 	async loadArtists() {
+		this.artists = undefined;
 		let artistsRes = await fetch('/api/artists');
 		this.artists = await artistsRes.json();
 	}
@@ -40,8 +43,10 @@ export class SongZArtistsList extends LitElement {
 	render() {
 		return html`
 			<songz-main-top-bar selected="artists"></songz-main-top-bar>
-			${this.artists.length === 0 ?
-				'No artists' :
+			${!this.artists ?
+				html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>` :
+			this.artists.length === 0 ?
+				html`<p>No artists</p>` :
 				html`
 					<mwc-list>
 						${(this.artists || []).map((artist, i) => html`

@@ -1,9 +1,17 @@
 'use strict';
 
-//import {LitElement, html} from 'lit-element';
-import {LitElement, html} from 'https://unpkg.com/lit-element@2.4.0/lit-element.js?module';
+//import {LitElement, html, css} from 'lit-element';
+import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.4.0/lit-element.js?module';
 
 export class SongZSongsList extends LitElement {
+	
+	static get styles() {
+		return css`
+			p {
+				text-align: center;
+			}
+		`;
+	}
 	
 	static get properties() {
 		return {
@@ -13,7 +21,6 @@ export class SongZSongsList extends LitElement {
 	
 	constructor() {
 		super();
-		this.songs = [];
 		this.loadSongs();
 	}
 	
@@ -22,6 +29,7 @@ export class SongZSongsList extends LitElement {
 	 * @returns {Promise} Resolves when the list of songs has been loaded and set to display
 	 */
 	async loadSongs() {
+		this.songs = undefined;
 		let songsRes = await fetch('/api/songs');
 		this.songs = await songsRes.json();
 	}
@@ -32,8 +40,10 @@ export class SongZSongsList extends LitElement {
 	render() {
 		return html`
 			<songz-main-top-bar selected="songs"></songz-main-top-bar>
-			${this.songs.length === 0 ?
-				'No songs' :
+			${!this.songs ?
+				html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>` :
+			this.songs.length === 0 ?
+				html`<p>No songs</p>` :
 				html`<songz-song-list .songs="${this.songs}"></songz-song-list>`
 			}
 		`;

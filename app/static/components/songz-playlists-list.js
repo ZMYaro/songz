@@ -10,6 +10,9 @@ export class SongZPlaylistsList extends LitElement {
 			a {
 				text-decoration: none;
 			}
+			p {
+				text-align: center;
+			}
 		`;
 	}
 	
@@ -21,7 +24,6 @@ export class SongZPlaylistsList extends LitElement {
 	
 	constructor() {
 		super();
-		this.playlists = [];
 		this.loadPlaylists();
 	}
 	
@@ -30,6 +32,7 @@ export class SongZPlaylistsList extends LitElement {
 	 * @returns {Promise} Resolves when the list of playlists has been loaded and set to display
 	 */
 	async loadPlaylists() {
+		this.playlists = undefined;
 		let playlistsRes = await fetch('/api/playlists');
 		this.playlists = await playlistsRes.json();
 	}
@@ -57,8 +60,10 @@ export class SongZPlaylistsList extends LitElement {
 			<songz-main-top-bar selected="playlists"></songz-main-top-bar>
 			<button @click="${this.createNewPlaylist}">Create new playlist</button>
 			<br />
-			${this.playlists.length === 0 ?
-				'No playlists' :
+			${!this.playlists ?
+				html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>` :
+			this.playlists.length === 0 ?
+				html`<p>No playlists</p>` :
 				html`
 					<mwc-list>
 						${(this.playlists || []).map((playlist, i) => html`

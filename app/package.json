@@ -17,6 +17,7 @@
 	},
 	"homepage": "https://github.com/zmyaro/songz#readme",
 	"dependencies": {
+		"@material/mwc-circular-progress": "^0.20.0",
 		"@material/mwc-fab": "^0.19.1",
 		"@material/mwc-icon": "^0.19.1",
 		"@material/mwc-icon-button": "^0.19.1",

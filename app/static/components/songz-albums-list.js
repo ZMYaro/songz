@@ -12,6 +12,9 @@ export class SongZAlbumsList extends LitElement {
 			a {
 				text-decoration: none;
 			}
+			p {
+				text-align: center;
+			}
 		`;
 	}
 	
@@ -23,7 +26,6 @@ export class SongZAlbumsList extends LitElement {
 	
 	constructor() {
 		super();
-		this.albums = [];
 		this.loadAlbums();
 	}
 	
@@ -32,6 +34,7 @@ export class SongZAlbumsList extends LitElement {
 	 * @returns {Promise} Resolves when the list of albums has been loaded and set to display
 	 */
 	async loadAlbums() {
+		this.albums = undefined;
 		let albumsRes = await fetch('/api/albums');
 		this.albums = await albumsRes.json();
 	}
@@ -42,8 +45,10 @@ export class SongZAlbumsList extends LitElement {
 	render() {
 		return html`
 			<songz-main-top-bar selected="albums"></songz-main-top-bar>
-			${this.albums.length === 0 ?
-				'No albums' :
+			${!this.albums ?
+				html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>` :
+			this.albums.length === 0 ?
+				html`<p>No albums</p>` :
 				html`
 					<mwc-list>
 						${(this.albums || []).map((album, i) => html`

@@ -3,6 +3,8 @@
 
 //import '@polymer/app-layout'; // Needed for <app-drawer> and <app-drawer-layout>.
 import 'https://unpkg.com/@polymer/app-layout@3.1.0/app-layout.js?module';
+//import '@material/mwc-circular-progress';
+import 'https://unpkg.com/@material/mwc-circular-progress@0.20.0/mwc-circular-progress.js?module';
 //import '@material/mwc-fab';
 import 'https://unpkg.com/@material/mwc-fab@0.20.0/mwc-fab.js?module';
 //import '@material/mwc-icon';
