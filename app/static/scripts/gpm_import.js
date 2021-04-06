@@ -5,7 +5,8 @@ import {
 	getAllTrackMetadata,
 	uploadTrackMetadata,
 	readPlaylistList,
-	getAllPlaylistMetadata
+	getAllPlaylistMetadata,
+	getAllPlaylistTracks
 } from '/scripts/gpm_import_steps.js';
 import * as Utils from '/scripts/gpm_import_utils.js';
 
@@ -74,7 +75,7 @@ async function selectGPMFolder() {
 	try {
 		await uploadTrackMetadata(trackMetadataList);
 	} catch (err) {
-		Utils.logMessage('Something went wrong during track metadata import.');
+		Utils.logMessage('Something went wrong during track metadata import.  Aborting.');
 		throw err;
 		return;
 	}
@@ -92,14 +93,23 @@ async function selectGPMFolder() {
 	try {
 		var playlists = await getAllPlaylistMetadata(playlistDirs);
 	} catch (err) {
-		Utils.logMessage('Something went wrong during playlist metadata import.');
+		Utils.logMessage('Something went wrong during playlist metadata import.  Aborting.');
 		throw err;
 		return;
 	}
 	
 	Utils.logMessage('Loaded playlists\' metadata.  Loading playlist tracks...');
 	
-	// TODO: Parse playlist dir contents.
+	try {
+		await getAllPlaylistTracks(playlists);
+	} catch (err) {
+		Utils.logMessage('Something went wrong during playlist track import.  Aborting.');
+		throw err;
+		return;
+	}
+	
+	Utils.logMessage('Loaded playlist track metadata.  Beginning upload...');
+	
 	// TODO: Parse and upload playlist track data.
 	Utils.logMessage('TODO: [see source code]');
 	

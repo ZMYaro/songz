@@ -183,7 +183,7 @@ export async function readPlaylistList(gpmDir) {
  */
 export async function getAllPlaylistMetadata(playlistDirs) {
 	var playlists = [],
-		progressBar = Utils.showProgressBar(playlists.length);
+		progressBar = Utils.showProgressBar(playlistDirs.length);
 	
 	for (let playlistDir of playlistDirs) {
 		let metadataCSVHandle = await playlistDir.getFileHandle(Utils.PLAYLIST_METADATA_FILE_NAME),
@@ -198,4 +198,40 @@ export async function getAllPlaylistMetadata(playlistDirs) {
 		progressBar.value++;
 	}
 	return playlists;
+}
+
+/**
+ * Parse each playlist's track CSVs.
+ * @param {Array<Object>} playlists
+ * @returns {Promise}
+ */
+export async function getAllPlaylistTracks(playlists) {
+	var progressBar = Utils.showProgressBar(playlists.length);
+	
+	for (let playlist of playlists) {
+		playlist.tracks = await getPlaylistTracks(playlist.tracksDir);
+		progressBar.value++;
+	}
+}
+
+/**
+ * Parse the track CSVs for a playlist.
+ * @param {FileSystemDirectoryHandle} tracksDir
+ * @returns {Promise<Array<Object>>}
+ */
+async function getPlaylistTracks(tracksDir) {
+	var tracks = [];
+	
+	for await (let [name, handle] of tracksDir) {
+		let trackCSV = await handle.getFile(),
+			csvData = (await Utils.parseCSV(trackCSV, { header: true })).data[0];
+		tracks.push({
+			title: csvData['Title'],
+			artist: csvData['Artist'],
+			albumTitle: csvData['Album'],
+			index: csvData['Playlist Index']
+		});
+	}
+	tracks = tracks.sort((a, b) => parseInt(a.index) < parseInt(b.index) ? -1 : 1);
+	return tracks;
 }
