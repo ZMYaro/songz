@@ -157,7 +157,7 @@ router.route('/songs')
 router.route('/albums')
 	/** Get all albums. */
 	.get(async function (req, res) {
-		var albums = await Album.find({}).sort({ title: 'asc', artist: 'asc' });
+		var albums = await Album.find({}).sort({ title: 'asc', artist: 'asc' }).populate('artist');
 		res.json(albums);
 	});
 
