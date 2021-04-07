@@ -1,14 +1,24 @@
 'use strict';
 
-//import {LitElement, html} from 'lit-element';
-import {LitElement, html} from 'https://unpkg.com/lit-element@2.4.0/lit-element.js?module';
+//import {LitElement, html, css} from 'lit-element';
+import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.4.0/lit-element.js?module';
 
 export class SongZPlaylist extends LitElement {
+	
+	static get styles() {
+		return css`
+			p {
+				text-align: center;
+			}
+		`;
+	}
 	
 	static get properties() {
 		return {
 			playlistid: { type: String, reflect: true },
-			playlist: { type: Object, attribute: false }
+			title: { type: String, reflect: true },
+			description: { type: String, reflect: true },
+			songs: { type: Array, attribute: false }
 		};
 	}
 	
@@ -28,10 +38,12 @@ export class SongZPlaylist extends LitElement {
 	 * @returns {Promise} Resolves when the list of playlists has been loaded and set to display
 	 */
 	async loadPlaylist() {
-		this.playlist = { title: '...', description: '', songs: [] };
+		this.songs = undefined;
 		var playlistRes = await fetch(`/api/playlists/${this.playlistid}`),
 			playlist = await playlistRes.json();
-		this.playlist = playlist;
+		this.title = playlist.title;
+		this.description = playlist.description;
+		this.songs = playlist.songs;
 	}
 	
 	// TEMP
@@ -47,7 +59,7 @@ export class SongZPlaylist extends LitElement {
 				body: 'song-id=' + encodeURIComponent(songId)
 			}),
 			newPlaylistItem = await playlistItemRes.json();
-		this.playlist.songs.push(newPlaylistItem);
+		this.songs.push(newPlaylistItem);
 		this.requestUpdate();
 	}
 	
@@ -58,11 +70,14 @@ export class SongZPlaylist extends LitElement {
 		return html`
 			<mwc-top-app-bar-fixed>
 				<mwc-icon-button icon="arrow_back" slot="navigationIcon" @click="${() => location.href = '#playlists'}"></mwc-icon-button>
-				<span role="heading" aria-level="1" slot="title">${this.playlist?.title}</span>
+				<span role="heading" aria-level="1" slot="title">${this.title || ''}</span>
 				<button slot="actionItems" @click="${this.addSongToPlaylist}">Add song</button>
 			</mwc-top-app-bar-fixed>
-			<p>${this.playlist?.description || ''}</p>
-			<songz-song-list type="playlist" .songs="${this.playlist?.songs}"></songz-song-list>
+			<p>${this.description || ''}</p>
+			${!this.songs ?
+				html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>` :
+				html`<songz-song-list type="playlist" .songs="${this.songs}"></songz-song-list>`
+			}
 		`;
 	}
 }
