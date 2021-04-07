@@ -47,7 +47,7 @@ playlistSchema.statics.findByIdWithSongs = async function (id) {
 	var playlist = await this.findById(id);
 	if (!playlist) { return; }
 	
-	var returnablePlaylist = Object.assign({ songs: [] }, playlist);
+	var returnablePlaylist = Object.assign({ songs: [] }, playlist.toObject());
 	
 	// Load the first item and then start recursively loading the rest of the list.
 	await playlist.populate('firstItem').execPopulate();
