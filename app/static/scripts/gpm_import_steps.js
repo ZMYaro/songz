@@ -273,7 +273,7 @@ export async function uploadPlaylists(playlists) {
 async function uploadPlaylistTracks(playlist) {
 	for (let trackData of playlist.tracks) {
 		// Get the ID the song has been assigned in the database.
-		let songId = await getPlaylistSongId(trackData);
+		let songId = await getPlaylistSongId(trackData, playlist);
 		if (!songId) {
 			continue;
 		}
@@ -287,7 +287,7 @@ async function uploadPlaylistTracks(playlist) {
 		});
 		
 		if (!trackAddRes.ok) {
-			console.warn(`Error occurred while adding ${trackData.title} for playlist ${playlist.title}.`);
+			console.warn(`Error occurred while adding \u201c${trackData.title}\u201d for playlist \u201c${playlist.title}\u201d.`);
 			debugger;
 		}
 	}
@@ -296,9 +296,10 @@ async function uploadPlaylistTracks(playlist) {
 /**
  * Get the ID for a song from the database.
  * @param {Object} trackData
+ * @param {Ojbect} playlist - Only for logging when something goes wrong
  * @returns {Promise<String>}
  */
-async function getPlaylistSongId(trackData) {
+async function getPlaylistSongId(trackData, playlist) {
 	let songParams = new URLSearchParams();
 	songParams.append('title', trackData.title);
 	if (trackData.artist    ) { songParams.append('artist',      trackData.artist);     }
@@ -316,7 +317,7 @@ async function getPlaylistSongId(trackData) {
 	}
 	if (!songData || songData.length === 0) {
 		// If still not found, give up.
-		console.warn(`Unable to find ${trackData.title} for playlist.`);
+		console.warn(`Unable to find \u201c${trackData.title}\u201d for playlist \u201c${playlist.title}\u201d.`);
 		debugger;
 		return;
 	}
