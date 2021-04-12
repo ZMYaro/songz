@@ -14,10 +14,12 @@ export class SongZMainView extends LitElement {
 					--mdc-top-app-bar-width: calc(100% - var(--app-drawer-width));
 				}
 			}
+			songz-album,
 			songz-albums-list,
+			songz-artist,
 			songz-artists-list,
-			songz-playlists-list,
 			songz-playlist,
+			songz-playlists-list,
 			songz-songs-list {
 				display: block;
 				height: 100%;
