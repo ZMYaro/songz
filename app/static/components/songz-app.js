@@ -231,9 +231,14 @@ export class SongZApp extends LitElement {
 	 * @param {NUmber} i - The index from the queue to move
 	 */
 	moveSongNext(i) {
+		// Do not move the current song.
+		if (i === this.queuePosition) {
+			return;
+		}
 		// Pull the song out of the queue.
 		var song = this.queue.splice(i, 1)[0];
-		// Insert it at the new position.
+		// Update the queue position if needed, and insert it at the new position.
+		this.queuePosition = (i < this.queuePosition ? (this.queuePosition - 1) : this.queuePosition);
 		this.queue.splice(this.queuePosition + 1, 0, song);
 		// Preload it as the next song.
 		this.loadSong(this.inactivePlayer, this.queue[this.queuePosition + 1]);
