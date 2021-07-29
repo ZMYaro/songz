@@ -15,9 +15,12 @@ const bodyParser = require('body-parser'),
 const router = express.Router();
 
 router.use(bodyParser.urlencoded({ extended: false }));
-
-router.all((req, res, next) => {
+router.use((req, res, next) => {
 	res.set('Content-Type', 'application/json');
+	// Ensure the user is authenticated, or fail the request.
+	if (!req.user) {
+		return handleError(res, 'Unauthorized.', 401);
+	}
 	next();
 });
 

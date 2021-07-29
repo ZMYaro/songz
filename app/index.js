@@ -1,10 +1,15 @@
 'use strict';
 
-const express = require('express'),
+const cookieSession = require('cookie-session'),
+	express = require('express'),
 	mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
-	path = require('path'),
-	apiRouter = require('./routes/api');
+	passport = require('passport'),
+	GoogleStrategy = require('passport-google-oauth20').Strategy,
+	User = require('./models/user.js'),
+	apiRouter = require('./routes/api.js'),
+	authRouter = require('./routes/auth.js'),
+	guiRouter = require('./routes/gui.js');
 
 const PORT = process.env.PORT || 8080,
 	DB_NAME = 'songz',
@@ -13,12 +18,41 @@ const PORT = process.env.PORT || 8080,
 // Set up Express.
 const app = express();
 app.set('port', PORT);
+
+// Set up Passport for auth.
+passport.use(new GoogleStrategy({
+	clientID: process.env.GOOGLE_CLIENT_ID,
+	clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+	callbackURL: '/auth/google/callback'
+}, function (accessToken, refreshToken, profile, done) {
+	User.findOne({ googleId: profile.id }).then(function (user) {
+		// Tell Passport done with DB.
+		done(null, user);
+	});
+}));
+passport.serializeUser(function (user, done) {
+	// Serialize the user's DB ID instead of xer Google ID.
+	done(null, user.id);
+});
+passport.deserializeUser(function (id, done) {
+	User.findById(id, function (err, user) {
+		done(err, user);
+	});
+});
+app.use(cookieSession({
+	name: 'session',
+	keys: [process.env.SESSION_KEY],
+	maxAge: 24 * 60 * 60 * 1000
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Set up routes.
 app.use(express.static('static'));
 app.use('/node_modules', express.static('node_modules'));
 app.use('/api', apiRouter);
-app.get('/add', (req, res) => res.sendFile(path.join(__dirname, '/views/add_song.html')));
-app.get('/import', (req, res) => res.sendFile(path.join(__dirname, '/views/gpm_import.html')));
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, '/views/index.html')));
+app.use('/auth', authRouter);
+app.use('/', guiRouter);
 
 // Set up DB connection.
 mongoose.connect(MONGODB_URI, {
@@ -33,7 +67,5 @@ db.on('error', (err) => {
 })
 db.once('open', function () {
 	// Start server once DB ready.
-	app.listen(PORT, () => {
-		console.log(`Listening on port ${PORT}...`);
-	});
+	app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
 });
