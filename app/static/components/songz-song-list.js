@@ -1,9 +1,9 @@
 'use strict';
 
 //import {LitElement, html, css} from 'lit-element';
-import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.4.0/lit-element.js?module';
+import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.5.1/lit-element.js?module';
 //import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
-import {unsafeHTML} from 'https://unpkg.com/lit-html@1.3.0/directives/unsafe-html.js?module';
+import {unsafeHTML} from 'https://unpkg.com/lit-html@1.4.1/directives/unsafe-html.js?module';
 
 import {formatAlbum, formatArtist, formatDuration, handleMenuButton, handleMenuItemSelect} from '../scripts/utils.js';
 

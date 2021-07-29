@@ -1,7 +1,7 @@
 'use strict';
 
 //import {LitElement, html, css, unsafeCSS}, css from 'lit-element';
-import {LitElement, html, css, unsafeCSS} from 'https://unpkg.com/lit-element@2.4.0/lit-element.js?module';
+import {LitElement, html, css, unsafeCSS} from 'https://unpkg.com/lit-element@2.5.1/lit-element.js?module';
 
 import {formatArtist, formatDuration, toGDriveURL, handleMenuButton, handleMenuItemSelect} from '../scripts/utils.js';
 

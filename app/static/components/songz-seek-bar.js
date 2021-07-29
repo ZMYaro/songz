@@ -1,7 +1,7 @@
 'use strict';
 
 //import {LitElement, html, css, unsafeCSS} from 'lit-element';
-import {LitElement, html, css, unsafeCSS} from 'https://unpkg.com/lit-element@2.4.0/lit-element.js?module';
+import {LitElement, html, css, unsafeCSS} from 'https://unpkg.com/lit-element@2.5.1/lit-element.js?module';
 
 import {NARROW_WINDOW_THRESHOLD} from '../scripts/constants.js';
 import {formatDuration, toGDriveURL} from '../scripts/utils.js';
