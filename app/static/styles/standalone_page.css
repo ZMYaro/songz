@@ -21,6 +21,7 @@ progress {
 
 @media (prefers-color-scheme: dark) {
 	body {
+		color-scheme: dark;
 		background: #101010;
 		color: #f0f0f0;
 	}
@@ -30,8 +31,4 @@ progress {
 		a:active {
 			color: #ff8080;
 		}
-	button,
-	input {
-		filter: invert();
-	}
 }
