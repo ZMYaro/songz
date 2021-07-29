@@ -1,7 +1,8 @@
 'use strict';
 
 //import * as ID3 from 'id3js';
-import * as ID3 from 'https://unpkg.com/id3js@2.1.1/lib/id3.js';
+//import * as ID3 from 'https://unpkg.com/id3js@2.1.1/lib/id3.js';
+import * as ID3 from './id3js/id3.js';
 
 import * as Utils from '/scripts/gpm_import_utils.js';
 
