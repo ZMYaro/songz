@@ -62,10 +62,12 @@ mongoose.connect(MONGODB_URI, {
 });
 let db = mongoose.connection;
 db.on('error', (err) => {
+	console.error(`Error connecting to database \u201c${MONGODB_URI}\u201d:`);
 	console.error(err);
 	process.exit(1);
 })
 db.once('open', function () {
+	console.log(`Connected to database \u201c${MONGODB_URI}\u201d.`);
 	// Start server once DB ready.
 	app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
 });
