@@ -13,7 +13,7 @@ const cookieSession = require('cookie-session'),
 
 const PORT = process.env.PORT || 8080,
 	DB_NAME = 'songz',
-	MONGODB_URI = process.env.MONGDB_URI || `mongodb://localhost:27017/${DB_NAME}`;
+	MONGODB_URI = process.env.MONGODB_URI || `mongodb://localhost:27017/${DB_NAME}`;
 
 // Set up Express.
 const app = express();
