@@ -96,6 +96,13 @@ export class SongZMainView extends LitElement {
 	}
 	
 	/**
+	 * Handle metadata getting updated.
+	 */
+	handleMetadataUpdate() {
+		this.shadowRoot.firstElementChild?.handleMetadataUpdate?.();
+	}
+	
+	/**
 	 * Get from a given API endpoint.
 	 * @param {String} url - The URL for the API endpoint
 	 * @returns {Promise<Array<Object>>} Resolves with the data and sorted list of songs

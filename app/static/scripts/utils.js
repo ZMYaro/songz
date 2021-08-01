@@ -7,7 +7,7 @@
  * @returns {String} - The song's album as an HTML link
  */
 export function formatAlbum(song, returnPlainText) {
-	if (!song.album) {
+	if (!song?.album) {
 		return '';
 	}
 	if (returnPlainText) {
@@ -23,7 +23,7 @@ export function formatAlbum(song, returnPlainText) {
  * @returns {String} - The song's artists' names, as a semicolon-separated list
  */
 export function formatArtist(song, returnPlainText) {
-	if (!song.artist) {
+	if (!song?.artist) {
 		return '';
 	}
 	if (returnPlainText) {

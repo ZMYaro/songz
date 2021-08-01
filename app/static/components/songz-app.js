@@ -14,6 +14,8 @@ export class SongZApp extends LitElement {
 	activePlayer;
 	inactivePlayer;
 	mainView;
+	queueView;
+	editSongDialog;
 	playthroughStatus = 0;
 	
 	static get properties() {
@@ -58,8 +60,10 @@ export class SongZApp extends LitElement {
 		// Apply theming to old Polymer drawer.
 		this.querySelector('app-drawer').shadowRoot.getElementById('contentContainer').style.backgroundColor = 'var(--mdc-theme-surface)';
 		
-		// Get reference to main view.
+		// Get references to views.
 		this.mainView = this.querySelector('songz-main-view');
+		this.queueView = this.querySelector('songz-queue');
+		this.editSongDialog = this.querySelector('songz-edit-song-dialog');
 		
 		// Set up audio players.
 		this.activePlayer = new Audio();
@@ -323,6 +327,7 @@ export class SongZApp extends LitElement {
 		this.activePlayer.currentTime = ev.currentTarget.currentTime;
 		this.updateSessionPositionState();
 	}
+	
 	/**
 	 * Update the UI and media session in response to the player playing.
 	 * @param {Event} ev
@@ -335,6 +340,15 @@ export class SongZApp extends LitElement {
 			this.savePlaythrough();
 		}
 	}
+	
+	/**
+	 * Handle metadata getting updated.
+	 */
+	handleMetadataUpdate() {
+		this.mainView.handleMetadataUpdate();
+		this.queueView.handleMetadataUpdate();
+	}
+	
 	/**
 	 * Update the media session with the current song's metadata.
 	 */
@@ -349,6 +363,7 @@ export class SongZApp extends LitElement {
 			}]
 		});
 	}
+	
 	/**
 	 * Update the media session's position state with the player's state.
 	 */
@@ -378,7 +393,8 @@ export class SongZApp extends LitElement {
 						@queue-play-next="${(ev) => this.moveSongNext(ev.detail.index)}"
 						@queue-remove="${(ev) => this.removeSongFromQueue(ev.detail.index)}"
 						@open-album="${(ev) => location.hash = 'albums/' + this.queue[ev.detail.index].album._id}"
-						@open-artist="${(ev) => location.hash = 'artists/' + this.queue[ev.detail.index].artist[0]._id}">
+						@open-artist="${(ev) => location.hash = 'artists/' + this.queue[ev.detail.index].artist[0]._id}"
+						@edit-song="${(ev) => this.editSongDialog.show(this.queue[ev.detail.index])}">
 					</songz-queue>
 				</app-drawer>
 				<songz-main-view
@@ -386,7 +402,8 @@ export class SongZApp extends LitElement {
 					@play-next="${(ev) => this.addSongToQueue(ev.detail.list, ev.detail.index, true)}"
 					@add-to-queue="${(ev) => this.addSongToQueue(ev.detail.list, ev.detail.index, false)}"
 					@open-album="${(ev) => location.hash = 'albums/' + ev.detail.list[ev.detail.index].album._id}"
-					@open-artist="${(ev) => location.hash = 'artists/' + ev.detail.list[ev.detail.index].artist[0]._id}">
+					@open-artist="${(ev) => location.hash = 'artists/' + ev.detail.list[ev.detail.index].artist[0]._id}"
+					@edit-song="${(ev) => this.editSongDialog.show(ev.detail.list[ev.detail.index])}">
 				</songz-main-view>
 			</app-drawer-layout>
 			<songz-player
@@ -401,6 +418,9 @@ export class SongZApp extends LitElement {
 				@next="${this.nextSong}"
 				@seek="${this.handleSeek}">
 			</songz-player>
+			<songz-edit-song-dialog
+				@update-song="${this.handleMetadataUpdate}">
+			</songz-edit-song-dialog>
 		`;
 	}
 	

@@ -20,7 +20,18 @@
 				font-family: Roboto, 'Helvetica Neue', sans-serif;
 				--mdc-theme-surface: #ffffff;
 				--mdc-theme-primary: #263238;
+				--mdc-theme-secondary: #018786;
+				--mdc-dialog-heading-ink-color: rgba(0, 0, 0, 0.87);
+				--mdc-dialog-content-ink-color: rgba(0, 0, 0, 0.6);
 				--player-height: 64px; /* PLAYER_HEIGHT_SMALL */
+			}
+			mwc-dialog mwc-button {
+				--mdc-theme-primary: var(--mdc-theme-secondary);
+			}
+			mwc-dialog fieldset {
+				margin: 0;
+				border: 0 none;
+				padding: 0;
 			}
 			@media (min-width: 640px) {
 				body {
@@ -69,6 +80,8 @@
 					--mdc-theme-text-secondary-on-background: rgba(255, 255, 255, 0.54);
 					--mdc-theme-text-hint-on-background: rgba(255, 255, 255, 0.38);
 					--mdc-theme-text-icon-on-background: rgba(255, 255, 255, 0.38);
+					--mdc-dialog-heading-ink-color: rgba(255, 255, 255, 0.87);
+					--mdc-dialog-content-ink-color: rgba(255, 255, 255, 0.6);
 					--mdc-ripple-color: rgba(255, 255, 255, 0.38);
 				}
 			}

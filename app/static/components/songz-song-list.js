@@ -9,7 +9,7 @@ import {formatAlbum, formatArtist, formatDuration, handleMenuButton, handleMenuI
 
 export class SongZSongList extends LitElement {
 	
-	songMenu = undefined;
+	songMenu;
 	
 	static get styles() {
 		return css`
@@ -137,6 +137,11 @@ export class SongZSongList extends LitElement {
 					<mwc-icon slot="graphic">person</mwc-icon>
 					<!--<mwc-icon slot="graphic">account_music</mwc-icon>-->
 					Go to artist
+				</mwc-list-item>
+				<li divider role="separator"></li>
+				<mwc-list-item graphic="icon" value="edit-song">
+					<mwc-icon slot="graphic">edit</mwc-icon>
+					Edit song
 				</mwc-list-item>
 			</mwc-menu>
 		`;

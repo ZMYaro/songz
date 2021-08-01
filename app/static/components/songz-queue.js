@@ -7,7 +7,7 @@ import {formatArtist, formatDuration, toGDriveURL, handleMenuButton, handleMenuI
 
 export class SongZQueue extends LitElement {
 	
-	songMenu = undefined;
+	songMenu;
 	
 	static get styles() {
 		return css`
@@ -103,6 +103,13 @@ export class SongZQueue extends LitElement {
 	}
 	
 	/**
+	 * Handle metadata getting updated.
+	 */
+	handleMetadataUpdate() {
+		this.requestUpdate();
+	}
+	
+	/**
 	 * @override
 	 */
 	render() {
@@ -143,6 +150,11 @@ export class SongZQueue extends LitElement {
 					<mwc-icon slot="graphic">person</mwc-icon>
 					<!--<mwc-icon slot="graphic">account_music</mwc-icon>-->
 					Go to artist
+				</mwc-list-item>
+				<li divider role="separator"></li>
+				<mwc-list-item graphic="icon" value="edit-song">
+					<mwc-icon slot="graphic">edit</mwc-icon>
+					Edit song
 				</mwc-list-item>
 			</mwc-menu>
 		`;

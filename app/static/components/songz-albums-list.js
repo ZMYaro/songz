@@ -40,6 +40,13 @@ export class SongZAlbumsList extends LitElement {
 	}
 	
 	/**
+	 * Handle metadata getting updated.
+	 */
+	handleMetadataUpdate() {
+		this.requestUpdate();
+	}
+	
+	/**
 	 * @override
 	 */
 	render() {

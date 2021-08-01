@@ -38,6 +38,13 @@ export class SongZArtistsList extends LitElement {
 	}
 	
 	/**
+	 * Handle metadata getting updated.
+	 */
+	handleMetadataUpdate() {
+		this.requestUpdate();
+	}
+	
+	/**
 	 * @override
 	 */
 	render() {

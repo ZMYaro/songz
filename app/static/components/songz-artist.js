@@ -45,6 +45,13 @@ export class SongZArtist extends LitElement {
 	}
 	
 	/**
+	 * Handle metadata getting updated.
+	 */
+	handleMetadataUpdate() {
+		this.shadowRoot.querySelector('songz-song-list').requestUpdate();
+	}
+	
+	/**
 	 * @override
 	 */
 	render() {

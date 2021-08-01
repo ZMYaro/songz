@@ -3,8 +3,12 @@
 
 //import '@polymer/app-layout'; // Needed for <app-drawer> and <app-drawer-layout>.
 import 'https://unpkg.com/@polymer/app-layout@3.1.0/app-layout.js?module';
+//import '@material/mwc-button';
+import 'https://unpkg.com/@material/mwc-button@0.22.1/mwc-button.js?module';
 //import '@material/mwc-circular-progress';
 import 'https://unpkg.com/@material/mwc-circular-progress@0.22.1/mwc-circular-progress.js?module';
+//import '@material/mwc-dialog';
+import 'https://unpkg.com/@material/mwc-dialog@0.22.1/mwc-dialog.js?module';
 //import '@material/mwc-fab';
 import 'https://unpkg.com/@material/mwc-fab@0.22.1/mwc-fab.js?module';
 //import '@material/mwc-icon';
@@ -29,6 +33,7 @@ import '../components/songz-albums-list.js';
 import '../components/songz-app.js';
 import '../components/songz-artist.js';
 import '../components/songz-artists-list.js';
+import '../components/songz-edit-song-dialog.js';
 import '../components/songz-main-top-bar.js';
 import '../components/songz-main-view.js';
 import '../components/songz-player.js';

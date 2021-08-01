@@ -53,6 +53,13 @@ export class SongZPlaylistsList extends LitElement {
 	}
 	
 	/**
+	 * Handle metadata getting updated.
+	 */
+	handleMetadataUpdate() {
+		this.requestUpdate();
+	}
+	
+	/**
 	 * @override
 	 */
 	render() {

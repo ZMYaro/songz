@@ -15,7 +15,7 @@ const artistSchema = new Schema({
  * @returns {Promise<Artist>}
  */
 artistSchema.statics.findOrCreateOne = async function (name) {
-	name = name.trim();
+	name = name?.trim();
 	if (!name) { return; }
 	var artist = await this.findOneAndUpdate({name: name}, {name: name}, {
 		new: true,
@@ -31,7 +31,7 @@ artistSchema.statics.findOrCreateOne = async function (name) {
  * @returns {Promise<Array<Artist>>} Resolves with the array of artists after all have been retrieved
  */
 artistSchema.statics.findFromStrList = async function (artistNamesStr, createIfNotFound) {
-	var artistNames = artistNamesStr.trim()?.split(';') || [],
+	var artistNames = artistNamesStr?.trim()?.split(';') || [],
 		artists = [];
 	for (let artistName of artistNames) {
 		let artist = await (createIfNotFound ?

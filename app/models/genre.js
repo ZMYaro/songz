@@ -13,7 +13,7 @@ const genreSchema = new Schema({
  * @returns {Genre}
  */
 genreSchema.statics.findOrCreateOne = async function (name) {
-	name = name.trim();
+	name = name?.trim();
 	if (!name) { return; }
 	var genre = await this.findOneAndUpdate({name: name}, {name: name}, {
 		new: true,
