@@ -17,13 +17,15 @@
 				height: 100%;
 			}
 			body {
-				font-family: Roboto, 'Helvetica Neue', sans-serif;
 				--mdc-theme-surface: #ffffff;
 				--mdc-theme-primary: #263238;
 				--mdc-theme-secondary: #018786;
 				--mdc-dialog-heading-ink-color: rgba(0, 0, 0, 0.87);
 				--mdc-dialog-content-ink-color: rgba(0, 0, 0, 0.6);
-				--player-height: 64px; /* PLAYER_HEIGHT_SMALL */
+				--player-height-small: 64px;
+				--player-height-large: 96px;
+				--player-height: var(--player-height-small);
+				font-family: Roboto, 'Helvetica Neue', sans-serif;
 			}
 			mwc-dialog mwc-button {
 				--mdc-theme-primary: var(--mdc-theme-secondary);
@@ -35,7 +37,7 @@
 			}
 			@media (min-width: 640px) {
 				body {
-					--player-height: 96px; /* PLAYER_HEIGHT_LARGE */
+					--player-height: var(--player-height-large);
 				}
 			}
 			songz-app {
