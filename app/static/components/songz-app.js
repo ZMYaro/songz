@@ -411,12 +411,14 @@ export class SongZApp extends LitElement {
 				status="${this.playStatus}"
 				currenttime="${this.currentTime}"
 				duration="${this.duration}"
+				.song="${this.queue[this.queuePosition]}"
 				@previous="${this.prevSong}"
 				@stepbackward="${this.stepBackward}"
 				@playpause="${this.playPauseSong}"
 				@stepforward="${this.stepForward}"
 				@next="${this.nextSong}"
-				@seek="${this.handleSeek}">
+				@seek="${this.handleSeek}"
+				@open-queue="${() => this.queueView.parentElement.toggle()}">
 			</songz-player>
 			<songz-edit-song-dialog
 				@update-song="${this.handleMetadataUpdate}">
