@@ -3,6 +3,8 @@
 //import {LitElement, html, css} from 'lit-element';
 import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.5.1/lit-element.js?module';
 
+import {setPageTitle} from '../scripts/utils.js';
+
 export class SongZSongsList extends LitElement {
 	
 	static get styles() {
@@ -29,6 +31,7 @@ export class SongZSongsList extends LitElement {
 	 * @returns {Promise} Resolves when the list of songs has been loaded and set to display
 	 */
 	async loadSongs() {
+		setPageTitle('Songs');
 		this.songs = undefined;
 		let songsRes = await fetch('/api/songs');
 		this.songs = await songsRes.json();

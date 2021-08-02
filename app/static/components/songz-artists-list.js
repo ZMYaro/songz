@@ -3,6 +3,8 @@
 //import {LitElement, html, css} from 'lit-element';
 import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.5.1/lit-element.js?module';
 
+import {setPageTitle} from '../scripts/utils.js';
+
 export class SongZArtistsList extends LitElement {
 	
 	static get styles() {
@@ -32,6 +34,7 @@ export class SongZArtistsList extends LitElement {
 	 * @returns {Promise} Resolves when the list of artists has been loaded and set to display
 	 */
 	async loadArtists() {
+		setPageTitle('Artists');
 		this.artists = undefined;
 		let artistsRes = await fetch('/api/artists');
 		this.artists = await artistsRes.json();

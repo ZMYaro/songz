@@ -3,6 +3,8 @@
 //import {LitElement, html, css} from 'lit-element';
 import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.5.1/lit-element.js?module';
 
+import {setPageTitle} from '../scripts/utils.js';
+
 export class SongZAlbum extends LitElement {
 	
 	static get styles() {
@@ -37,9 +39,11 @@ export class SongZAlbum extends LitElement {
 	 * @returns {Promise} Resolves when the list of albums has been loaded and set to display
 	 */
 	async loadAlbum() {
+		setPageTitle('[Album]');
 		this.songs = undefined;
 		var albumRes = await fetch(`/api/albums/${this.albumid}`),
 			album = await albumRes.json();
+		setPageTitle(album.title);
 		this.title = album.title;
 		this.songs = album.songs;
 	}

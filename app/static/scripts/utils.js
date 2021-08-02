@@ -109,3 +109,11 @@ export function handleMenuItemSelect(ev, songList, component) {
 		composed: true
 	}));
 }
+
+/**
+ * Set the page title suffixed with “- SongZ”.
+ * @param {String} title
+ */
+export function setPageTitle(title) {
+	document.title = title ? `${title} - SongZ` : 'SongZ';
+}
