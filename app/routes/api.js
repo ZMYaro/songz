@@ -76,7 +76,9 @@ router.route('/songs')
 			params.album = await Album.findOne(albumParams);
 		}
 		
-		var songs = await populateSong(Song.find(params).sort({ title: 'asc', artist: 'asc', album: 'asc' }));
+		var songs = await populateSong(Song.find(params)
+			.collation({ 'locale': 'en' })
+			.sort({ title: 'asc', artist: 'asc', album: 'asc' }));
 		res.json(songs);
 	})
 	/**
@@ -199,7 +201,10 @@ router.route('/songs')
 router.route('/albums')
 	/** Get all albums. */
 	.get(async function (req, res) {
-		var albums = await Album.find({}).sort({ title: 'asc', artist: 'asc' }).populate('artist');
+		var albums = await Album.find({})
+			.collation({ 'locale': 'en' })
+			.sort({ title: 'asc', artist: 'asc' })
+			.populate('artist');
 		res.json(albums);
 	});
 
@@ -218,7 +223,9 @@ router.route('/albums/:albumId')
 router.route('/artists')
 	/** Get all artists. */
 	.get(async function (req, res) {
-		var artists = await Artist.find({}).sort({ name: 'asc' });
+		var artists = await Artist.find({})
+			.collation({ 'locale': 'en' })
+			.sort({ name: 'asc' });
 		res.json(artists);
 	});
 
@@ -237,7 +244,9 @@ router.route('/artists/:artistId')
 router.route('/playlists')
 	/** Get all playlists. */
 	.get(async function (req, res) {
-		var playlists = await Playlist.find({}).sort({ title: 'asc' });
+		var playlists = await Playlist.find({})
+			.collation({ 'locale': 'en' })
+			.sort({ title: 'asc' });
 		res.json(playlists);
 	})
 	/**
