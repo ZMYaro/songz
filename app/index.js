@@ -5,6 +5,7 @@ const cookieSession = require('cookie-session'),
 	mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
 	passport = require('passport'),
+	path = require('path'),
 	GoogleStrategy = require('passport-google-oauth20').Strategy,
 	User = require('./models/user.js'),
 	apiRouter = require('./routes/api.js'),
@@ -50,6 +51,7 @@ app.use(passport.session());
 // Set up routes.
 app.use(express.static('static'));
 app.use('/node_modules', express.static('node_modules'));
+app.get('/manifest.webmanifest', (req, res) => res.sendFile(path.join(__dirname, 'manifest.webmanifest')));
 app.use('/api', apiRouter);
 app.use('/auth', authRouter);
 app.use('/', guiRouter);
