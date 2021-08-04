@@ -63,6 +63,17 @@ export function formatDuration(duration) {
 		return (minutes + ':' + seconds);
 	}*/
 
+/**
+ * If a response had an HTTP error, turn it into a JavaScript error.
+ * @param {Response} res
+ */
+export function httpToJSError(res) {
+	if (res.ok) {
+		return;
+	}
+	throw Error(res.status + ' - ' + res.statusText);
+}
+
 export function toGDriveURL(gDriveId) {
 	return `https://drive.google.com/uc?export=view&id=${gDriveId}`;
 }

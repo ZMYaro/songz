@@ -3,7 +3,7 @@
 //import {LitElement, html, css} from 'lit-element';
 import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.5.1/lit-element.js?module';
 
-import {setPageTitle} from '../scripts/utils.js';
+import {httpToJSError, setPageTitle} from '../scripts/utils.js';
 
 export class SongZSongsList extends LitElement {
 	
@@ -17,7 +17,8 @@ export class SongZSongsList extends LitElement {
 	
 	static get properties() {
 		return {
-			songs: { type: Array, attribute: false }
+			songs: { type: Array, attribute: false },
+			message: { type: String, attribute: false }
 		};
 	}
 	
@@ -32,9 +33,18 @@ export class SongZSongsList extends LitElement {
 	 */
 	async loadSongs() {
 		setPageTitle('Songs');
+		this.message = undefined;
 		this.songs = undefined;
-		let songsRes = await fetch('/api/songs');
-		this.songs = await songsRes.json();
+		try {
+			var songsRes = await fetch('/api/songs');
+			httpToJSError(songsRes);
+			this.songs = await songsRes.json();
+			if (this.songs.length === 0) {
+				this.message = 'No songs';
+			}
+		} catch (err) {
+			this.message = err;
+		}
 	}
 	
 	/**
@@ -50,11 +60,12 @@ export class SongZSongsList extends LitElement {
 	render() {
 		return html`
 			<songz-main-top-bar selected="songs"></songz-main-top-bar>
-			${!this.songs ?
-				html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>` :
-			this.songs.length === 0 ?
-				html`<p>No songs</p>` :
+			${this.message ?
+				html`<p>${this.message}</p>`
+			: this.songs ?
 				html`<songz-song-list .songs="${this.songs}"></songz-song-list>`
+			:
+				html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>`
 			}
 		`;
 	}

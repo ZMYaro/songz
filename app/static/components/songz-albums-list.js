@@ -3,7 +3,7 @@
 //import {LitElement, html, css} from 'lit-element';
 import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.5.1/lit-element.js?module';
 
-import {formatArtist, setPageTitle} from '../scripts/utils.js';
+import {formatArtist, httpToJSError, setPageTitle} from '../scripts/utils.js';
 
 export class SongZAlbumsList extends LitElement {
 	
@@ -20,7 +20,8 @@ export class SongZAlbumsList extends LitElement {
 	
 	static get properties() {
 		return {
-			albums: { type: Array, attribute: false }
+			albums: { type: Array, attribute: false },
+			message: { type: String, attribute: false }
 		};
 	}
 	
@@ -35,9 +36,18 @@ export class SongZAlbumsList extends LitElement {
 	 */
 	async loadAlbums() {
 		setPageTitle('Albums');
+		this.message = undefined;
 		this.albums = undefined;
-		let albumsRes = await fetch('/api/albums');
-		this.albums = await albumsRes.json();
+		try {
+			var albumsRes = await fetch('/api/albums');
+			httpToJSError(albumsRes);
+			this.albums = await albumsRes.json();
+			if (this.albums.length === 0) {
+				this.message = 'No albums';
+			}
+		} catch (err) {
+			this.message = err;
+		}
 	}
 	
 	/**
@@ -53,10 +63,9 @@ export class SongZAlbumsList extends LitElement {
 	render() {
 		return html`
 			<songz-main-top-bar selected="albums"></songz-main-top-bar>
-			${!this.albums ?
-				html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>` :
-			this.albums.length === 0 ?
-				html`<p>No albums</p>` :
+			${this.message ?
+				html`<p>${this.message}</p>`
+			: this.albums ?
 				html`
 					<mwc-list>
 						${(this.albums || []).map((album, i) => html`
@@ -69,6 +78,8 @@ export class SongZAlbumsList extends LitElement {
 						`)}
 					</mwc-list>
 				`
+			:
+				html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>`
 			}
 		`;
 	}
