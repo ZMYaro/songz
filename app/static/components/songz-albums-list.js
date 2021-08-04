@@ -7,6 +7,8 @@ import {formatArtist, httpToJSError, setPageTitle} from '../scripts/utils.js';
 
 export class SongZAlbumsList extends LitElement {
 	
+	loadAbortController;
+	
 	static get styles() {
 		return css`
 			a {
@@ -31,6 +33,13 @@ export class SongZAlbumsList extends LitElement {
 	}
 	
 	/**
+	 * Abort loading on disconnect.
+	 */
+	disconnectedCallback() {
+		this.loadAbortController.abort();
+	}
+	
+	/**
 	 * Load the list of albums.
 	 * @returns {Promise} Resolves when the list of albums has been loaded and set to display
 	 */
@@ -38,8 +47,9 @@ export class SongZAlbumsList extends LitElement {
 		setPageTitle('Albums');
 		this.message = undefined;
 		this.albums = undefined;
+		this.loadAbortController = new AbortController();
 		try {
-			var albumsRes = await fetch('/api/albums');
+			var albumsRes = await fetch('/api/albums', { signal: this.loadAbortController.signal });
 			httpToJSError(albumsRes);
 			this.albums = await albumsRes.json();
 			if (this.albums.length === 0) {
