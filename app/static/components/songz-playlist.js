@@ -3,9 +3,11 @@
 //import {LitElement, html, css} from 'lit-element';
 import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.5.1/lit-element.js?module';
 
-import {setPageTitle} from '../scripts/utils.js';
+import {httpToJSError, setPageTitle} from '../scripts/utils.js';
 
 export class SongZPlaylist extends LitElement {
+	
+	loadAbortController;
 	
 	static get styles() {
 		return css`
@@ -18,10 +20,18 @@ export class SongZPlaylist extends LitElement {
 	static get properties() {
 		return {
 			playlistid: { type: String, reflect: true },
+			pending: { type: Boolean, attribute: false },
 			title: { type: String, reflect: true },
 			description: { type: String, reflect: true },
 			songs: { type: Array, attribute: false }
 		};
+	}
+	
+	/**
+	 * Abort loading on disconnect.
+	 */
+	disconnectedCallback() {
+		this.loadAbortController.abort();
 	}
 	
 	/**
@@ -40,14 +50,25 @@ export class SongZPlaylist extends LitElement {
 	 * @returns {Promise} Resolves when the list of playlists has been loaded and set to display
 	 */
 	async loadPlaylist() {
-		setPageTitle('[Loading playlist...]');
+		setPageTitle('');
+		this.title = '';
+		this.description = undefined;
 		this.songs = undefined;
-		var playlistRes = await fetch(`/api/playlists/${this.playlistid}`),
-			playlist = await playlistRes.json();
-		setPageTitle(playlist.title);
-		this.title = playlist.title;
-		this.description = playlist.description;
-		this.songs = playlist.songs;
+		this.pending = true;
+		this.loadAbortController = new AbortController();
+		try {
+			var playlistRes = await fetch(`/api/playlists/${this.playlistid}`, { signal: this.loadAbortController.signal });
+			httpToJSError(playlistRes);
+			var playlist = await playlistRes.json();
+			setPageTitle(playlist.title);
+			this.title = playlist.title;
+			this.description = playlist.description;
+			this.songs = playlist.songs;
+		} catch (err) {
+			this.description = err;
+		} finally {
+			this.pending = false;
+		}
 	}
 	
 	// TEMP
@@ -84,11 +105,9 @@ export class SongZPlaylist extends LitElement {
 				<span role="heading" aria-level="1" slot="title">${this.title || ''}</span>
 				<button slot="actionItems" @click="${this.addSongToPlaylist}">Add song</button>
 			</mwc-top-app-bar-fixed>
-			<p>${this.description || ''}</p>
-			${!this.songs ?
-				html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>` :
-				html`<songz-song-list type="playlist" .songs="${this.songs}"></songz-song-list>`
-			}
+			${this.pending ? html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>` : ''}
+			${this.description ? html`<p>${this.description}</p>` : ''}
+			${this.songs ? html`<songz-song-list type="playlist" .songs="${this.songs}"></songz-song-list>` : ''}
 		`;
 	}
 }

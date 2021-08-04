@@ -3,9 +3,11 @@
 //import {LitElement, html, css} from 'lit-element';
 import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.5.1/lit-element.js?module';
 
-import {setPageTitle} from '../scripts/utils.js';
+import {httpToJSError, setPageTitle} from '../scripts/utils.js';
 
 export class SongZAlbum extends LitElement {
+	
+	loadAbortController;
 	
 	static get styles() {
 		return css`
@@ -18,9 +20,18 @@ export class SongZAlbum extends LitElement {
 	static get properties() {
 		return {
 			albumid: { type: String, reflect: true },
+			pending: { type: Boolean, attribute: false },
 			title: { type: String, reflect: true },
-			songs: { type: Array, attribute: false }
+			songs: { type: Array, attribute: false },
+			message: { type: String, attribute: false }
 		};
+	}
+	
+	/**
+	 * Abort loading on disconnect.
+	 */
+	disconnectedCallback() {
+		this.loadAbortController.abort();
 	}
 	
 	/**
@@ -39,13 +50,23 @@ export class SongZAlbum extends LitElement {
 	 * @returns {Promise} Resolves when the list of albums has been loaded and set to display
 	 */
 	async loadAlbum() {
-		setPageTitle('[Album]');
+		setPageTitle('');
+		this.message = undefined;
 		this.songs = undefined;
-		var albumRes = await fetch(`/api/albums/${this.albumid}`),
-			album = await albumRes.json();
-		setPageTitle(album.title);
-		this.title = album.title;
-		this.songs = album.songs;
+		this.pending = true;
+		this.loadAbortController = new AbortController();
+		try {
+			var albumRes = await fetch(`/api/albums/${this.albumid}`, { signal: this.loadAbortController.signal });
+			httpToJSError(albumRes);
+			var album = await albumRes.json();
+			setPageTitle(album.title);
+			this.title = album.title;
+			this.songs = album.songs;
+		} catch (err) {
+			this.message = err;
+		} finally {
+			this.pending = false;
+		}
 	}
 	
 	/**
@@ -64,10 +85,9 @@ export class SongZAlbum extends LitElement {
 				<mwc-icon-button icon="arrow_back" slot="navigationIcon" @click="${() => location.href = '#albums'}"></mwc-icon-button>
 				<span role="heading" aria-level="1" slot="title">${this.title || ''}</span>
 			</mwc-top-app-bar-fixed>
-			${!this.songs ?
-				html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>` :
-				html`<songz-song-list type="album" .songs="${this.songs}"></songz-song-list>`
-			}
+			${this.pending ? html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>` : ''}
+			${this.message ? html`<p>${this.message}</p>` : ''}
+			${this.songs ? html`<songz-song-list type="album" .songs="${this.songs}"></songz-song-list>` : ''}
 		`;
 	}
 }

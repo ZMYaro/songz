@@ -22,6 +22,7 @@ export class SongZAlbumsList extends LitElement {
 	
 	static get properties() {
 		return {
+			pending: { type: Boolean, attribute: false },
 			albums: { type: Array, attribute: false },
 			message: { type: String, attribute: false }
 		};
@@ -47,6 +48,7 @@ export class SongZAlbumsList extends LitElement {
 		setPageTitle('Albums');
 		this.message = undefined;
 		this.albums = undefined;
+		this.pending = true;
 		this.loadAbortController = new AbortController();
 		try {
 			var albumsRes = await fetch('/api/albums', { signal: this.loadAbortController.signal });
@@ -57,6 +59,8 @@ export class SongZAlbumsList extends LitElement {
 			}
 		} catch (err) {
 			this.message = err;
+		} finally {
+			this.pending = false;
 		}
 	}
 	
@@ -73,24 +77,20 @@ export class SongZAlbumsList extends LitElement {
 	render() {
 		return html`
 			<songz-main-top-bar selected="albums"></songz-main-top-bar>
-			${this.message ?
-				html`<p>${this.message}</p>`
-			: this.albums ?
-				html`
-					<mwc-list>
-						${(this.albums || []).map((album, i) => html`
-							<a href="#albums/${album._id}">
-								<mwc-list-item twoline>
-									${album.title}
-									<span slot="secondary">${formatArtist(album, true)}</span>
-								</mwc-list-item>
-							</a>
-						`)}
-					</mwc-list>
-				`
-			:
-				html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>`
-			}
+			${this.pending ? html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>` : ''}
+			${this.message ? html`<p>${this.message}</p>` : ''}
+			${this.albums ? html`
+				<mwc-list>
+					${(this.albums || []).map((album, i) => html`
+						<a href="#albums/${album._id}">
+							<mwc-list-item twoline>
+								${album.title}
+								<span slot="secondary">${formatArtist(album, true)}</span>
+							</mwc-list-item>
+						</a>
+					`)}
+				</mwc-list>`
+			: ''}
 		`;
 	}
 }

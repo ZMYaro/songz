@@ -22,6 +22,7 @@ export class SongZPlaylistsList extends LitElement {
 	
 	static get properties() {
 		return {
+			pending: { type: Boolean, attribute: false },
 			playlists: { type: Array, attribute: false },
 			message: { type: String, attribute: false }
 		};
@@ -47,6 +48,7 @@ export class SongZPlaylistsList extends LitElement {
 		setPageTitle('Playlists');
 		this.message = undefined;
 		this.playlists = undefined;
+		this.pending = true;
 		this.loadAbortController = new AbortController();
 		try {
 			var playlistsRes = await fetch('/api/playlists', { signal: this.loadAbortController.signal });
@@ -57,6 +59,8 @@ export class SongZPlaylistsList extends LitElement {
 			}
 		} catch (err) {
 			this.message = err;
+		} finally {
+			this.pending = false;
 		}
 	}
 	
@@ -90,23 +94,19 @@ export class SongZPlaylistsList extends LitElement {
 			<songz-main-top-bar selected="playlists"></songz-main-top-bar>
 			<button @click="${this.createNewPlaylist}">Create new playlist</button>
 			<br />
-			${this.message ?
-				html`<p>${this.message}</p>`
-			: this.playlists ?
-				html`
-					<mwc-list>
-						${(this.playlists || []).map((playlist, i) => html`
-							<a href="#playlists/${playlist._id}">
-								<mwc-list-item>
-									${playlist.title}
-								</mwc-list-item>
-							</a>
-						`)}
-					</mwc-list>
-				`
-			:
-				html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>`
-			}
+			${this.pending ? html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>` : ''}
+			${this.message ? html`<p>${this.message}</p>` : ''}
+			${this.playlists ? html`
+				<mwc-list>
+					${(this.playlists || []).map((playlist, i) => html`
+						<a href="#playlists/${playlist._id}">
+							<mwc-list-item>
+								${playlist.title}
+							</mwc-list-item>
+						</a>
+					`)}
+				</mwc-list>`
+			: ''}
 		`;
 	}
 }

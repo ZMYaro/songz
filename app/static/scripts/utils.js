@@ -126,5 +126,5 @@ export function handleMenuItemSelect(ev, songList, component) {
  * @param {String} title
  */
 export function setPageTitle(title) {
-	document.title = title ? `${title} - SongZ` : 'SongZ';
+	document.title = (typeof title !== 'undefined') ? `${title} - SongZ` : 'SongZ';
 }

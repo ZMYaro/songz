@@ -19,6 +19,7 @@ export class SongZSongsList extends LitElement {
 	
 	static get properties() {
 		return {
+			pending: { type: Boolean, attribute: false },
 			songs: { type: Array, attribute: false },
 			message: { type: String, attribute: false }
 		};
@@ -44,6 +45,7 @@ export class SongZSongsList extends LitElement {
 		setPageTitle('Songs');
 		this.message = undefined;
 		this.songs = undefined;
+		this.pending = true;
 		this.loadAbortController = new AbortController();
 		try {
 			var songsRes = await fetch('/api/songs', { signal: this.loadAbortController.signal });
@@ -54,6 +56,8 @@ export class SongZSongsList extends LitElement {
 			}
 		} catch (err) {
 			this.message = err;
+		} finally {
+			this.pending = false;
 		}
 	}
 	
@@ -70,13 +74,9 @@ export class SongZSongsList extends LitElement {
 	render() {
 		return html`
 			<songz-main-top-bar selected="songs"></songz-main-top-bar>
-			${this.message ?
-				html`<p>${this.message}</p>`
-			: this.songs ?
-				html`<songz-song-list .songs="${this.songs}"></songz-song-list>`
-			:
-				html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>`
-			}
+			${this.pending ? html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>` : ''}
+			${this.message ? html`<p>${this.message}</p>` : ''}
+			${this.songs ? html`<songz-song-list .songs="${this.songs}"></songz-song-list>` : ''}
 		`;
 	}
 }
