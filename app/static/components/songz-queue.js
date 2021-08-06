@@ -125,6 +125,7 @@ export class SongZQueue extends LitElement {
 				`)}
 			</mwc-list>
 			<mwc-menu fixed wrapFocus @action="${this.handleMenuItemSelect}">
+				<!-- Play/queue actions -->
 				<mwc-list-item graphic="icon" value="queue-play-now">
 					<mwc-icon slot="graphic">play_arrow</mwc-icon>
 					Play
@@ -138,10 +139,17 @@ export class SongZQueue extends LitElement {
 					Remove from queue
 				</mwc-list-item>
 				<li divider role="separator"></li>
+				<!-- Library actions -->
+				<mwc-list-item graphic="icon" value="edit-song">
+					<mwc-icon slot="graphic">edit</mwc-icon>
+					Edit song
+				</mwc-list-item>
 				<mwc-list-item graphic="icon" @click=${() => alert('Not yet implemented.')}>
 					<mwc-icon slot="graphic">playlist_add</mwc-icon>
 					Add to playlist
 				</mwc-list-item>
+				<li divider role="separator"></li>
+				<!-- Navigation actions -->
 				<mwc-list-item graphic="icon" value="open-album">
 					<mwc-icon slot="graphic">album</mwc-icon>
 					Go to album
@@ -150,11 +158,6 @@ export class SongZQueue extends LitElement {
 					<mwc-icon slot="graphic">person</mwc-icon>
 					<!--<mwc-icon slot="graphic">account_music</mwc-icon>-->
 					Go to artist
-				</mwc-list-item>
-				<li divider role="separator"></li>
-				<mwc-list-item graphic="icon" value="edit-song">
-					<mwc-icon slot="graphic">edit</mwc-icon>
-					Edit song
 				</mwc-list-item>
 			</mwc-menu>
 		`;
