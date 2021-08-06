@@ -1,3 +1,7 @@
+body {
+	font-family: Roboto, Helvetica, 'Droid Sans', sans-serif;
+}
+
 h1,
 section {
 	max-width: 600px;
