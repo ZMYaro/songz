@@ -77,6 +77,10 @@ export class SongZEditSongDialog extends LitElement {
 				bubbles: true,
 				composed: true
 			}));
+			// Make Lit aware the data changed.
+			// (If this is not done, any fields whose previous values match those of the next song
+			// edited will be stuck on the values just entered because Lit sees them as unchanged.)
+			this.requestUpdate();
 		} catch (err) {
 			alert('The updated metadata was submitted, but something was wrong with the updated song data returned by the server.');
 			this.pending = false;
