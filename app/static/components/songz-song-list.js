@@ -21,8 +21,20 @@ export class SongZSongList extends LitElement {
 				:host a:focus {
 					text-decoration: underline;
 				}
+			table {
+				border-spacing: 0;
+			}
 			td {
+				padding-left: 0.125rem;
+				padding-right: 0.125rem;
 				cursor: default;
+			}
+			.album-art {
+				width: 3em;
+				height: 3em;
+				margin-right: 0.25rem;
+				margin-top: -0.25rem;
+				margin-bottom: -0.25rem;
 			}
 		`;
 	}
@@ -87,6 +99,7 @@ export class SongZSongList extends LitElement {
 					<tr>
 						${this.type === 'album' ? html`<th title="Track number">#</th>` : ''}
 						${this.type === 'playlist' ? html`<th title="List index">#</th>` : ''}
+						${(this.type === 'artist' || this.type === 'playlist') ? html`<th></th>` : ''}
 						<th colspan="2">Title</th>
 						<th><mwc-icon title="Duration">schedule</mwc-icon></th>
 						${this.type !== 'artist' ? html`<th>Artist</th>` : ''}
@@ -100,6 +113,7 @@ export class SongZSongList extends LitElement {
 						<tr data-index="${i}">
 							${this.type === 'album' ? html`<td class="index">${song.trackNo}</td>` : ''}
 							${this.type === 'playlist' ? html`<td class="index">${song.listIndex + 1}</td>` : ''}
+							${(this.type === 'artist' || this.type === 'playlist') ? html`<td><img class="album-art" src="${song.gDriveArt ? toGDriveURL(song.gDriveArt) : '/images/unknown_album.svg'}" alt="" /></td>` : ''}
 							<td class="title" title="${song.title}" @dblclick="${this.handleDblClick}">${song.title}</td>
 							<td><mwc-icon-button slot="meta" icon="more_vert" @click=${this.handleMenuButton}></mwc-icon-button></td>
 							<td class="duration">${formatDuration(song.duration / 1000)}</td>
