@@ -10,7 +10,8 @@ const cookieSession = require('cookie-session'),
 	User = require('./models/user.js'),
 	apiRouter = require('./routes/api.js'),
 	authRouter = require('./routes/auth.js'),
-	guiRouter = require('./routes/gui.js');
+	guiRouter = require('./routes/gui.js'),
+	wrappedRouter = require('./routes/wrapped.js');
 
 const PORT = process.env.PORT || 8080,
 	DB_NAME = 'songz',
@@ -55,6 +56,7 @@ app.use('/node_modules', express.static('node_modules'));
 app.get('/manifest.webmanifest', (req, res) => res.sendFile(path.join(__dirname, 'manifest.webmanifest')));
 app.use('/api', apiRouter);
 app.use('/auth', authRouter);
+app.use('/wrapped', wrappedRouter);
 app.use('/', guiRouter);
 
 // Set up DB connection.

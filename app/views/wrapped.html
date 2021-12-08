@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>SongZ</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="shortcut icon" type="image/x-icon" sizes="16x16" href="/images/logo/favicon.ico" />
+		<link rel="icon" type="image/png" sizes="512x512" href="/images/logo/512.png" />
+		<link rel="manifest" href="/manifest.webmanifest" />
+		
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons&display=block" />
+		<link rel="stylesheet" type="text/css" href="/styles/styles.css" />
+		
+		<script src="/scripts/mwc_duplicate_define_fix_hack.js"></script>
+		<script type="module" src="/scripts/components.js"></script>
+		<script>
+			var topSongsPromise = fetch('/wrapped/api/songs').then((response) => response.json());
+			window.addEventListener('load', async function () {
+				var topSongs = await topSongsPromise;
+				document.querySelector('songz-song-list').songs = topSongs;
+			});
+		</script>
+	</head>
+	<body>
+		<mwc-top-app-bar-fixed>
+			<span role="heading" aria-level="1" slot="title">SongZ Wrapped 2021 &ndash; Top 100 Songs</span>
+			<a href="/" slot="actionItems" style="text-decoration: none;">
+				<mwc-button icon="arrow_back" style="--mdc-theme-primary: white;">Back to SongZ</mwc-icon-button>
+			</a>
+		</mwc-top-app-bar-fixed>
+		<songz-song-list type="wrapped"></songz-song-list>
+	</body>
+</html>

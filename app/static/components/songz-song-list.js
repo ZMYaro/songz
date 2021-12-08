@@ -93,19 +93,22 @@ export class SongZSongList extends LitElement {
 	 * @override
 	 */
 	render() {
+		const SHOW_ART = (['artist', 'playlist', 'wrapped'].indexOf(this.type) !== -1),
+			SHOW_ACTIONS = (this.type !== 'wrapped');
 		return html`
 			<table>
 				<thead>
 					<tr>
 						${this.type === 'album' ? html`<th title="Track number">#</th>` : ''}
 						${this.type === 'playlist' ? html`<th title="List index">#</th>` : ''}
-						${(this.type === 'artist' || this.type === 'playlist') ? html`<th></th>` : ''}
-						<th colspan="2">Title</th>
+						${this.type === 'wrapped' ? html`<th title="Ranking">#</th>` : ''}
+						${SHOW_ART ? html`<th></th>` : ''}
+						<th colspan="${SHOW_ACTIONS ? 2 : 1}">Title</th>
 						<th><mwc-icon title="Duration">schedule</mwc-icon></th>
 						${this.type !== 'artist' ? html`<th>Artist</th>` : ''}
-						${this.type !== 'album' ? html`<th>Album</th>`: ''}
+						${this.type !== 'album' ? html`<th>Album</th>` : ''}
 						<th><mwc-icon title="Playthroughs" aria-label="Playthroughs">music_note</mwc-icon></th>
-						<th><mwc-icon title="Rating" aria-label="Rating">thumbs_up_down</mwc-icon></th>
+						${this.type !== 'wrapped' ? html`<th><mwc-icon title="Rating" aria-label="Rating">thumbs_up_down</mwc-icon></th>` : ''}
 					</tr>
 				</thead>
 				<tbody>
@@ -113,14 +116,15 @@ export class SongZSongList extends LitElement {
 						<tr data-index="${i}">
 							${this.type === 'album' ? html`<td class="index">${song.trackNo}</td>` : ''}
 							${this.type === 'playlist' ? html`<td class="index">${song.listIndex + 1}</td>` : ''}
-							${(this.type === 'artist' || this.type === 'playlist') ? html`<td><img class="album-art" src="${song.gDriveArt ? toGDriveURL(song.gDriveArt) : '/images/unknown_album.svg'}" alt="" /></td>` : ''}
+							${this.type === 'wrapped' ? html`<td class="index">${i + 1}</td>` : ''}
+							${SHOW_ART ? html`<td><img class="album-art" src="${song.gDriveArt ? toGDriveURL(song.gDriveArt) : '/images/unknown_album.svg'}" alt="" /></td>` : ''}
 							<td class="title" title="${song.title}" @dblclick="${this.handleDblClick}">${song.title}</td>
-							<td><mwc-icon-button slot="meta" icon="more_vert" @click=${this.handleMenuButton}></mwc-icon-button></td>
+							${SHOW_ACTIONS ? html`<td><mwc-icon-button slot="meta" icon="more_vert" @click=${this.handleMenuButton}></mwc-icon-button></td>` : ''}
 							<td class="duration">${formatDuration(song.duration / 1000)}</td>
 							${this.type !== 'artist' ? html`<td class="artist" title="${formatArtist(song, true)}">${unsafeHTML(formatArtist(song, false))}</td>` : ''}
 							${this.type !== 'album' ? html`<td class="album" title="${formatAlbum(song, true)}">${unsafeHTML(formatAlbum(song))}</td>` : ''}
-							<td class="playthroughs"></td>
-							<td class="rating"></td>
+							<td class="playthroughs">${song.playthroughs ?? ''}</td>
+							${this.type !== 'wrapped' ? html`<td class="rating"></td>` : ''}
 						</tr>
 					`)}
 				</tbody>
