@@ -3,93 +3,13 @@
 	<head>
 		<title>SongZ</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="shortcut icon" type="image/x-icon" sizes="16x16" href="/images/logo/favicon.ico">
-		<link rel="icon" type="image/png" sizes="512x512" href="/images/logo/512.png">
-		<link rel="manifest" href="/manifest.webmanifest">
+		<link rel="shortcut icon" type="image/x-icon" sizes="16x16" href="/images/logo/favicon.ico" />
+		<link rel="icon" type="image/png" sizes="512x512" href="/images/logo/512.png" />
+		<link rel="manifest" href="/manifest.webmanifest" />
 		
-		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons&display=block">
-		<style>
-			html,
-			body,
-			songz-app {
-				margin: 0;
-				border: 0;
-				padding: 0;
-				width: 100%;
-				height: 100%;
-			}
-			body {
-				--mdc-theme-surface: #ffffff;
-				--mdc-theme-primary: #263238;
-				--mdc-theme-secondary: #018786;
-				--mdc-dialog-heading-ink-color: rgba(0, 0, 0, 0.87);
-				--mdc-dialog-content-ink-color: rgba(0, 0, 0, 0.6);
-				--player-height-small: 64px;
-				--player-height-large: 96px;
-				--player-height: var(--player-height-small);
-				font-family: Roboto, 'Helvetica Neue', sans-serif;
-			}
-			mwc-dialog mwc-button {
-				--mdc-theme-primary: var(--mdc-theme-secondary);
-			}
-			mwc-dialog fieldset {
-				margin: 0;
-				border: 0 none;
-				padding: 0;
-			}
-			@media (min-width: 640px) {
-				body {
-					--player-height: var(--player-height-large);
-				}
-			}
-			songz-app {
-				display: flex;
-				flex-direction: column;
-			}
-			app-drawer-layout {
-				--app-drawer-width: min(320px, calc(100% - 48px));
-				flex-grow: 1;
-				height: calc(100% - var(--player-height));
-			}
-			app-drawer {
-				top: 0;
-				padding-top: 0;
-				bottom: var(--player-height);
-			}
-				app-drawer h2 {
-					position: absolute;
-					margin: 0;
-					top: 0.5em;
-					left: 0.125em;
-				}
-			label {
-				display: block;
-			}
-			audio {
-				width: 90%;
-			}
-			#prev-btn,
-			#play-pause-btn,
-			#next-btn {
-				font-size: 200%;
-			}
-			
-			@media (prefers-color-scheme: dark) {
-				body {
-					color-scheme: dark;
-					background: #212121;
-					color: #efefef;
-					--mdc-theme-surface: #323232;
-					--mdc-theme-text-primary-on-background: rgba(255, 255, 255, 0.87);
-					--mdc-theme-text-secondary-on-background: rgba(255, 255, 255, 0.54);
-					--mdc-theme-text-hint-on-background: rgba(255, 255, 255, 0.38);
-					--mdc-theme-text-icon-on-background: rgba(255, 255, 255, 0.38);
-					--mdc-dialog-heading-ink-color: rgba(255, 255, 255, 0.87);
-					--mdc-dialog-content-ink-color: rgba(255, 255, 255, 0.6);
-					--mdc-ripple-color: rgba(255, 255, 255, 0.38);
-				}
-			}
-		</style>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons&display=block" />
+		<link rel="stylesheet" type="text/css" href="/styles/styles.css" />
+		
 		<script src="/scripts/mwc_duplicate_define_fix_hack.js"></script>
 		<script type="module" src="/scripts/components.js"></script>
 	</head>
