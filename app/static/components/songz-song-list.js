@@ -5,7 +5,7 @@ import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.5.1/lit-ele
 //import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import {unsafeHTML} from 'https://unpkg.com/lit-html@1.4.1/directives/unsafe-html.js?module';
 
-import {formatAlbum, formatArtist, formatDuration, handleMenuButton, handleMenuItemSelect} from '../scripts/utils.js';
+import {formatAlbum, formatArtist, formatDuration, handleMenuButton, handleMenuItemSelect, toGDriveURL} from '../scripts/utils.js';
 
 export class SongZSongList extends LitElement {
 	
