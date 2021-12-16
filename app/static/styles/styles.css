@@ -26,9 +26,21 @@ mwc-dialog fieldset {
 	border: 0 none;
 	padding: 0;
 }
+mwc-dialog label {
+	font-size: 80%;
+}
+mwc-dialog input[type="text"],
+mwc-dialog input[type="number"] {
+	display: block;
+	width: 100%;
+	margin-top: -0.25em;
+}
 @media (min-width: 640px) {
 	body {
 		--player-height: var(--player-height-large);
+	}
+	songz-edit-song-dialog mwc-dialog {
+		--mdc-dialog-min-width: 512px;
 	}
 }
 songz-app {
