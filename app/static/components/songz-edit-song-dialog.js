@@ -121,6 +121,10 @@ export class SongZEditSongDialog extends LitElement {
 							<input type="text" name="gdrive-art" .value="${this.song?.gDriveArt || ''}" />
 						</label>
 						<label>
+							GDrive LRC:
+							<input type="text" name="gdrive-lrc" .value="${this.song?.gDriveLRC || ''}" />
+						</label>
+						<label>
 							Title:
 							<input type="text" name="title" .value="${this.song?.title}" />
 						</label>

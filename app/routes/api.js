@@ -32,6 +32,7 @@ router.route('/songs')
 	 * [gdrive-mp3] - The GDrive ID of the song's MP3 audio file
 	 * [gdrive-ogg] - The GDrive ID of the song's Ogg audio file
 	 * [gdrive-art] - The GDrive ID of the song's album art file
+	 * [gdrive-lrc] - The GDrive ID of the song's lyric file
 	 * [title] - The song's title
 	 * [duration] - The duration of the song, in milliseconds
 	 * [track-no] - The track number of the song on its disc
@@ -52,6 +53,7 @@ router.route('/songs')
 		if (req.query['gdrive-mp3'] ) { params.gDriveMP3 = req.query['gdrive-mp3'].trim(); }
 		if (req.query['gdrive-ogg'] ) { params.gDriveOgg = req.query['gdrive-ogg'].trim(); }
 		if (req.query['gdrive-art'] ) { params.gDriveArt = req.query['gdrive-art'].trim(); }
+		if (req.query['gdrive-lrc'] ) { params.gDriveLRC = req.query['gdrive-lrc'].trim(); }
 		if (req.query['title']      ) { params.title = req.query['title'].trim(); }
 		if (req.query['duration']   ) { params.duration = parseFloat(req.query['duration']); }
 		if (req.query['track-no']   ) { params.trackNo = Math.floor(parseInt(req.query['track-no'])); }
@@ -88,6 +90,7 @@ router.route('/songs')
 	 * [gdrive-mp3] - The GDrive ID of the song's MP3 audio file
 	 * [gdrive-ogg] - The GDrive ID of the song's Ogg audio file
 	 * [gdrive-art] - The GDrive ID of the song's album art file
+	 * [gdrive-lrc] - The GDrive ID of the song's lyric file
 	 * title - The song's title
 	 * [duration] - The duration of the song, in milliseconds
 	 * [track-no] - The track number of the song on its disc
@@ -114,6 +117,7 @@ router.route('/songs')
 			gDriveMP3: req.body['gdrive-mp3']?.trim(),
 			gDriveOgg: req.body['gdrive-ogg']?.trim(),
 			gDriveArt: req.body['gdrive-art']?.trim(),
+			gDriveLRC: req.body['gdrive-lrc']?.trim(),
 			title: title,
 			duration: parseFloat(req.body['duration']) || undefined,
 			trackNo: Math.floor(parseInt(req.body['track-no'])) || undefined,
@@ -167,8 +171,9 @@ router.route('/songs')
 		song.gDriveFLAC = req.body['gdrive-flac']?.trim() || undefined;
 		song.gDriveM4A = req.body['gdrive-m4a']?.trim() || undefined;
 		song.gDriveMP3 = req.body['gdrive-mp3']?.trim() || undefined;
-		song.gDriveOgg = req.body['gdrive-ogg'].trim() || undefined;
-		song.gDriveArt = req.body['gdrive-art'].trim() || undefined;
+		song.gDriveOgg = req.body['gdrive-ogg']?.trim() || undefined;
+		song.gDriveArt = req.body['gdrive-art']?.trim() || undefined;
+		song.gDriveLRC = req.body['gdrive-lrc']?.trim() || undefined;
 		song.title = title;
 		song.duration = parseFloat(req.body['duration']) || undefined;
 		song.trackNo = Math.floor(parseInt(req.body['track-no'])) || undefined;
