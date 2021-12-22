@@ -95,6 +95,15 @@ export class SongZEditSongDialog extends LitElement {
 			<mwc-dialog heading="Edit song" scrimClickAction="" escapeKeyAction="${this.pending ? '' : 'close'}">
 				<form>
 					<fieldset ?disabled="${this.pending}">
+						<label style="font-size: 100%; color: var(--on-background-color); display: inline-block;"><input type="radio" name="rating" value="-2" .checked="${this.song?.rating === -2}" />👎👎</label>
+						&nbsp;
+						<label style="font-size: 100%; color: var(--on-background-color); display: inline-block;"><input type="radio" name="rating" value="-1" .checked="${this.song?.rating === -1}" />👎</label>
+						&nbsp;
+						<label style="font-size: 100%; color: var(--on-background-color); display: inline-block;"><input type="radio" name="rating" value="0" .checked="${this.song?.rating === 0}" />✊</label>
+						&nbsp;
+						<label style="font-size: 100%; color: var(--on-background-color); display: inline-block;"><input type="radio" name="rating" value="1" .checked="${this.song?.rating === 1}" />👍</label>
+						&nbsp;
+						<label style="font-size: 100%; color: var(--on-background-color); display: inline-block;"><input type="radio" name="rating" value="2" .checked="${this.song?.rating === 2}" />👍👍</label>
 						<label>
 							ID:
 							<input type="text" .value="${this.song?._id}" disabled="disabled" />

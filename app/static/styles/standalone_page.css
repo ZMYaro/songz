@@ -15,6 +15,12 @@ input[type="number"] {
 	min-width: calc(100% - 1em);
 }
 
+button[type="submit"] {
+	float: right;
+	margin-right: 1em;
+	margin-bottom: 1em;
+}
+
 progress {
 	display: block;
 }

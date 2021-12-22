@@ -43,6 +43,7 @@ router.route('/songs')
 	 * [composer] - The name(s) of the song's composer(s), semicolon-separated
 	 * [album-title] - The title of the album the song belongs to
 	 * [album-artist] - The album artist of the album the song belongs to
+	 * [rating] - The personal rating of the song, from -2 to 2
 	 */
 	.get(async function (req, res) {
 		var params = {};
@@ -59,6 +60,7 @@ router.route('/songs')
 		if (req.query['track-no']   ) { params.trackNo = Math.floor(parseInt(req.query['track-no'])); }
 		if (req.query['disc-no']    ) { params.discNo = Math.floor(parseInt(req.query['disc-no'])); }
 		if (req.query['year']       ) { params.year = Math.floor(parseInt(req.query['year'])); }
+		if (req.query['rating']     ) { params.rating = parseInt(req.query['rating']); }
 		if (req.query['genre']) {
 			params.genre = await Genre.findOne({ name: req.query['genre'].trim() });
 		}
@@ -102,6 +104,7 @@ router.route('/songs')
 	 * [album-title] - The title of the album the song belongs to
 	 * [album-artist] - The album artist of the album the song belongs to
 	 * [playthroughs] - The number of past playthroughs
+	 * [rating] - The personal rating of the song, from -2 to 2
 	 */
 	.post(async function (req, res) {
 		console.log('\nAdding new song:');
@@ -122,7 +125,8 @@ router.route('/songs')
 			duration: parseFloat(req.body['duration']) || undefined,
 			trackNo: Math.floor(parseInt(req.body['track-no'])) || undefined,
 			discNo: Math.floor(parseInt(req.body['disc-no'])) || undefined,
-			year: Math.floor(parseInt(req.body['year'])) || undefined
+			year: Math.floor(parseInt(req.body['year'])) || undefined,
+			rating: parseInt(req.body['rating']) ?? undefined
 		});
 		
 		var genreName = req.body['genre']?.trim();
@@ -179,6 +183,7 @@ router.route('/songs')
 		song.trackNo = Math.floor(parseInt(req.body['track-no'])) || undefined;
 		song.discNo = Math.floor(parseInt(req.body['disc-no'])) || undefined;
 		song.year = Math.floor(parseInt(req.body['year'])) || undefined;
+		song.rating = parseInt(req.body['rating']) ?? undefined;
 		
 		var genre = await Genre.findOrCreateOne(req.body['genre']?.trim());
 		song.genre = genre?._id;
