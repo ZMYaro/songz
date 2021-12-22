@@ -8,6 +8,8 @@ songz-app {
 	height: 100%;
 }
 body {
+	--background-color: #fafafa;
+	--on-background-color: #000000;
 	--mdc-theme-surface: #ffffff;
 	--mdc-theme-primary: #263238;
 	--mdc-theme-secondary: #018786;
@@ -16,6 +18,8 @@ body {
 	--player-height-small: 64px;
 	--player-height-large: 96px;
 	--player-height: var(--player-height-small);
+	background-color: var(--background-color);
+	color: var(--on-background-color);
 	font-family: 'Roboto', 'Helvetica Neue', 'Helvetica', 'Droid Sans', sans-serif;
 }
 mwc-dialog mwc-button {
@@ -78,8 +82,8 @@ audio {
 @media (prefers-color-scheme: dark) {
 	body {
 		color-scheme: dark;
-		background: #212121;
-		color: #efefef;
+		--background-color: #212121;
+		--on-background-color: #efefef;
 		--mdc-theme-surface: #323232;
 		--mdc-theme-text-primary-on-background: rgba(255, 255, 255, 0.87);
 		--mdc-theme-text-secondary-on-background: rgba(255, 255, 255, 0.54);

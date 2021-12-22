@@ -15,6 +15,7 @@ const songSchema = new Schema({
 	trackNo: Number,
 	discNo: Number,
 	year: Number,
+	rating: Number,
 	artist: [{
 		type: Schema.Types.ObjectId,
 		ref: 'Artist'
