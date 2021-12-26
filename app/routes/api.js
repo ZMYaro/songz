@@ -113,6 +113,9 @@ router.route('/songs')
 		var title = req.body['title']?.trim();
 		if (!title) { return handleError(res, 'Missing title.', 422); }
 		
+		var rating = parseInt(req.body['rating']);
+		rating = (!isNaN(rating) ? rating : undefined);
+		
 		// Put all the text fields in the new song.
 		var newSong = new Song({
 			gDriveFLAC: req.body['gdrive-flac']?.trim(),
@@ -126,7 +129,7 @@ router.route('/songs')
 			trackNo: Math.floor(parseInt(req.body['track-no'])) || undefined,
 			discNo: Math.floor(parseInt(req.body['disc-no'])) || undefined,
 			year: Math.floor(parseInt(req.body['year'])) || undefined,
-			rating: parseInt(req.body['rating']) ?? undefined
+			rating: rating
 		});
 		
 		var genreName = req.body['genre']?.trim();
@@ -172,6 +175,9 @@ router.route('/songs')
 		var title = req.body['title']?.trim();
 		if (!title) { return handleError(res, 'Missing title.', 422); }
 		
+		var rating = parseInt(req.body['rating']);
+		rating = (!isNaN(rating) ? rating : undefined);
+		
 		song.gDriveFLAC = req.body['gdrive-flac']?.trim() || undefined;
 		song.gDriveM4A = req.body['gdrive-m4a']?.trim() || undefined;
 		song.gDriveMP3 = req.body['gdrive-mp3']?.trim() || undefined;
@@ -183,7 +189,7 @@ router.route('/songs')
 		song.trackNo = Math.floor(parseInt(req.body['track-no'])) || undefined;
 		song.discNo = Math.floor(parseInt(req.body['disc-no'])) || undefined;
 		song.year = Math.floor(parseInt(req.body['year'])) || undefined;
-		song.rating = parseInt(req.body['rating']) ?? undefined;
+		song.rating = rating;
 		
 		var genre = await Genre.findOrCreateOne(req.body['genre']?.trim());
 		song.genre = genre?._id;
