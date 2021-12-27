@@ -15,6 +15,7 @@ body {
 	--mdc-theme-secondary: #018786;
 	--mdc-dialog-heading-ink-color: rgba(0, 0, 0, 0.87);
 	--mdc-dialog-content-ink-color: rgba(0, 0, 0, 0.6);
+	--mdc-tab-text-label-color-default: rgba(0, 0, 0, 0.6);
 	--player-height-small: 64px;
 	--player-height-large: 96px;
 	--player-height: var(--player-height-small);
@@ -53,6 +54,7 @@ songz-app {
 }
 app-drawer-layout {
 	--app-drawer-width: min(320px, calc(100% - 48px));
+	--app-drawer-content-padding: 0;
 	flex-grow: 1;
 	height: calc(100% - var(--player-height));
 }
@@ -91,6 +93,7 @@ audio {
 		--mdc-theme-text-icon-on-background: rgba(255, 255, 255, 0.38);
 		--mdc-dialog-heading-ink-color: rgba(255, 255, 255, 0.87);
 		--mdc-dialog-content-ink-color: rgba(255, 255, 255, 0.6);
+		--mdc-tab-text-label-color-default: rgba(255, 255, 255, 0.6);
 		--mdc-ripple-color: rgba(255, 255, 255, 0.38);
 	}
 }

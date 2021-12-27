@@ -1,7 +1,7 @@
 'use strict';
 
-//import {LitElement, html, css, unsafeCSS}, css from 'lit-element';
-import {LitElement, html, css, unsafeCSS} from 'https://unpkg.com/lit-element@2.5.1/lit-element.js?module';
+//import {LitElement, html, css}, css from 'lit-element';
+import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.5.1/lit-element.js?module';
 
 import {formatArtist, formatDuration, toGDriveURL, handleMenuButton, handleMenuItemSelect} from '../scripts/utils.js';
 
@@ -12,12 +12,6 @@ export class SongZQueue extends LitElement {
 	static get styles() {
 		return css`
 			:host {
-				/* Position within the Polymer app-drawer. */
-				position: absolute;
-				left: 0;
-				right: 0;
-				top: 48px;
-				bottom: 0;
 				overflow-y: auto;
 			}
 			.queue-list mwc-list-item {
@@ -98,7 +92,9 @@ export class SongZQueue extends LitElement {
 			detail: {
 				list: this.songs,
 				index: parseInt(ev.currentTarget.dataset.index)
-			}
+			},
+			bubbles: true,
+			composed: true
 		}));
 	}
 	
@@ -115,14 +111,17 @@ export class SongZQueue extends LitElement {
 	render() {
 		return html`
 			<mwc-list class="queue-list">
-				${(this.songs || []).map((song, i) => html`
-					<mwc-list-item graphic="small" hasMeta class="${i === this.activeIndex ? 'current' : ''}" data-index="${i}" @dblclick="${this.handleDblClick}">
-						<img slot="graphic" class="album-art" src="${song.gDriveArt ? toGDriveURL(song.gDriveArt) : '/images/unknown_album.svg'}" alt="" />
-						<span class="song-title">${song.title}</span>
-						<span class="artist">${formatDuration(song.duration / 1000)} &middot; ${formatArtist(song, true)}</span>
-						<mwc-icon-button slot="meta" icon="more_vert" @click=${this.handleMenuButton}></mwc-icon-button>
-					</mwc-list-item>
-				`)}
+				${(this.songs || []).length === 0 ?
+					html`<p style="text-align: center;">No songs in queue.</p>` :
+					(this.songs || []).map((song, i) => html`
+						<mwc-list-item graphic="small" hasMeta class="${i === this.activeIndex ? 'current' : ''}" data-index="${i}" @dblclick="${this.handleDblClick}">
+							<img slot="graphic" class="album-art" src="${song.gDriveArt ? toGDriveURL(song.gDriveArt) : '/images/unknown_album.svg'}" alt="" />
+							<span class="song-title">${song.title}</span>
+							<span class="artist">${formatDuration(song.duration / 1000)} &middot; ${formatArtist(song, true)}</span>
+							<mwc-icon-button slot="meta" icon="more_vert" @click=${this.handleMenuButton}></mwc-icon-button>
+						</mwc-list-item>
+					`)
+				}
 			</mwc-list>
 			<mwc-menu fixed wrapFocus @action="${this.handleMenuItemSelect}">
 				<!-- Play/queue actions -->

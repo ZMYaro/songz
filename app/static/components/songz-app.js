@@ -14,7 +14,7 @@ export class SongZApp extends LitElement {
 	activePlayer;
 	inactivePlayer;
 	mainView;
-	queueView;
+	sidePanel;
 	editSongDialog;
 	playthroughStatus = 0;
 	
@@ -62,7 +62,7 @@ export class SongZApp extends LitElement {
 		
 		// Get references to views.
 		this.mainView = this.querySelector('songz-main-view');
-		this.queueView = this.querySelector('songz-queue');
+		this.sidePanel = this.querySelector('songz-side-panel');
 		this.editSongDialog = this.querySelector('songz-edit-song-dialog');
 		
 		// Set up audio players.
@@ -346,7 +346,7 @@ export class SongZApp extends LitElement {
 	 */
 	handleMetadataUpdate() {
 		this.mainView.handleMetadataUpdate();
-		this.queueView.handleMetadataUpdate();
+		this.sidePanel.handleMetadataUpdate();
 	}
 	
 	/**
@@ -385,8 +385,7 @@ export class SongZApp extends LitElement {
 		return html`
 			<app-drawer-layout>
 				<app-drawer slot="drawer" align="end" swipe-open>
-					<h2>Queue</h2>
-					<songz-queue
+					<songz-side-panel
 						.songs="${this.queue}"
 						activeIndex="${this.queuePosition}"
 						@queue-play-now="${(ev) => this.playSong(ev.detail.index)}"
@@ -395,7 +394,7 @@ export class SongZApp extends LitElement {
 						@open-album="${(ev) => location.hash = 'albums/' + this.queue[ev.detail.index].album._id}"
 						@open-artist="${(ev) => location.hash = 'artists/' + this.queue[ev.detail.index].artist[0]._id}"
 						@edit-song="${(ev) => this.editSongDialog.show(this.queue[ev.detail.index])}">
-					</songz-queue>
+					</songz-side-panel>
 				</app-drawer>
 				<songz-main-view
 					@play-now="${(ev) => {this.queue = ev.detail.list; this.queuePosition = -1; this.playSong(ev.detail.index);}}"
@@ -418,7 +417,7 @@ export class SongZApp extends LitElement {
 				@stepforward="${this.stepForward}"
 				@next="${this.nextSong}"
 				@seek="${this.handleSeek}"
-				@open-queue="${() => this.queueView.parentElement.toggle()}">
+				@open-queue="${() => this.sidePanel.parentElement.toggle()}">
 			</songz-player>
 			<songz-edit-song-dialog
 				@update-song="${this.handleMetadataUpdate}">
