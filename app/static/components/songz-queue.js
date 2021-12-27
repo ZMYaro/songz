@@ -13,6 +13,7 @@ export class SongZQueue extends LitElement {
 		return css`
 			:host {
 				overflow-y: auto;
+				--mdc-list-vertical-padding: 0;
 			}
 			.queue-list mwc-list-item {
 				padding-left: 0;
