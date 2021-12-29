@@ -52,7 +52,7 @@ export class SongZPlaylistsList extends LitElement {
 		this.loadAbortController = new AbortController();
 		try {
 			var playlistsRes = await fetch('/api/playlists', { signal: this.loadAbortController.signal });
-			httpToJSError(playlistsRes);
+			await httpToJSError(playlistsRes);
 			this.playlists = await playlistsRes.json();
 			if (this.playlists.length === 0) {
 				this.message = 'No playlists';

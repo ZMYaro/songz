@@ -57,7 +57,7 @@ export class SongZAlbum extends LitElement {
 		this.loadAbortController = new AbortController();
 		try {
 			var albumRes = await fetch(`/api/albums/${this.albumid}`, { signal: this.loadAbortController.signal });
-			httpToJSError(albumRes);
+			await httpToJSError(albumRes);
 			var album = await albumRes.json();
 			setPageTitle(album.title);
 			this.title = album.title;

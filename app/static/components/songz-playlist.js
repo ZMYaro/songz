@@ -58,7 +58,7 @@ export class SongZPlaylist extends LitElement {
 		this.loadAbortController = new AbortController();
 		try {
 			var playlistRes = await fetch(`/api/playlists/${this.playlistid}`, { signal: this.loadAbortController.signal });
-			httpToJSError(playlistRes);
+			await httpToJSError(playlistRes);
 			var playlist = await playlistRes.json();
 			setPageTitle(playlist.title);
 			this.title = playlist.title;

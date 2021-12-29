@@ -52,7 +52,7 @@ export class SongZAlbumsList extends LitElement {
 		this.loadAbortController = new AbortController();
 		try {
 			var albumsRes = await fetch('/api/albums', { signal: this.loadAbortController.signal });
-			httpToJSError(albumsRes);
+			await httpToJSError(albumsRes);
 			this.albums = await albumsRes.json();
 			if (this.albums.length === 0) {
 				this.message = 'No albums';

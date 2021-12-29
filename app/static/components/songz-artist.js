@@ -58,7 +58,7 @@ export class SongZArtist extends LitElement {
 		this.loadAbortController = new AbortController();
 		try {
 			var artistRes = await fetch(`/api/artists/${this.artistid}`, { signal: this.loadAbortController.signal });
-			httpToJSError(artistRes);
+			await httpToJSError(artistRes);
 			var artist = await artistRes.json();
 			setPageTitle(artist.name);
 			this.name = artist.name;

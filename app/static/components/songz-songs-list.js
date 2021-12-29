@@ -49,7 +49,7 @@ export class SongZSongsList extends LitElement {
 		this.loadAbortController = new AbortController();
 		try {
 			var songsRes = await fetch('/api/songs', { signal: this.loadAbortController.signal });
-			httpToJSError(songsRes);
+			await httpToJSError(songsRes);
 			this.songs = await songsRes.json();
 			if (this.songs.length === 0) {
 				this.message = 'No songs';

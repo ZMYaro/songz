@@ -66,12 +66,27 @@ export function formatDuration(duration) {
 /**
  * If a response had an HTTP error, turn it into a JavaScript error.
  * @param {Response} res
+ * @returns {Promise}
  */
-export function httpToJSError(res) {
+export async function httpToJSError(res) {
 	if (res.ok) {
 		return;
 	}
-	throw Error(res.status + ' - ' + res.statusText);
+	
+	var message = res.status;
+	
+	if (res.statusText) {
+		message += ' - ' + res.statusText;
+	} else {
+		try {
+			var resJSON = await res.json();
+			if (resJSON.message || resJSON.error?.message) {
+				message += ' - ' + (resJSON.message || resJSON.error?.message)
+			}
+		} catch (err) {}
+	}
+	
+	throw new Error(message);
 }
 
 export function toGDriveURL(gDriveId) {

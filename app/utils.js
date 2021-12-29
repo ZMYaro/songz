@@ -4,7 +4,7 @@ function handleError(res, message, code) {
 	code = code ?? 500;
 	console.error(`{ "status": ${code}, "message": "${message}" }`);
 	res.status(code);
-	res.json({ status: code, error: message });
+	res.json({ status: code, message: message });
 }
 
 /**

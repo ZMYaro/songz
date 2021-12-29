@@ -52,7 +52,7 @@ export class SongZArtistsList extends LitElement {
 		this.loadAbortController = new AbortController();
 		try {
 			var artistsRes = await fetch('/api/artists', { signal: this.loadAbortController.signal });
-			httpToJSError(artistsRes);
+			await httpToJSError(artistsRes);
 			this.artists = await artistsRes.json();
 			if (this.artists.length === 0) {
 				this.message = 'No artists';
