@@ -54,6 +54,10 @@ app.use(passport.session());
 app.use(express.static('static'));
 app.use('/node_modules', express.static('node_modules'));
 app.get('/manifest.webmanifest', (req, res) => res.sendFile(path.join(__dirname, 'manifest.webmanifest')));
+app.get('/api_key.js', (req, res) => {
+	res.set('Content-Type', 'text/javascript');
+	res.send(`export const GOOGLE_API_KEY = '${process.env.GOOGLE_API_KEY}';`);
+});
 app.use('/api', apiRouter);
 app.use('/auth', authRouter);
 app.use('/wrapped', wrappedRouter);

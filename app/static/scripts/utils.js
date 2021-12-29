@@ -1,5 +1,7 @@
 'use strict';
 
+import {GOOGLE_API_KEY} from '/api_key.js';
+
 /**
  * Format a song's album as a links to that album.
  * @param {Song} song - A song object
@@ -66,7 +68,7 @@ export function formatDuration(duration) {
 /**
  * If a response had an HTTP error, turn it into a JavaScript error.
  * @param {Response} res
- * @returns {Promise}
+ * @returns {Promise} Resolves if no error, or rejects with the error code and message if there was an HTTP error
  */
 export async function httpToJSError(res) {
 	if (res.ok) {
@@ -89,8 +91,18 @@ export async function httpToJSError(res) {
 	throw new Error(message);
 }
 
-export function toGDriveURL(gDriveId) {
-	return `https://drive.google.com/uc?export=view&id=${gDriveId}`;
+/**
+ * Generate a link to retrieve the file at a Google Drive file ID.
+ * @param {String} gDriveID - The ID of the Google Drive file
+ * @param {Boolean} useAPI - Use the Google API URL instead of the CDN URL
+ * @returns {String}
+ */
+export function toGDriveURL(gDriveID, useAPI) {
+	if (useAPI) {
+		return `https://www.googleapis.com/drive/v3/files/${gDriveID}?alt=media&key=${GOOGLE_API_KEY}`;
+	} else {
+		return `https://drive.google.com/uc?export=view&id=${gDriveID}`;
+	}
 }
 
 /**
