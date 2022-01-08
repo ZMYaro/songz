@@ -14,7 +14,7 @@ router.get('/api/songs', async function (req, res) {
 		{ $match: {
 			'timestamp': {
 				$gt: new Date(`${YEAR}-01-01`),
-				$lt: new Date(`${YEAR}-12-31`)
+				$lt: new Date(`${YEAR}-12-31T23:59:59`)
 			}
 		}},
 		{ $group: {
