@@ -9,12 +9,22 @@ const router = express.Router();
 router.get('/', (req, res) => res.sendFile(path.join(__dirname, '../views/wrapped.html')));
 
 router.get('/api/songs', async function (req, res) {
-	const YEAR = 2021;
+	const DEFAULT_YEAR = 2021,
+		DEFAULT_START_DATE = `${DEFAULT_YEAR}-01-01`,
+		DEFAULT_END_DATE = `${DEFAULT_YEAR}-12-31`;
+	
+	var startDate = req.query['start']?.trim(),
+		endDate = req.query['end']?.trim();
+	if (!startDate || !endDate) {
+		startDate = DEFAULT_START_DATE;
+		endDate = DEFAULT_END_DATE;
+	}
+	
 	var topSongs = await Playthrough.aggregate([
 		{ $match: {
 			'timestamp': {
-				$gt: new Date(`${YEAR}-01-01`),
-				$lt: new Date(`${YEAR}-12-31T23:59:59`)
+				$gt: new Date(`${startDate}T00:00:00`),
+				$lt: new Date(`${endDate}T23:59:59`)
 			}
 		}},
 		{ $group: {
