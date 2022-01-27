@@ -122,7 +122,7 @@ export class SongZSongList extends LitElement {
 						${this.type === 'wrapped' ? html`<th title="Ranking">#</th>` : ''}
 						${SHOW_ART ? html`<th></th>` : ''}
 						<th colspan="${SHOW_ACTIONS ? 2 : 1}">Title</th>
-						<th><mwc-icon title="Duration">schedule</mwc-icon></th>
+						${this.type !== 'wrapped' ? html`<th><mwc-icon title="Duration">schedule</mwc-icon></th>` : ''}
 						${this.type !== 'artist' ? html`<th>Artist</th>` : ''}
 						${this.type !== 'album' ? html`<th>Album</th>` : ''}
 						<th><mwc-icon title="Playthroughs" aria-label="Playthroughs">music_note</mwc-icon></th>
@@ -138,7 +138,7 @@ export class SongZSongList extends LitElement {
 							${SHOW_ART ? html`<td><img class="album-art" src="${song.gDriveArt ? toGDriveURL(song.gDriveArt) : '/images/unknown_album.svg'}" alt="" /></td>` : ''}
 							<td class="title" title="${song.title}" @dblclick="${this.handleDblClick}">${song.title}</td>
 							${SHOW_ACTIONS ? html`<td><mwc-icon-button slot="meta" icon="more_vert" @click=${this.handleMenuButton}></mwc-icon-button></td>` : ''}
-							<td class="duration">${formatDuration(song.duration / 1000)}</td>
+							${this.type !== 'wrapped' ? html`<td class="duration">${formatDuration(song.duration / 1000)}</td>` : ''}
 							${this.type !== 'artist' ? html`<td class="artist" title="${formatArtist(song, true)}">${unsafeHTML(formatArtist(song, false))}</td>` : ''}
 							${this.type !== 'album' ? html`<td class="album" title="${formatAlbum(song, true)}">${unsafeHTML(formatAlbum(song))}</td>` : ''}
 							<td class="playthroughs">${song.playthroughs ?? ''}</td>
