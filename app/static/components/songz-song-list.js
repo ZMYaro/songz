@@ -10,11 +10,13 @@ import {formatAlbum, formatArtist, formatDuration, handleMenuButton, handleMenuI
 export class SongZSongList extends LitElement {
 	
 	RATING_INDICATORS = [
+		html`<mwc-icon>thumb_down</mwc-icon><mwc-icon class="doubled-thumb-down">thumb_down</mwc-icon><mwc-icon class="tripled-thumb-down">thumb_down</mwc-icon>`,
 		html`<mwc-icon>thumb_down</mwc-icon><mwc-icon class="doubled-thumb-down">thumb_down</mwc-icon>`,
 		html`<mwc-icon>thumb_down_alt</mwc-icon>`,
 		html`<svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24"><path fill="currentColor" d="M20 13C20.6 13 21.1 13.2 21.5 13.6C21.8 14 22 14.5 22 15L14 18L7 16V7H8.9L16.2 9.7C16.7 9.9 17 10.3 17 10.8C17 11.1 16.9 11.4 16.7 11.6S16.1 12 15.8 12H13L11.2 11.3L10.9 12.2L13 13H20M1 7H5V18H1V7Z" /></svg>`,
 		html`<mwc-icon>thumb_up_alt</mwc-icon>`,
 		html`<mwc-icon>thumb_up</mwc-icon><mwc-icon class="doubled-thumb-up">thumb_up</mwc-icon>`,
+		html`<mwc-icon>thumb_up</mwc-icon><mwc-icon class="doubled-thumb-up">thumb_up</mwc-icon><mwc-icon class="tripled-thumb-up">thumb_up</mwc-icon>`
 	];
 	songMenu;
 	
@@ -44,7 +46,9 @@ export class SongZSongList extends LitElement {
 				margin-bottom: -0.25rem;
 			}
 			.doubled-thumb-down,
-			.doubled-thumb-up {
+			.doubled-thumb-up,
+			.tripled-thumb-down,
+			.tripled-thumb-up {
 				margin-left: -1em;
 				-webkit-text-stroke: 0.125rem var(--background-color);
 			}
@@ -53,6 +57,12 @@ export class SongZSongList extends LitElement {
 			}
 			.doubled-thumb-up {
 				transform: translate(-0.15rem, 0.0375rem) scale(0.75);
+			}
+			.tripled-thumb-down {
+				transform: translate(0.25rem, -0.09rem) scale(0.5);
+			}
+			.tripled-thumb-up {
+				transform: translate(-0.25rem, 0.09rem) scale(0.5);
 			}
 		`;
 	}
@@ -143,7 +153,7 @@ export class SongZSongList extends LitElement {
 							${this.type !== 'album' ? html`<td class="album" title="${formatAlbum(song, true)}">${unsafeHTML(formatAlbum(song))}</td>` : ''}
 							<td class="playthroughs">${song.playthroughs ?? ''}</td>
 							${this.type !== 'wrapped' ? html`<td class="rating">${
-								(typeof song.rating === 'undefined') ? '' : this.RATING_INDICATORS[song.rating + 2]
+								(typeof song.rating === 'undefined') ? '' : this.RATING_INDICATORS[song.rating + 3]
 							}</td>` : ''}
 						</tr>
 					`)}
