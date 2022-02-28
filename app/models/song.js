@@ -10,6 +10,7 @@ const songSchema = new Schema({
 	gDriveOgg: String,
 	gDriveArt: String,
 	gDriveLRC: String,
+	gDriveMD: String,
 	title: String,
 	duration: Number, // In milliseconds
 	trackNo: Number,
