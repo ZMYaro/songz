@@ -136,6 +136,7 @@ export class SongZSongList extends LitElement {
 						${this.type !== 'album' ? html`<th>Album</th>` : ''}
 						${this.type !== 'artist' ? html`<th>Artist</th>` : ''}
 						${this.type !== 'composer' && this.type !== 'wrapped' ? html`<th>Composer</th>` : ''}
+						${this.type !== 'wrapped' ? html `<th>Genre</th>` : ''}
 						<th><mwc-icon title="Playthroughs" aria-label="Playthroughs">music_note</mwc-icon></th>
 						${this.type !== 'wrapped' ? html`<th><mwc-icon title="Rating" aria-label="Rating">thumbs_up_down</mwc-icon></th>` : ''}
 					</tr>
@@ -153,6 +154,7 @@ export class SongZSongList extends LitElement {
 							${this.type !== 'album' ? html`<td class="album" title="${formatAlbum(song, true)}">${unsafeHTML(formatAlbum(song))}</td>` : ''}
 							${this.type !== 'artist' ? html`<td class="artist" title="${formatArtist(song, true)}">${unsafeHTML(formatArtist(song, false))}</td>` : ''}
 							${(this.type !== 'composer' && this.type !== 'wrapped') ? html`<td title="${formatArtist(song, true, true)}">${unsafeHTML(formatArtist(song, false, true))}</td>` : ''}
+							${this.type !== 'wrapped' ? html`<td>${song.genre?.name || ''}</td>` : ''}
 							<td class="playthroughs">${song.playthroughs ?? ''}</td>
 							${this.type !== 'wrapped' ? html`<td class="rating">${
 								(typeof song.rating === 'undefined') ? '' : this.RATING_INDICATORS[song.rating + 3]
