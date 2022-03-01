@@ -121,7 +121,7 @@ export class SongZSongList extends LitElement {
 	 * @override
 	 */
 	render() {
-		const SHOW_ART = (['artist', 'playlist', 'wrapped'].indexOf(this.type) !== -1),
+		const SHOW_ART = (['artist', 'composer', 'playlist', 'wrapped'].indexOf(this.type) !== -1),
 			SHOW_ACTIONS = (this.type !== 'wrapped');
 		return html`
 			<table>
@@ -133,8 +133,9 @@ export class SongZSongList extends LitElement {
 						${SHOW_ART ? html`<th></th>` : ''}
 						<th colspan="${SHOW_ACTIONS ? 2 : 1}">Title</th>
 						${this.type !== 'wrapped' ? html`<th><mwc-icon title="Duration">schedule</mwc-icon></th>` : ''}
-						${this.type !== 'artist' ? html`<th>Artist</th>` : ''}
 						${this.type !== 'album' ? html`<th>Album</th>` : ''}
+						${this.type !== 'artist' ? html`<th>Artist</th>` : ''}
+						${this.type !== 'composer' && this.type !== 'wrapped' ? html`<th>Composer</th>` : ''}
 						<th><mwc-icon title="Playthroughs" aria-label="Playthroughs">music_note</mwc-icon></th>
 						${this.type !== 'wrapped' ? html`<th><mwc-icon title="Rating" aria-label="Rating">thumbs_up_down</mwc-icon></th>` : ''}
 					</tr>
@@ -149,8 +150,9 @@ export class SongZSongList extends LitElement {
 							<td class="title" title="${song.title}" @dblclick="${this.handleDblClick}">${song.title}</td>
 							${SHOW_ACTIONS ? html`<td><mwc-icon-button slot="meta" icon="more_vert" @click=${this.handleMenuButton}></mwc-icon-button></td>` : ''}
 							${this.type !== 'wrapped' ? html`<td class="duration">${formatDuration(song.duration / 1000)}</td>` : ''}
-							${this.type !== 'artist' ? html`<td class="artist" title="${formatArtist(song, true)}">${unsafeHTML(formatArtist(song, false))}</td>` : ''}
 							${this.type !== 'album' ? html`<td class="album" title="${formatAlbum(song, true)}">${unsafeHTML(formatAlbum(song))}</td>` : ''}
+							${this.type !== 'artist' ? html`<td class="artist" title="${formatArtist(song, true)}">${unsafeHTML(formatArtist(song, false))}</td>` : ''}
+							${(this.type !== 'composer' && this.type !== 'wrapped') ? html`<td title="${formatArtist(song, true, true)}">${unsafeHTML(formatArtist(song, false, true))}</td>` : ''}
 							<td class="playthroughs">${song.playthroughs ?? ''}</td>
 							${this.type !== 'wrapped' ? html`<td class="rating">${
 								(typeof song.rating === 'undefined') ? '' : this.RATING_INDICATORS[song.rating + 3]

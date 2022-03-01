@@ -22,7 +22,8 @@ export class SongZArtist extends LitElement {
 			artistid: { type: String, reflect: true },
 			pending: { type: Boolean, attribute: false },
 			name: { type: String, reflect: true },
-			songs: { type: Array, attribute: false },
+			artistsongs: { type: Array, attribute: false },
+			composersongs: { type: Array, attribute: false },
 			message: { type: String, attribute: false }
 		};
 	}
@@ -47,7 +48,7 @@ export class SongZArtist extends LitElement {
 	
 	/**
 	 * Load the list of artists.
-	 * @returns {Promise} Resolves when the list of artists has been loaded and set to display
+	 * @returns {Promise} Resolves when the artist and lists of songs has been loaded and set to display
 	 */
 	async loadArtist() {
 		setPageTitle('');
@@ -62,7 +63,8 @@ export class SongZArtist extends LitElement {
 			var artist = await artistRes.json();
 			setPageTitle(artist.name);
 			this.name = artist.name;
-			this.songs = artist.songs;
+			this.artistsongs = artist.artistSongs;
+			this.composersongs = artist.composerSongs;
 		} catch (err) {
 			this.message = err;
 		} finally {
@@ -74,7 +76,7 @@ export class SongZArtist extends LitElement {
 	 * Handle metadata getting updated.
 	 */
 	handleMetadataUpdate() {
-		this.shadowRoot.querySelector('songz-song-list').requestUpdate();
+		this.shadowRoot.querySelectorAll('songz-song-list').forEach((songList) => songList.requestUpdate());
 	}
 	
 	/**
@@ -88,7 +90,18 @@ export class SongZArtist extends LitElement {
 			</mwc-top-app-bar-fixed>
 			${this.pending ? html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>` : ''}
 			${this.message ? html`<p>${this.message}</p>` : ''}
-			${this.songs ? html`<songz-song-list type="artist" .songs="${this.songs}"></songz-song-list>` : ''}
+			${this.artistsongs ?
+				(this.artistsongs.length === 0 ?
+					html`<p>No artist credits</p>` :
+					html`<songz-song-list type="artist" .songs="${this.artistsongs}"></songz-song-list>`
+				) : ''
+			}
+			${this.composersongs ?
+				(this.composersongs.length === 0 ?
+					html`<hr /><p>No composer credits</p>` :
+					html`<hr /><songz-song-list type="composer" .songs="${this.composersongs}"></songz-song-list>`
+				) : ''
+			}
 		`;
 	}
 }

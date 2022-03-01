@@ -22,16 +22,20 @@ export function formatAlbum(song, returnPlainText) {
  * Format a song's list of artist names as links to those artists.
  * @param {Song} song - A song object
  * @param {Boolean} returnPlainText - Whether to return plain text instead of links
+ * @param {Boolean} returnComposers - Whether to return composers instead of artists
  * @returns {String} - The song's artists' names, as a semicolon-separated list
  */
-export function formatArtist(song, returnPlainText) {
-	if (!song?.artist) {
+export function formatArtist(song, returnPlainText, returnComposers) {
+	if (!song?.artist || (returnComposers && !song?.composer)) {
 		return '';
 	}
+	
+	var returnProperty = (returnComposers ? 'composer' : 'artist');
+	
 	if (returnPlainText) {
-		return song.artist.map((artist) => artist.name).join('; ');
+		return song[returnProperty].map((artist) => artist.name).join('; ');
 	}
-	return song.artist.map((artist) => `<a href="#artists/${artist._id}">${artist.name}</a>`).join('; ');
+	return song[returnProperty].map((artist) => `<a href="#artists/${artist._id}">${artist.name}</a>`).join('; ');
 }
 
 /**
