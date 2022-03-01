@@ -57,7 +57,7 @@ export class SongZLyrics extends LitElement {
 	 * @returns {Promise} Resolves when the lyrics have been loaded and set to display
 	 */
 	async loadLyrics() {
-		if (!this.song || !this.song.gDriveLRC) {
+		if (!this.song || !(this.song.gDriveLRC || this.song.gDriveMD)) {
 			return;
 		}
 		this.lyrics = '';
@@ -65,17 +65,32 @@ export class SongZLyrics extends LitElement {
 		this.pending = true;
 		this.loadAbortController = new AbortController();
 		try {
-			var lyricsRes = await fetch(toGDriveURL(this.song.gDriveLRC, true), { signal: this.loadAbortController.signal });
-			await httpToJSError(lyricsRes);
-			var lyricsFileText = await lyricsRes.text();
-			// For now, remove all LRC file tags and preceding whitespace, and only display the lyric text.
-			// Later, this can be replaced with actually parsing the LRC file.
-			this.lyrics = lyricsFileText.replace(/\[.*?\]/g, '').replace(/^\n+/, '');
+			if (this.song.gDriveLRC) {
+				await this.loadLRC();
+			} else if (this.song.gDriveMD) {
+				await this.loadMD();
+			}
 		} catch (err) {
 			this.message = err;
 		} finally {
 			this.pending = false;
 		}
+	}
+	
+	async loadLRC() {
+		var lyricsRes = await fetch(toGDriveURL(this.song.gDriveLRC, true), { signal: this.loadAbortController.signal });
+		await httpToJSError(lyricsRes);
+		var lyricsFileText = await lyricsRes.text();
+		// For now, remove all LRC file tags and preceding whitespace, and only display the lyric text.
+		// Later, this can be replaced with actually parsing the LRC file.
+		this.lyrics = lyricsFileText.replace(/\[.*?\]/g, '').replace(/^\n+/, '');
+	}
+	
+	async loadMD() {
+		var lyricsRes = await fetch(toGDriveURL(this.song.gDriveMD, true), { signal: this.loadAbortController.signal });
+		await httpToJSError(lyricsRes);
+		this.lyrics = await lyricsRes.text();
+		// TODO: Convert markdown to HTML
 	}
 	
 	/**
@@ -84,7 +99,7 @@ export class SongZLyrics extends LitElement {
 	render() {
 		if (!this.song) {
 			return html`<p class="message">No song playing.</p>`;
-		} else if (!this.song.gDriveLRC) {
+		} else if (!this.song.gDriveLRC && !this.song.gDriveMD) {
 			return html`<p class="message">No lyrics.</p>`;
 		} else if (this.pending) {
 			return html`<p class="message"><mwc-circular-progress indeterminate></mwc-circular-progress></p>`;
