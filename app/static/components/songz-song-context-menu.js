@@ -76,13 +76,13 @@ export class SongZSongContextMenu extends LitElement {
 				</mwc-list-item>
 				<li divider role="separator"></li>
 				<!-- Navigation actions -->
-				${this.viewtype !== 'album' ?
+				${this.viewtype !== 'album' && this.song?.album ?
 					html`<mwc-list-item graphic="icon" value="open-album">
 						<mwc-icon slot="graphic">album</mwc-icon>
 						Go to album
 					</mwc-list-item>` : ''
 				}
-				${this.viewtype !== 'artist' ?
+				${this.viewtype !== 'artist' && this.song?.artist?.length ?
 					html`<mwc-list-item graphic="icon" value="open-artist">
 						<mwc-icon slot="graphic">person</mwc-icon>
 						<!--<mwc-icon slot="graphic">account_music</mwc-icon>-->
