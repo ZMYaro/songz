@@ -87,7 +87,7 @@ export class SongZAlbum extends LitElement {
 			</mwc-top-app-bar-fixed>
 			${this.pending ? html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>` : ''}
 			${this.message ? html`<p>${this.message}</p>` : ''}
-			${this.songs ? html`<songz-song-list type="album" .songs="${this.songs}"></songz-song-list>` : ''}
+			${this.songs ? html`<songz-song-list viewtype="album" .songs="${this.songs}"></songz-song-list>` : ''}
 		`;
 	}
 }

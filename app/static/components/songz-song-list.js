@@ -5,7 +5,7 @@ import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.5.1/lit-ele
 //import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import {unsafeHTML} from 'https://unpkg.com/lit-html@1.4.1/directives/unsafe-html.js?module';
 
-import {formatAlbum, formatArtist, formatDuration, handleMenuButton, handleMenuItemSelect, toGDriveURL} from '../scripts/utils.js';
+import {formatAlbum, formatArtist, formatDuration, showMenuForSong, handleMenuItemSelect, toGDriveURL} from '../scripts/utils.js';
 
 export class SongZSongList extends LitElement {
 	
@@ -69,7 +69,7 @@ export class SongZSongList extends LitElement {
 	
 	static get properties() {
 		return {
-			type: { type: String, reflect: true }, /* artist, album, playlist */
+			viewtype: { type: String, reflect: true }, /* album, artist, composer, playlist, wrapped, null */
 			songs: { type: Array, attribute: false }
 		};
 	}
@@ -79,7 +79,7 @@ export class SongZSongList extends LitElement {
 	 * Get a reference to the song menu when the element is first updated.
 	 */
 	firstUpdated() {
-		this.songMenu = this.shadowRoot.querySelector('mwc-menu');
+		this.songMenu = this.shadowRoot.querySelector('songz-song-context-menu');
 	}
 	
 	/**
@@ -87,10 +87,9 @@ export class SongZSongList extends LitElement {
 	 * @param {MouseEvent} ev
 	 */
 	handleMenuButton(ev) {
-		// Tell the menu which song it is open for.
-		this.songMenu.dataset.index = ev.currentTarget.parentElement.parentElement.dataset.index;
-		
-		handleMenuButton(ev, this.songMenu);
+		var index = parseInt(ev.currentTarget.parentElement.parentElement.dataset.index),
+			song = this.songs[index];
+		showMenuForSong(ev, this.songMenu, song, index);
 	}
 	
 	/**
@@ -121,84 +120,49 @@ export class SongZSongList extends LitElement {
 	 * @override
 	 */
 	render() {
-		const SHOW_ART = (['artist', 'composer', 'playlist', 'wrapped'].indexOf(this.type) !== -1),
-			SHOW_ACTIONS = (this.type !== 'wrapped');
+		const SHOW_ART = (['artist', 'composer', 'playlist', 'wrapped'].indexOf(this.viewtype) !== -1),
+			SHOW_ACTIONS = (this.viewtype !== 'wrapped');
 		return html`
 			<table>
 				<thead>
 					<tr>
-						${this.type === 'album' ? html`<th title="Track number">#</th>` : ''}
-						${this.type === 'playlist' ? html`<th title="List index">#</th>` : ''}
-						${this.type === 'wrapped' ? html`<th title="Ranking">#</th>` : ''}
+						${this.viewtype === 'album' ? html`<th title="Track number">#</th>` : ''}
+						${this.viewtype === 'playlist' ? html`<th title="List index">#</th>` : ''}
+						${this.viewtype === 'wrapped' ? html`<th title="Ranking">#</th>` : ''}
 						${SHOW_ART ? html`<th></th>` : ''}
 						<th colspan="${SHOW_ACTIONS ? 2 : 1}">Title</th>
-						${this.type !== 'wrapped' ? html`<th><mwc-icon title="Duration">schedule</mwc-icon></th>` : ''}
-						${this.type !== 'album' ? html`<th>Album</th>` : ''}
-						${this.type !== 'artist' ? html`<th>Artist</th>` : ''}
-						${this.type !== 'composer' && this.type !== 'wrapped' ? html`<th>Composer</th>` : ''}
-						${this.type !== 'wrapped' ? html `<th>Genre</th>` : ''}
+						${this.viewtype !== 'wrapped' ? html`<th><mwc-icon title="Duration">schedule</mwc-icon></th>` : ''}
+						${this.viewtype !== 'album' ? html`<th>Album</th>` : ''}
+						${this.viewtype !== 'artist' ? html`<th>Artist</th>` : ''}
+						${this.viewtype !== 'composer' && this.viewtype !== 'wrapped' ? html`<th>Composer</th>` : ''}
+						${this.viewtype !== 'wrapped' ? html `<th>Genre</th>` : ''}
 						<th><mwc-icon title="Playthroughs" aria-label="Playthroughs">music_note</mwc-icon></th>
-						${this.type !== 'wrapped' ? html`<th><mwc-icon title="Rating" aria-label="Rating">thumbs_up_down</mwc-icon></th>` : ''}
+						${this.viewtype !== 'wrapped' ? html`<th><mwc-icon title="Rating" aria-label="Rating">thumbs_up_down</mwc-icon></th>` : ''}
 					</tr>
 				</thead>
 				<tbody>
 					${(this.songs || []).map((song, i) => html`
 						<tr data-index="${i}">
-							${this.type === 'album' ? html`<td class="index">${song.trackNo}</td>` : ''}
-							${this.type === 'playlist' ? html`<td class="index">${song.listIndex + 1}</td>` : ''}
-							${this.type === 'wrapped' ? html`<td class="index">${i + 1}</td>` : ''}
+							${this.viewtype === 'album' ? html`<td class="index">${song.trackNo}</td>` : ''}
+							${this.viewtype === 'playlist' ? html`<td class="index">${song.listIndex + 1}</td>` : ''}
+							${this.viewtype === 'wrapped' ? html`<td class="index">${i + 1}</td>` : ''}
 							${SHOW_ART ? html`<td><img class="album-art" src="${song.gDriveArt ? toGDriveURL(song.gDriveArt) : '/images/unknown_album.svg'}" alt="" /></td>` : ''}
 							<td class="title" title="${song.title}" @dblclick="${this.handleDblClick}">${song.title}</td>
 							${SHOW_ACTIONS ? html`<td><mwc-icon-button slot="meta" icon="more_vert" @click=${this.handleMenuButton}></mwc-icon-button></td>` : ''}
-							${this.type !== 'wrapped' ? html`<td class="duration">${formatDuration(song.duration / 1000)}</td>` : ''}
-							${this.type !== 'album' ? html`<td class="album" title="${formatAlbum(song, true)}">${unsafeHTML(formatAlbum(song))}</td>` : ''}
-							${this.type !== 'artist' ? html`<td class="artist" title="${formatArtist(song, true)}">${unsafeHTML(formatArtist(song, false))}</td>` : ''}
-							${(this.type !== 'composer' && this.type !== 'wrapped') ? html`<td title="${formatArtist(song, true, true)}">${unsafeHTML(formatArtist(song, false, true))}</td>` : ''}
-							${this.type !== 'wrapped' ? html`<td>${song.genre?.name || ''}</td>` : ''}
+							${this.viewtype !== 'wrapped' ? html`<td class="duration">${formatDuration(song.duration / 1000)}</td>` : ''}
+							${this.viewtype !== 'album' ? html`<td class="album" title="${formatAlbum(song, true)}">${unsafeHTML(formatAlbum(song))}</td>` : ''}
+							${this.viewtype !== 'artist' ? html`<td class="artist" title="${formatArtist(song, true)}">${unsafeHTML(formatArtist(song, false))}</td>` : ''}
+							${(this.viewtype !== 'composer' && this.viewtype !== 'wrapped') ? html`<td title="${formatArtist(song, true, true)}">${unsafeHTML(formatArtist(song, false, true))}</td>` : ''}
+							${this.viewtype !== 'wrapped' ? html`<td>${song.genre?.name || ''}</td>` : ''}
 							<td class="playthroughs">${song.playthroughs ?? ''}</td>
-							${this.type !== 'wrapped' ? html`<td class="rating">${
+							${this.viewtype !== 'wrapped' ? html`<td class="rating">${
 								(typeof song.rating === 'undefined') ? '' : this.RATING_INDICATORS[song.rating + 3]
 							}</td>` : ''}
 						</tr>
 					`)}
 				</tbody>
 			</table>
-			<mwc-menu fixed wrapFocus @action="${this.handleMenuItemSelect}">
-				<!-- Play/queue actions -->
-				<mwc-list-item graphic="icon" value="play-now">
-					<mwc-icon slot="graphic">play_arrow</mwc-icon>
-					Play
-				</mwc-list-item>
-				<mwc-list-item graphic="icon" value="play-next">
-					<mwc-icon slot="graphic">playlist_play</mwc-icon>
-					Play next
-				</mwc-list-item>
-				<mwc-list-item graphic="icon" value="add-to-queue">
-					<mwc-icon slot="graphic">queue_music</mwc-icon>
-					Add to queue
-				</mwc-list-item>
-				<li divider role="separator"></li>
-				<!-- Library actions -->
-				<mwc-list-item graphic="icon" value="edit-song">
-					<mwc-icon slot="graphic">edit</mwc-icon>
-					Edit song
-				</mwc-list-item>
-				<mwc-list-item graphic="icon" @click=${() => alert('Not yet implemented.')}>
-					<mwc-icon slot="graphic">playlist_add</mwc-icon>
-					Add to playlist
-				</mwc-list-item>
-				<li divider role="separator"></li>
-				<!-- Navigation actions -->
-				<mwc-list-item graphic="icon" value="open-album">
-					<mwc-icon slot="graphic">album</mwc-icon>
-					Go to album
-				</mwc-list-item>
-				<mwc-list-item graphic="icon" value="open-artist">
-					<mwc-icon slot="graphic">person</mwc-icon>
-					<!--<mwc-icon slot="graphic">account_music</mwc-icon>-->
-					Go to artist
-				</mwc-list-item>
-			</mwc-menu>
+			<songz-song-context-menu viewtype="${this.viewtype}" @action="${this.handleMenuItemSelect}"></songz-song-context-menu>
 		`;
 	}
 }

@@ -107,7 +107,7 @@ export class SongZPlaylist extends LitElement {
 			</mwc-top-app-bar-fixed>
 			${this.pending ? html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>` : ''}
 			${this.description ? html`<p>${this.description}</p>` : ''}
-			${this.songs ? html`<songz-song-list type="playlist" .songs="${this.songs}"></songz-song-list>` : ''}
+			${this.songs ? html`<songz-song-list viewtype="playlist" .songs="${this.songs}"></songz-song-list>` : ''}
 		`;
 	}
 }

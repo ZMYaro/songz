@@ -93,13 +93,13 @@ export class SongZArtist extends LitElement {
 			${this.artistsongs ?
 				(this.artistsongs.length === 0 ?
 					html`<p>No artist credits</p>` :
-					html`<songz-song-list type="artist" .songs="${this.artistsongs}"></songz-song-list>`
+					html`<songz-song-list viewtype="artist" .songs="${this.artistsongs}"></songz-song-list>`
 				) : ''
 			}
 			${this.composersongs ?
 				(this.composersongs.length === 0 ?
 					html`<hr /><p>No composer credits</p>` :
-					html`<hr /><songz-song-list type="composer" .songs="${this.composersongs}"></songz-song-list>`
+					html`<hr /><songz-song-list viewtype="composer" .songs="${this.composersongs}"></songz-song-list>`
 				) : ''
 			}
 		`;

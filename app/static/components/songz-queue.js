@@ -3,7 +3,7 @@
 //import {LitElement, html, css}, css from 'lit-element';
 import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.5.1/lit-element.js?module';
 
-import {formatArtist, formatDuration, toGDriveURL, handleMenuButton, handleMenuItemSelect} from '../scripts/utils.js';
+import {formatArtist, formatDuration, toGDriveURL, showMenuForSong, handleMenuItemSelect} from '../scripts/utils.js';
 
 export class SongZQueue extends LitElement {
 	
@@ -62,7 +62,7 @@ export class SongZQueue extends LitElement {
 	 * Get a reference to the song menu when the element is first updated.
 	 */
 	firstUpdated() {
-		this.songMenu = this.shadowRoot.querySelector('mwc-menu');
+		this.songMenu = this.shadowRoot.querySelector('songz-song-context-menu');
 	}
 	
 	/**
@@ -70,10 +70,9 @@ export class SongZQueue extends LitElement {
 	 * @param {MouseEvent} ev
 	 */
 	handleMenuButton(ev) {
-		// Tell the menu which song it is open for.
-		this.songMenu.dataset.index = ev.currentTarget.parentElement.dataset.index;
-		
-		handleMenuButton(ev, this.songMenu);
+		var index = parseInt(ev.currentTarget.parentElement.dataset.index),
+			song = this.songs[index];
+		showMenuForSong(ev, this.songMenu, song, index);
 	}
 	
 	/**
@@ -124,42 +123,7 @@ export class SongZQueue extends LitElement {
 					`)
 				}
 			</mwc-list>
-			<mwc-menu fixed wrapFocus @action="${this.handleMenuItemSelect}">
-				<!-- Play/queue actions -->
-				<mwc-list-item graphic="icon" value="queue-play-now">
-					<mwc-icon slot="graphic">play_arrow</mwc-icon>
-					Play
-				</mwc-list-item>
-				<mwc-list-item graphic="icon" value="queue-play-next">
-					<mwc-icon slot="graphic">playlist_play</mwc-icon>
-					Play next
-				</mwc-list-item>
-				<mwc-list-item graphic="icon" value="queue-remove">
-					<mwc-icon slot="graphic">remove_circle</mwc-icon>
-					Remove from queue
-				</mwc-list-item>
-				<li divider role="separator"></li>
-				<!-- Library actions -->
-				<mwc-list-item graphic="icon" value="edit-song">
-					<mwc-icon slot="graphic">edit</mwc-icon>
-					Edit song
-				</mwc-list-item>
-				<mwc-list-item graphic="icon" @click=${() => alert('Not yet implemented.')}>
-					<mwc-icon slot="graphic">playlist_add</mwc-icon>
-					Add to playlist
-				</mwc-list-item>
-				<li divider role="separator"></li>
-				<!-- Navigation actions -->
-				<mwc-list-item graphic="icon" value="open-album">
-					<mwc-icon slot="graphic">album</mwc-icon>
-					Go to album
-				</mwc-list-item>
-				<mwc-list-item graphic="icon" value="open-artist">
-					<mwc-icon slot="graphic">person</mwc-icon>
-					<!--<mwc-icon slot="graphic">account_music</mwc-icon>-->
-					Go to artist
-				</mwc-list-item>
-			</mwc-menu>
+			<songz-song-context-menu viewtype="queue" @action="${this.handleMenuItemSelect}"></songz-song-context-menu>
 		`;
 	}
 }

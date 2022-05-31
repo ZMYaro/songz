@@ -113,12 +113,16 @@ export function toGDriveURL(gDriveID, useAPI) {
  * Open a menu when its menu button is clicked.
  * @param {MouseEvent} ev
  * @param {Menu} menu - The menu to be opened by the button
+ * @param {Object} song - The selected song metadata
+ * @param {Number} songIndex - The index of the song on the list
  */
-export function handleMenuButton(ev, menu) {
+export function showMenuForSong(ev, menu, song, songIndex) {
 	ev.stopPropagation();
 	
 	// Open the menu from the button.
 	menu.anchor = ev.currentTarget;
+	menu.song = song;
+	menu.songIndex = songIndex;
 	menu.show();
 }
 
@@ -129,13 +133,9 @@ export function handleMenuButton(ev, menu) {
  * @param {HTMLElement} component - The custom element to emit the event from
  */
 export function handleMenuItemSelect(ev, songList, component) {
-	if (!ev.currentTarget.selected) {
-		return;
-	}
-	
 	// Get the action and song index recorded in data attributes.
-	var action = ev.currentTarget.selected.value,
-		index = parseInt(ev.currentTarget.dataset.index);
+	var action = ev.currentTarget.menu.selected?.value,
+		index = parseInt(ev.currentTarget.songIndex);
 	
 	if (!action) {
 		return;
