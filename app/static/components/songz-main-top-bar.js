@@ -23,6 +23,18 @@ export class SongZMainTopBar extends LitElement {
 	
 	/**
 	 * @override
+	 * Override tabs' hard-coded minimum width when the top bar is first updated.
+	 */
+	firstUpdated() {
+		var tabStyleSheet = new CSSStyleSheet();
+		tabStyleSheet.replaceSync('.mdc-tab { min-width: 56px; }');
+		for (let tab of this.shadowRoot.querySelectorAll('mwc-tab')) {
+			tab.shadowRoot.adoptedStyleSheets = [...tab.shadowRoot.adoptedStyleSheets, tabStyleSheet];
+		}
+	}
+	
+	/**
+	 * @override
 	 */
 	render() {
 		var activeIndex = ['artists', 'albums', 'songs', 'playlists'].indexOf(this.selected);
