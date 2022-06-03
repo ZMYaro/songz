@@ -3,7 +3,7 @@
 import {GOOGLE_API_KEY} from '/api_key.js';
 
 /**
- * Format a song's album as a links to that album.
+ * Format a song's album as a link to that album.
  * @param {Song} song - A song object
  * @param {Boolean} returnPlainText - Whether to return plain text instead of a link
  * @returns {String} - The song's album as an HTML link
@@ -68,6 +68,22 @@ export function formatDuration(duration) {
 		}
 		return (minutes + ':' + seconds);
 	}*/
+
+/**
+ * Format a song's genre as a link to that genre.
+ * @param {Song} song - A song object
+ * @param {Boolean} returnPlainText - Whether to return plain text instead of a link
+ * @returns {String} - The song's genre as an HTML link
+ */
+export function formatGenre(song, returnPlainText) {
+	if (!song?.genre) {
+		return '';
+	}
+	if (returnPlainText) {
+		return song.genre.name;
+	}
+	return `<a href="#genres/${song.genre._id}">${song.genre.name}</a>`;
+}
 
 /**
  * If a response had an HTTP error, turn it into a JavaScript error.

@@ -262,6 +262,27 @@ router.route('/artists/:artistId')
 		res.json(artist);
 	});
 
+router.route('/genres')
+	/** Get all genres. */
+	.get(async function (req, res) {
+		var genres = await Genre.find({})
+			.collation({ 'locale': 'en' })
+			.sort({ name: 'asc' });
+		res.json(genres);
+	});
+
+router.route('/genres/:genreId')
+	/** Get the genre and all songs in it. */
+	.get(async function (req, res) {
+		var genreId = req.params.genreId;
+		if (!mongoose.Types.ObjectId.isValid(genreId)) { return handleError(res, 'Genre not found.', 404); }
+		
+		var genre = await Genre.findByIdWithSongs(genreId);
+		if (!genre) { return handleError(res, 'Genre not found.', 404); }
+		
+		res.json(genre);
+	});
+
 router.route('/playlists')
 	/** Get all playlists. */
 	.get(async function (req, res) {

@@ -9,7 +9,7 @@ export class SongZSongContextMenu extends LitElement {
 	
 	static get properties() {
 		return {
-			viewtype: { type: String, reflect: true }, /* album, artist, composer, queue, playlist, null */
+			viewtype: { type: String, reflect: true }, /* album, artist, composer, genre, queue, playlist, null */
 			anchor: { type: Object, attribute: false },
 			song: { type: Object, attribute: false },
 			songIndex: { type: Number }

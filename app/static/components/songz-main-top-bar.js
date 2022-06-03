@@ -37,12 +37,13 @@ export class SongZMainTopBar extends LitElement {
 	 * @override
 	 */
 	render() {
-		var activeIndex = ['artists', 'albums', 'songs', 'playlists'].indexOf(this.selected);
+		var activeIndex = ['artists', 'albums', 'genres', 'songs', 'playlists'].indexOf(this.selected);
 		return html`
 			<mwc-top-app-bar-fixed>
 				<mwc-tab-bar activeIndex="${activeIndex}" slot="navigationIcon">
 					<mwc-tab icon="person" title="Artists" aria-label="Artists." @click="${() => location.href = '#artists'}"></mwc-tab>
 					<mwc-tab icon="album" title="Albums" aria-label="Albums." @click="${() => location.href = '#albums'}"></mwc-tab>
+					<mwc-tab icon="piano" title="Genres" aria-label="Genres." @click="${() => location.href = '#genres'}"></mwc-tab>
 					<mwc-tab icon="music_note" title="Songs" aria-label="Songs." @click="${() => location.href = '#songs'}"></mwc-tab>
 					<mwc-tab icon="format_list_bulleted" title="Playlists" aria-label="Playlists." @click="${() => location.href = '#playlists'}"></mwc-tab>
 				</mwc-tab-bar>

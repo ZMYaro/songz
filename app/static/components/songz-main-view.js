@@ -18,6 +18,8 @@ export class SongZMainView extends LitElement {
 			songz-albums-list,
 			songz-artist,
 			songz-artists-list,
+			songz-genre,
+			songz-genres-list,
 			songz-playlist,
 			songz-playlists-list,
 			songz-songs-list {
@@ -79,6 +81,13 @@ export class SongZMainView extends LitElement {
 			this.view = 'artist';
 			this.viewContentId = location.hash.match(/^#artists\/([0-9a-f]+)$/)[1];
 			
+		} else if (location.hash === '#genres') {
+			this.view = 'genres';
+			
+		} else if (location.hash.match(/^#genres\/[0-9a-f]+$/)) {
+			this.view = 'genre';
+			this.viewContentId = location.hash.match(/^#genres\/([0-9a-f]+)$/)[1];
+			
 		} else if (location.hash === '#songs') {
 			this.view = 'songs';
 			
@@ -132,6 +141,12 @@ export class SongZMainView extends LitElement {
 				break;
 			case 'artists':
 				mainViewContents = html`<songz-artists-list></songz-artists-list>`;
+				break;
+			case 'genre':
+				mainViewContents = html`<songz-genre genreid="${this.viewContentId}"></songz-genre>`;
+				break;
+			case 'genres':
+				mainViewContents = html`<songz-genres-list></songz-genres-list>`;
 				break;
 			case 'playlist':
 				mainViewContents = html`<songz-playlist playlistid="${this.viewContentId}"></songz-playlist>`;

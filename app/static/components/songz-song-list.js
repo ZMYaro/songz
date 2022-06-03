@@ -5,7 +5,7 @@ import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.5.1/lit-ele
 //import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import {unsafeHTML} from 'https://unpkg.com/lit-html@1.4.1/directives/unsafe-html.js?module';
 
-import {formatAlbum, formatArtist, formatDuration, showMenuForSong, handleMenuItemSelect, toGDriveURL} from '../scripts/utils.js';
+import {formatAlbum, formatArtist, formatDuration, formatGenre, showMenuForSong, handleMenuItemSelect, toGDriveURL} from '../scripts/utils.js';
 
 export class SongZSongList extends LitElement {
 	
@@ -69,7 +69,7 @@ export class SongZSongList extends LitElement {
 	
 	static get properties() {
 		return {
-			viewtype: { type: String, reflect: true }, /* album, artist, composer, playlist, wrapped, null */
+			viewtype: { type: String, reflect: true }, /* album, artist, composer, genre, playlist, wrapped, null */
 			songs: { type: Array, attribute: false }
 		};
 	}
@@ -120,7 +120,7 @@ export class SongZSongList extends LitElement {
 	 * @override
 	 */
 	render() {
-		const SHOW_ART = (['artist', 'composer', 'playlist', 'wrapped'].indexOf(this.viewtype) !== -1),
+		const SHOW_ART = (this.viewtype !== 'album'),
 			SHOW_ACTIONS = (this.viewtype !== 'wrapped');
 		return html`
 			<table>
@@ -135,7 +135,7 @@ export class SongZSongList extends LitElement {
 						${this.viewtype !== 'album' ? html`<th>Album</th>` : ''}
 						${this.viewtype !== 'artist' ? html`<th>Artist</th>` : ''}
 						${this.viewtype !== 'composer' && this.viewtype !== 'wrapped' ? html`<th>Composer</th>` : ''}
-						${this.viewtype !== 'wrapped' ? html `<th>Genre</th>` : ''}
+						${this.viewtype !== 'genre' && this.viewtype !== 'wrapped' ? html `<th>Genre</th>` : ''}
 						<th><mwc-icon title="Playthroughs" aria-label="Playthroughs">music_note</mwc-icon></th>
 						${this.viewtype !== 'wrapped' ? html`<th><mwc-icon title="Rating" aria-label="Rating">thumbs_up_down</mwc-icon></th>` : ''}
 					</tr>
@@ -153,7 +153,7 @@ export class SongZSongList extends LitElement {
 							${this.viewtype !== 'album' ? html`<td class="album" title="${formatAlbum(song, true)}">${unsafeHTML(formatAlbum(song))}</td>` : ''}
 							${this.viewtype !== 'artist' ? html`<td class="artist" title="${formatArtist(song, true)}">${unsafeHTML(formatArtist(song, false))}</td>` : ''}
 							${(this.viewtype !== 'composer' && this.viewtype !== 'wrapped') ? html`<td title="${formatArtist(song, true, true)}">${unsafeHTML(formatArtist(song, false, true))}</td>` : ''}
-							${this.viewtype !== 'wrapped' ? html`<td>${song.genre?.name || ''}</td>` : ''}
+							${this.viewtype !== 'genre' && this.viewtype !== 'wrapped' ? html`<td>${unsafeHTML(formatGenre(song))}</td>` : ''}
 							<td class="playthroughs">${song.playthroughs ?? ''}</td>
 							${this.viewtype !== 'wrapped' ? html`<td class="rating">${
 								(typeof song.rating === 'undefined') ? '' : this.RATING_INDICATORS[song.rating + 3]
