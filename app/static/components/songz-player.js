@@ -57,9 +57,12 @@ export class SongZPlayer extends LitElement {
 					align-items: flex-start;
 					justify-content: center;
 				}
-				.song-details a {
+				.song-details .artist {
 					font-size: var(--mdc-typography-body2-font-size, 0.875rem);
 					color: var(--mdc-theme-text-secondary-on-background, rgba(0, 0, 0, 0.54));
+				}
+				.song-details a {
+					color: inherit;
 					text-decoration: none;
 				}
 					.song-details a:hover,
