@@ -3,7 +3,7 @@
 const mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
 	Song = require('./song.js'),
-	populateSong = require('../utils.js').populateSong;
+	{ parseSemicolonSeparatedList, populateSong } = require('../utils.js');
 
 const genreSchema = new Schema({
 	name: String
@@ -23,6 +23,25 @@ genreSchema.statics.findOrCreateOne = async function (name) {
 	});
 	return genre;
 };
+
+/**
+ * Find or optionally create genres requested in a semicolon-separated list.
+ * @param {String} genreNamesStr - The name(s) of the genre(s), semicolon-separated
+ * @param {Boolean} [createIfNotFound] - Whether to create new genres with names not found
+ * @returns {Promise<Array<Genre>>} Resolves with the array of genres after all have been retrieved
+ */
+genreSchema.statics.findFromStrList = async function (genreNamesStr, createIfNotFound) {
+	var genreNames = parseSemicolonSeparatedList(genreNamesStr),
+		genres = [];
+	for (let genreName of genreNames) {
+		let genre = await (createIfNotFound ?
+			this.findOrCreateOne(genreName.trim()) :
+			this.findOne({ name: genreName.trim() }));
+		if (!genre) { continue; }
+		genres.push(genre);
+	}
+	return genres;
+}
 
 /**
  * Find a genre by its ID and return it with all songs in it.
