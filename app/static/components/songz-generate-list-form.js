@@ -31,7 +31,6 @@ export class SongZGenerateListForm extends LitElement {
 	static get properties() {
 		return {
 			pending: { type: Boolean, attribute: false },
-			songs: { type: Array, attribute: false },
 			message: { type: String, attribute: false }
 		};
 	}
@@ -59,12 +58,28 @@ export class SongZGenerateListForm extends LitElement {
 		try {
 			var listRes = await fetch(url);
 			await httpToJSError(listRes);
-			this.songs = await listRes.json();
+			var songList = await listRes.json();
+			this.dispatchPlayEvent(songList);
 		} catch (err) {
 			this.message = err;
 		} finally {
 			this.pending = false;
 		}
+	}
+	
+	/**
+	 * 
+	 * @param {Array<Object>} songList - The generated list of songs to play
+	 */
+	dispatchPlayEvent(songList) {
+		this.dispatchEvent(new CustomEvent('play-now', {
+			detail: {
+				list: songList,
+				index: 0
+			},
+			bubbles: true,
+			composed: true
+		}));
 	}
 	
 	/**
@@ -119,7 +134,7 @@ export class SongZGenerateListForm extends LitElement {
 						<input name="count" type="number" min="1" max="100" value="20" />
 					</label>
 					<br />
-					<button type="submit">Generate</button>
+					<button type="submit">▶️ Generate and play</button>
 				</fieldset>
 			</form>
 			${this.pending ? html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>` : ''}
