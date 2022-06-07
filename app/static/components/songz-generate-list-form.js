@@ -100,7 +100,8 @@ export class SongZGenerateListForm extends LitElement {
 						<input name="max-duration" type="number" min="1" max="99999999" />
 					</label>
 					<label>
-						🎹 Genre:
+						🎹 Genre(s):
+						<small>(semicolon-separated)</small>
 						<br />
 						<input name="genre" type="text" />
 					</label>
