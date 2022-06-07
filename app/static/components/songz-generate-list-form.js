@@ -11,6 +11,11 @@ export class SongZGenerateListForm extends LitElement {
 		return css`
 			label {
 				display: block;
+				margin-bottom: 0.25em;
+			}
+			input[type="text"] {
+				width: 600px;
+				max-width: 96%;
 			}
 		`;
 	}
@@ -33,19 +38,46 @@ export class SongZGenerateListForm extends LitElement {
 			<songz-main-top-bar selected="generatelist"></songz-main-top-bar>
 			<form method="GET" @submit="${this.handleFormSubmit}">
 				<label>
-					Genre
+					🕓 Duration:
+					<small>(in milliseconds)</small>
 					<br />
-					<input type="text" name="genre" />
+					<input name="min-duration" type="number" min="1" max="99999999" />
+					-
+					<input name="max-duration" type="number" min="1" max="99999999" />
 				</label>
 				<label>
-					Minimum rating
+					🎹 Genre:
 					<br />
-					<input type="number" min="-3" max="3" value="1" />
+					<input name="genre" type="text" />
 				</label>
 				<label>
-					Number of tracks
+					🧑‍🎤 Artist(s):
+					<small>(semicolon-separated)</small>
 					<br />
-					<input type="number" min="1" max="100" value="20" />
+					<input name="artist" type="text" />
+				</label>
+				<label>
+					👤 Composer(s):
+					<small>(semicolon-separated)</small>
+					<br />
+					<input name="composer" type="text" />
+				</label>
+				<label>
+					📅 Year:
+					<br />
+					<input name="min-year" type="number" min="1000" max="9999" />
+					-
+					<input name="max-year" type="number" min="1000" max="9999" />
+				</label>
+				<label>
+					👍 Minimum rating:
+					<br />
+					<input name="min-rating" type="number" min="-3" max="3" value="1" />
+				</label>
+				<label>
+					🧮 Number of tracks:
+					<br />
+					<input name="count" type="number" min="1" max="100" value="20" />
 				</label>
 				<br />
 				<button type="submit">Generate</button>
