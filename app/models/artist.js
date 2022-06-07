@@ -3,7 +3,7 @@
 const mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
 	Song = require('./song.js'),
-	populateSong = require('../utils.js').populateSong;
+	{ parseSemicolonSeparatedList, populateSong } = require('../utils.js');
 
 const artistSchema = new Schema({
 	name: String
@@ -31,7 +31,7 @@ artistSchema.statics.findOrCreateOne = async function (name) {
  * @returns {Promise<Array<Artist>>} Resolves with the array of artists after all have been retrieved
  */
 artistSchema.statics.findFromStrList = async function (artistNamesStr, createIfNotFound) {
-	var artistNames = artistNamesStr?.trim()?.split(';') || [],
+	var artistNames = parseSemicolonSeparatedList(artistNamesStr),
 		artists = [];
 	for (let artistName of artistNames) {
 		let artist = await (createIfNotFound ?
