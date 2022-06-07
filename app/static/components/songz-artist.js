@@ -54,7 +54,8 @@ export class SongZArtist extends LitElement {
 		setPageTitle('');
 		this.name = '';
 		this.message = undefined;
-		this.songs = undefined;
+		this.artistsongs = undefined;
+		this.composersongs = undefined;
 		this.pending = true;
 		this.loadAbortController = new AbortController();
 		try {
