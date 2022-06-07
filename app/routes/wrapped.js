@@ -2,7 +2,8 @@
 
 const express = require('express'),
 	path = require('path'),
-	Playthrough = require('../models/playthrough.js');
+	Playthrough = require('../models/playthrough.js'),
+	{ SONG_AGGREGATE_POPULATE_STEPS } = require('../utils.js');
 
 const router = express.Router();
 
@@ -42,29 +43,7 @@ router.get('/api/songs', async function (req, res) {
 			localField: '_id',
 			foreignField: '_id',
 			as: 'song',
-			pipeline: [
-				{ $lookup: {
-					from: 'artists',
-					localField: 'artist',
-					foreignField: '_id',
-					as: 'artist'
-				}},
-				/*{ $lookup: {
-					from: 'artists',
-					localField: 'composer',
-					foreignField: '_id',
-					as: 'composer'
-				}},*/
-				{ $lookup: {
-					from: 'albums',
-					localField: 'album',
-					foreignField: '_id',
-					as: 'album'
-				}},
-				{ $set: {
-					album: { $arrayElemAt: ['$album', 0] }
-				}}
-			]
+			pipeline: SONG_AGGREGATE_POPULATE_STEPS
 		}},
 		{ $set: {
 			playthroughs: { playthroughs: '$playthroughs' },

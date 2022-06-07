@@ -1,5 +1,36 @@
 'use strict';
 
+const SONG_AGGREGATE_POPULATE_STEPS = [
+	{ $lookup: {
+		from: 'albums',
+		localField: 'album',
+		foreignField: '_id',
+		as: 'album'
+	}},
+	{ $lookup: {
+		from: 'artists',
+		localField: 'artist',
+		foreignField: '_id',
+		as: 'artist'
+	}},
+	{ $lookup: {
+		from: 'artists',
+		localField: 'composer',
+		foreignField: '_id',
+		as: 'composer'
+	}},
+	{ $lookup: {
+		from: 'genres',
+		localField: 'genre',
+		foreignField: '_id',
+		as: 'genre'
+	}},
+	{ $set: {
+		album: { $arrayElemAt: ['$album', 0] },
+		genre: { $arrayElemAt: ['$genre', 0] }
+	}}
+];
+
 function handleError(res, message, code) {
 	code = code ?? 500;
 	console.error(`{ "status": ${code}, "message": "${message}" }`);
@@ -48,6 +79,7 @@ function processDurationInput(inputDuration) {
 }
 
 module.exports = {
+	SONG_AGGREGATE_POPULATE_STEPS,
 	handleError,
 	parseSemicolonSeparatedList,
 	populateSong,
