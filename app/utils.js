@@ -32,8 +32,24 @@ function populateSong(song) {
 		.populate('genre');
 }
 
+/**
+ * Process a duration value from the query, converting it to a positive number.
+ * @param {String} inputDuration - The input value from the query
+ * @returns {Number} - The duration, or undefined if the input was invalid
+ */
+function processDurationInput(inputDuration) {
+	var duration = parseFloat(inputDuration);
+	
+	// If invalid, return undefined.
+	if (!duration) { return undefined; }
+	
+	// Otherwise, ensure the duration is not negative.
+	return Math.max(0, duration);
+}
+
 module.exports = {
 	handleError,
 	parseSemicolonSeparatedList,
-	populateSong
+	populateSong,
+	processDurationInput
 };

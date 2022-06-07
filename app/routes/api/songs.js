@@ -8,7 +8,7 @@ const bodyParser = require('body-parser'),
 	Genre = require('../../models/genre.js'),
 	Playthrough = require('../../models/playthrough.js'),
 	Song = require('../../models/song.js'),
-	{ handleError, populateSong } = require('../../utils.js');
+	{ handleError, populateSong, processDurationInput } = require('../../utils.js');
 
 const router = express.Router();
 
@@ -46,7 +46,7 @@ router.route('')
 		if (req.query['gdrive-lrc'] ) { params.gDriveLRC = req.query['gdrive-lrc'].trim(); }
 		if (req.query['gdrive-md']  ) { params.gDriveMD = req.query['gdrive-md'].trim(); }
 		if (req.query['title']      ) { params.title = req.query['title'].trim(); }
-		if (req.query['duration']   ) { params.duration = parseFloat(req.query['duration']); }
+		if (req.query['duration']   ) { params.duration = processDurationInput(req.query['duration']); }
 		if (req.query['track-no']   ) { params.trackNo = Math.floor(parseInt(req.query['track-no'])); }
 		if (req.query['disc-no']    ) { params.discNo = Math.floor(parseInt(req.query['disc-no'])); }
 		if (req.query['year']       ) { params.year = Math.floor(parseInt(req.query['year'])); }
@@ -117,7 +117,7 @@ router.route('')
 			gDriveLRC: req.body['gdrive-lrc']?.trim(),
 			gDriveMD: req.body['gdrive-md']?.trim(),
 			title: title,
-			duration: parseFloat(req.body['duration']) || undefined,
+			duration: processDurationInput(req.body['duration']),
 			trackNo: Math.floor(parseInt(req.body['track-no'])) || undefined,
 			discNo: Math.floor(parseInt(req.body['disc-no'])) || undefined,
 			year: Math.floor(parseInt(req.body['year'])) || undefined,
