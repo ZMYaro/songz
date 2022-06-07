@@ -32,7 +32,7 @@ router.route('')
 	 * [composer] - The name(s) of the song's composer(s), semicolon-separated
 	 * [album-title] - The title of the album the song belongs to
 	 * [album-artist] - The album artist of the album the song belongs to
-	 * [rating] - The personal rating of the song, from -2 to 2
+	 * [rating] - The personal rating of the song, from −3 to +3
 	 */
 	.get(async function (req, res) {
 		var params = {};
@@ -95,7 +95,7 @@ router.route('')
 	 * [album-title] - The title of the album the song belongs to
 	 * [album-artist] - The album artist of the album the song belongs to
 	 * [playthroughs] - The number of past playthroughs
-	 * [rating] - The personal rating of the song, from -2 to 2
+	 * [rating] - The personal rating of the song, from −3 to +3
 	 */
 	.post(async function (req, res) {
 		console.log('\nAdding new song:');

@@ -6,6 +6,7 @@ const bodyParser = require('body-parser'),
 	songsRouter = require('./api/songs.js'),
 	albumsRouter = require('./api/albums.js'),
 	artistsRouter = require('./api/artists.js'),
+	generateListRouter = require('./api/generate_list.js'),
 	genresRouter = require('./api/genres.js'),
 	playlistsRouter = require('./api/playlists.js'),
 	playthroughsRouter = require('./api/playthroughs.js'),
@@ -26,6 +27,7 @@ router.use((req, res, next) => {
 router.use('/songs', songsRouter);
 router.use('/albums', albumsRouter);
 router.use('/artists', artistsRouter);
+router.use('/generatelist', generateListRouter);
 router.use('/genres', genresRouter);
 router.use('/playlists', playlistsRouter);
 router.use('/playthroughs', playthroughsRouter);
