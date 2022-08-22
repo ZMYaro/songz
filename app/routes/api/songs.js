@@ -158,7 +158,7 @@ router.route('')
 			await Playthrough.insertMany(playthroughObjects);
 		}
 		
-		await populateSong(newSong).execPopulate();
+		await populateSong(newSong);
 		res.json(newSong);
 	})
 	.put(async function (req, res) {
@@ -203,7 +203,7 @@ router.route('')
 		
 		await song.save();
 		
-		await populateSong(song).execPopulate();
+		await populateSong(song);
 		res.json(song);
 	});
 

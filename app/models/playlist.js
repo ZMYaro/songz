@@ -29,15 +29,15 @@ playlistSchema.statics.findByIdWithSongs = async function (id) {
 		}
 		
 		// Add the item to the playlist.
-		await item.populate('song').execPopulate();
-		await populateSong(item.song).execPopulate();
+		await item.populate('song');
+		await populateSong(item.song);
 		var song = item.song.toObject();
 		song.itemId = item._id;
 		song.listIndex = songsArr.length;
 		songsArr.push(song);
 		
 		// Get the next item and recurse if there is one.
-		await item.populate('nextItem').execPopulate();
+		await item.populate('nextItem');
 		if (!item.$isEmpty('nextItem')) {
 			await addItemToSongsArray(item.nextItem, songsArr, depth + 1);
 		}
@@ -50,7 +50,7 @@ playlistSchema.statics.findByIdWithSongs = async function (id) {
 	var returnablePlaylist = Object.assign({ songs: [] }, playlist.toObject());
 	
 	// Load the first item and then start recursively loading the rest of the list.
-	await playlist.populate('firstItem').execPopulate();
+	await playlist.populate('firstItem');
 	if (!playlist.$isEmpty('firstItem')) {
 		await addItemToSongsArray(playlist.firstItem, returnablePlaylist.songs, 0);
 	}

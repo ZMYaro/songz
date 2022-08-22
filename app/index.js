@@ -64,11 +64,7 @@ app.use('/wrapped', wrappedRouter);
 app.use('/', guiRouter);
 
 // Set up DB connection.
-mongoose.connect(MONGODB_URI, {
-	useFindAndModify: false,
-	useNewUrlParser: true,
-	useUnifiedTopology: true
-});
+mongoose.connect(MONGODB_URI);
 let db = mongoose.connection;
 db.on('error', (err) => {
 	console.error(`Error connecting to database \u201c${MONGODB_URI}\u201d:`);

@@ -81,7 +81,7 @@ router.route('/:playlistId')
 			newItem.save()
 		]);
 		
-		await populateSong(song).execPopulate();
+		await populateSong(song);
 		var returnableSong = song.toObject();
 		returnableSong.itemId = newItem._id;
 		res.json(returnableSong);

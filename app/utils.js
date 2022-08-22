@@ -53,14 +53,21 @@ function parseSemicolonSeparatedList(input) {
 /**
  * Populate all the fields in a song query or document.
  * @param {Query|Document} song - The song query or document to populate
- * @returns {Query|Document} The populated query, or document ready to have execPopulate run on it
+ * @returns {Promise} The result of tellitg Mongoose to populate the query, or document
  */
 function populateSong(song) {
-	return song
-		.populate({path: 'album', populate: {path: 'artist'}})
-		.populate('artist')
-		.populate('composer')
-		.populate('genre');
+	var result = song.populate([
+		{path: 'album', populate: {path: 'artist'}},
+		'artist',
+		'composer',
+		'genre'
+	]);
+	if (result.exec) {
+		// At time of writing, document.populate now returns a promise,
+		// but query.populate still needs to be told to execute.
+		result = result.exec();
+	}
+	return result;
 }
 
 /**

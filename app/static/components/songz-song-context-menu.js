@@ -1,7 +1,7 @@
 'use strict';
 
-//import {LitElement, html} from 'lit-element';
-import {LitElement, html} from 'https://unpkg.com/lit-element@2.5.1/lit-element.js?module';
+//import {LitElement, html} from 'lit';
+import {LitElement, html} from 'https://unpkg.com/lit@2.3.1/index.js?module';
 
 export class SongZSongContextMenu extends LitElement {
 	

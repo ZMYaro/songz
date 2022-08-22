@@ -1,9 +1,9 @@
 'use strict';
 
-//import {LitElement, html, css, unsafeCSS} from 'lit-element';
-import {LitElement, html, css, unsafeCSS} from 'https://unpkg.com/lit-element@2.5.1/lit-element.js?module';
-//import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
-import {unsafeHTML} from 'https://unpkg.com/lit-html@1.4.1/directives/unsafe-html.js?module';
+//import {LitElement, html, css, unsafeCSS} from 'lit';
+import {LitElement, html, css, unsafeCSS} from 'https://unpkg.com/lit@2.3.1/index.js?module';
+//import {unsafeHTML} from 'lit/directives/unsafe-html.js';
+import {unsafeHTML} from 'https://unpkg.com/lit@2.3.1/directives/unsafe-html.js?module';
 
 import {NARROW_WINDOW_THRESHOLD} from '../scripts/constants.js';
 import {formatAlbum, formatArtist, toGDriveURL} from '../scripts/utils.js';

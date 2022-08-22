@@ -1,7 +1,7 @@
 'use strict';
 
-//import {LitElement, html, css}, css from 'lit-element';
-import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.5.1/lit-element.js?module';
+//import {LitElement, html, css}, css from 'lit';
+import {LitElement, html, css} from 'https://unpkg.com/lit@2.3.1/index.js?module';
 
 import {SIDE_PANE_WIDTH} from '../scripts/constants.js';
 
