@@ -358,6 +358,7 @@ export class SongZApp extends LitElement {
 		navigator.mediaSession.metadata = new MediaMetadata({
 			title: song.title,
 			artist: formatArtist(song, true),
+			album: song.album?.title,
 			artwork: [{
 				src: (song.gDriveArt ? toGDriveURL(song.gDriveArt) : '/images/unknown_album.svg') 
 			}]
