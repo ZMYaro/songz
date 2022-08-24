@@ -8,6 +8,8 @@ songz-app {
 	height: 100%;
 }
 body {
+	overscroll-behavior-y: contain; /* Prevent pull-to-refresh. */
+	
 	--background-color: #fafafa;
 	--on-background-color: #000000;
 	--mdc-theme-surface: #ffffff;

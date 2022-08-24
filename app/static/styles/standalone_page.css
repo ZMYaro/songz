@@ -1,4 +1,6 @@
 body {
+	overscroll-behavior-y: contain; /* Prevent pull-to-refresh. */
+	
 	font-family: 'Roboto', 'Helvetica Neue', 'Helvetica', 'Droid Sans', sans-serif;
 }
 
