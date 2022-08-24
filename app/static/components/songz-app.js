@@ -68,6 +68,10 @@ export class SongZApp extends LitElement {
 		// Set up audio players.
 		this.activePlayer = new Audio();
 		this.inactivePlayer = new Audio();
+ 		this.activePlayer.addEventListener('playing', this.handlePlay.bind(this));
+		this.inactivePlayer.addEventListener('playing', this.handlePlay.bind(this));
+		this.activePlayer.addEventListener('pause', this.handlePause.bind(this));
+		this.inactivePlayer.addEventListener('pause', this.handlePause.bind(this));
 		this.activePlayer.addEventListener('timeupdate', this.handlePlayerTimeChange.bind(this));
 		this.inactivePlayer.addEventListener('timeupdate', this.handlePlayerTimeChange.bind(this));
 		this.activePlayer.addEventListener('ended', this.nextSong.bind(this));
@@ -141,14 +145,21 @@ export class SongZApp extends LitElement {
 		}
 	}
 	/**
-	 * Play the current player.
+	 * Play the active player.
 	 * @returns {Promise} Resolves when the song starts playing
 	 */
-	async resumeSong() {
+	resumeSong() {
 		navigator.mediaSession.playbackState = 'none';
 		this.playStatus = 'buffering';
 		this.duration = null;
-		await this.activePlayer.play();
+		return this.activePlayer.play();
+	}
+	/**
+	 * Handle the active player playing.
+	 * @param {Event} ev
+	 */
+	handlePlay(ev) {
+		if (ev.currentTarget !== this.activePlayer) { return; }
 		navigator.mediaSession.playbackState = 'playing';
 		this.currentTime = this.activePlayer.currentTime;
 		this.duration = this.activePlayer.duration;
@@ -157,16 +168,23 @@ export class SongZApp extends LitElement {
 		this.playStatus = 'playing';
 	}
 	/**
-	 * Pause the current player.
+	 * Pause the active player.
 	 * @returns {Promise} Resolves when the song is paused.
 	 */
-	async pauseSong() {
-		await this.activePlayer.pause();
+	pauseSong() {
+		return this.activePlayer.pause();
+	}
+	/*
+	 * Handle the active player pausing.
+	 * @param {Event} ev
+	 */
+	handlePause(ev) {
+		if (ev.currentTarget !== this.activePlayer) { return; }
 		navigator.mediaSession.playbackState = 'paused';
 		this.playStatus = 'paused';
 	}
 	/**
-	 * Pause the current player and return to the start of the song.
+	 * Pause the active player and return to the start of the song.
 	 * @returns {Promise} Resolves when the song is stopped and back at the start.
 	 */
 	async stopSong() {
@@ -407,7 +425,6 @@ export class SongZApp extends LitElement {
 				</songz-main-view>
 			</app-drawer-layout>
 			<songz-player
-				playing="${navigator.mediaSession.playbackState === 'playing'}"
 				status="${this.playStatus}"
 				currenttime="${this.currentTime}"
 				duration="${this.duration}"
