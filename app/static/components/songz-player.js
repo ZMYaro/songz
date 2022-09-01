@@ -18,9 +18,8 @@ export class SongZPlayer extends LitElement {
 				flex-shrink: 0;
 				
 				display: flex;
+				flex-direction: column;
 				justify-content: space-between;
-				align-items: center;
-				flex-wrap: wrap;
 				height: var(--player-height);
 				overflow: hidden;
 				
@@ -28,13 +27,24 @@ export class SongZPlayer extends LitElement {
 				box-shadow: rgba(0, 0, 0, 0.2) 0 8px 17px 0, rgba(0, 0, 0, 0.19) 0 6px 20px 0;
 				z-index: 2;
 			}
-			.scrollable-region {
+			.bottom-row {
 				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				
 				width: 100%;
 				height: calc(100% - 20px);
+				flex-grow: 1;
+				margin-top: -2px;
+			}
+			.scrollable-region {
+				display: flex;
 				overflow-x: auto;
 				overflow-y: hidden;
 				scroll-snap-type: x mandatory;
+				
+				flex-grow: 1;
+				height: 100%;
 			}
 				.scrollable-region > div {
 					width: 100%;
@@ -43,20 +53,19 @@ export class SongZPlayer extends LitElement {
 					scroll-snap-align: start;
 					scroll-snap-stop: always;
 				}
-			.song-details {
-				display: flex;
+			.album-art,
+			.album-art > img {
+				height: 100%;
+				aspect-ratio: 1 / 1;
 			}
-				.song-details img {
-					height: 100%;
-					aspect-ratio: 1 / 1;
-					margin-right: 8px;
-				}
-				.song-details div {
-					display: flex;
-					flex-direction: column;
-					align-items: flex-start;
-					justify-content: center;
-				}
+			.song-details {
+				box-sizing: border-box;
+				display: flex;
+				flex-direction: column;
+				align-items: start;
+				justify-content: center;
+				padding: 0 8px;
+			}
 				.song-details .artist {
 					font-size: var(--mdc-typography-body2-font-size, 0.875rem);
 					color: var(--mdc-theme-text-secondary-on-background, rgba(0, 0, 0, 0.54));
@@ -74,19 +83,21 @@ export class SongZPlayer extends LitElement {
 				align-items: center;
 				justify-content: center;
 			}
-			.queue-controls {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
+			.queue-toggle {
+				background-color: var(--mdc-theme-surface, #fff);
 			}
 			@media (min-width: ${unsafeCSS(`${NARROW_WINDOW_THRESHOLD}px`)}) {
 				.scrollable-region {
 					justify-content: space-between;
 				}
 					.scrollable-region > div {
-						width: 33%;
+						width: auto;
+						flex-shrink: 1;
 					}
-				.queue-controls mwc-icon-button[icon="queue_music"] {
+				.play-controls {
+					padding-right: 8px;
+				}
+				.queue-toggle {
 					display: none;
 				}
 			}
@@ -179,45 +190,40 @@ export class SongZPlayer extends LitElement {
 				duration="${this.duration}"
 				@seek="${this.sendSeek}">
 			</songz-seek-bar>
-			<div class="scrollable-region">
-				<div class="song-details">
-					${this.song?.album ?
-						html`<a href="${'#albums/' + this.song.album._id}">
-							<img
-								src="${this.song?.gDriveArt ? toGDriveURL(this.song.gDriveArt) : '/images/unknown_album.svg'}"
-								alt="${this.song.album.title + ' album cover.'}"
-								title="${this.song.album.title}" />
-						</a>` :
-						html`<img src="/images/unknown_album.svg" alt="" />`
-					}
-					<div>
+			<div class="bottom-row">
+				${this.song?.album ?
+					html`<a href="${'#albums/' + this.song.album._id}" class="album-art">
+						<img
+							src="${this.song?.gDriveArt ? toGDriveURL(this.song.gDriveArt) : '/images/unknown_album.svg'}"
+							alt="${this.song.album.title + ' album cover.'}"
+							title="${this.song.album.title}" />
+					</a>` :
+					html`<a class="album-art">
+						<img src="/images/unknown_album.svg" alt="" />
+					</a>`
+				}
+				<div class="scrollable-region">
+					<div class="song-details">
 						${this.song?.title || ''}
-						<br />
 						<span class="artist">${unsafeHTML(formatArtist(this.song))}</span>
 					</div>
-				</div>
-				<div class="play-controls">
-					<mwc-icon-button icon="skip_previous" @click="${this.sendPrevious}"></mwc-icon-button>
-					<mwc-icon-button icon="replay_10" @click="${this.sendStepBackward}"></mwc-icon-button>
-					<mwc-fab
-						?mini=${this.narrowWindow}
-						icon="${this.status === 'buffering' ? 'refresh' :
-							this.status === 'playing' ? 'pause' :
-							'play_arrow'}"
-						class="${this.status === 'buffering' ? 'spin' : ''}"
-						@click="${this.sendPlayPause}">
-					</mwc-fab>
-					<mwc-icon-button icon="forward_10" @click="${this.sendStepForward}"></mwc-icon-button>
-					<mwc-icon-button icon="skip_next" @click="${this.sendNext}"></mwc-icon-button>
-				</div>
-				<div class="queue-controls">
-					<div>
-						<mwc-icon-button icon="repeat" @click="${() => alert('Repeat not yet implemented.')}"></mwc-icon-button>
-						<mwc-icon-button icon="shuffle" @click="${() => alert('Shuffle not yet implemented.')}"></mwc-icon-button>
+					<div class="play-controls">
+						<mwc-icon-button icon="skip_previous" @click="${this.sendPrevious}"></mwc-icon-button>
+						<mwc-icon-button icon="replay_10" @click="${this.sendStepBackward}"></mwc-icon-button>
+						<mwc-fab
+							?mini=${this.narrowWindow}
+							icon="${this.status === 'buffering' ? 'refresh' :
+								this.status === 'playing' ? 'pause' :
+								'play_arrow'}"
+							class="${this.status === 'buffering' ? 'spin' : ''}"
+							@click="${this.sendPlayPause}">
+						</mwc-fab>
+						<mwc-icon-button icon="forward_10" @click="${this.sendStepForward}"></mwc-icon-button>
+						<mwc-icon-button icon="skip_next" @click="${this.sendNext}"></mwc-icon-button>
 					</div>
-					<div>
-						<mwc-icon-button icon="queue_music" @click="${this.sendOpenQueue}"></mwc-icon-button>
-					</div>
+				</div>
+				<div class="queue-toggle">
+					<mwc-icon-button icon="queue_music" @click="${this.sendOpenQueue}"></mwc-icon-button>
 				</div>
 			</div>
 		`;

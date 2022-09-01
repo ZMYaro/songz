@@ -13,11 +13,11 @@ export class SongZSeekBar extends LitElement {
 	static get styles() {
 		return css`
 			:host {
+				box-sizing: border-box;
 				display: flex;
 				align-items: center;
 				width: 100%;
 				padding: 0 0.25em;
-				margin: -0.5em 0 -1em;
 				
 				font-size: 0.5rem;
 			}
