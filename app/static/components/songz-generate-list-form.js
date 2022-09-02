@@ -137,7 +137,7 @@ export class SongZGenerateListForm extends LitElement {
 					<label>
 						🧮 Number of tracks:
 						<br />
-						<input name="count" type="number" min="1" max="100" value="20" />
+						<input name="count" type="number" min="1" max="100" value="50" />
 					</label>
 					<br />
 					<button type="submit">▶️ Generate and play</button>
