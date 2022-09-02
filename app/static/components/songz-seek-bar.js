@@ -22,6 +22,7 @@ export class SongZSeekBar extends LitElement {
 				font-size: 0.5rem;
 			}
 			input[type="range"] {
+				margin: 1px 2px;
 				flex-grow: 1;
 			}
 			@media (min-width: ${unsafeCSS(`${NARROW_WINDOW_THRESHOLD}px`)}) {

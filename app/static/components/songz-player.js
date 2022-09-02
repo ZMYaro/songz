@@ -35,7 +35,6 @@ export class SongZPlayer extends LitElement {
 				width: 100%;
 				height: calc(100% - 20px);
 				flex-grow: 1;
-				margin-top: -2px;
 			}
 			.scrollable-region {
 				display: flex;
