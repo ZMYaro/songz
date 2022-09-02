@@ -421,7 +421,8 @@ export class SongZApp extends LitElement {
 					@add-to-queue="${(ev) => this.addSongToQueue(ev.detail.list, ev.detail.index, false)}"
 					@open-album="${(ev) => location.hash = 'albums/' + ev.detail.list[ev.detail.index].album._id}"
 					@open-artist="${(ev) => location.hash = 'artists/' + ev.detail.list[ev.detail.index].artist[0]._id}"
-					@edit-song="${(ev) => this.editSongDialog.show(ev.detail.list[ev.detail.index])}">
+					@edit-song="${(ev) => this.editSongDialog.show(ev.detail.list[ev.detail.index])}"
+					@open-queue="${() => this.sidePanel.parentElement.open()}">
 				</songz-main-view>
 			</app-drawer-layout>
 			<songz-player
@@ -435,7 +436,7 @@ export class SongZApp extends LitElement {
 				@stepforward="${this.stepForward}"
 				@next="${this.nextSong}"
 				@seek="${this.handleSeek}"
-				@open-queue="${() => this.sidePanel.parentElement.toggle()}">
+				@toggle-queue="${() => this.sidePanel.parentElement.toggle()}">
 			</songz-player>
 			<songz-edit-song-dialog
 				@update-song="${this.handleMetadataUpdate}">

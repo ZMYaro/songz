@@ -177,7 +177,7 @@ export class SongZPlayer extends LitElement {
 		});
 	}
 	sendOpenQueue() {
-		this.dispatchEvent(new CustomEvent('open-queue'));
+		this.dispatchEvent(new CustomEvent('toggle-queue'));
 	}
 	
 	/**

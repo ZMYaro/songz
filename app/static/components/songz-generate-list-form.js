@@ -80,6 +80,11 @@ export class SongZGenerateListForm extends LitElement {
 			bubbles: true,
 			composed: true
 		}));
+		// Open the queue once the list has been generated and started.
+		this.dispatchEvent(new CustomEvent('open-queue', {
+			bubbles: true,
+			composed: true
+		}));
 	}
 	
 	/**
