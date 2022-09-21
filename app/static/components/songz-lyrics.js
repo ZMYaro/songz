@@ -2,11 +2,16 @@
 
 //import {LitElement, html, css}, css from 'lit';
 import {LitElement, html, css} from 'https://unpkg.com/lit@2.3.1/index.js?module';
+//import {unsafeHTML} from 'lit/directives/unsafe-html.js';
+import {unsafeHTML} from 'https://unpkg.com/lit@2.3.1/directives/unsafe-html.js?module';
+
+import {furiganaMarkdownIt} from '../scripts/furigana-markdown-it-modulified/index.js';
 
 import {httpToJSError, toGDriveURL} from '../scripts/utils.js';
 
 export class SongZLyrics extends LitElement {
 	
+	mdParser;
 	loadAbortController;
 	
 	static get styles() {
@@ -16,15 +21,20 @@ export class SongZLyrics extends LitElement {
 				padding: 0.5rem;
 				white-space: normal;
 				overflow-y: auto;
+				
+				text-align: left;
+				font-size: 0.875rem;
 			}
 			.message {
 				text-align: center;
 			}
+			h1 {
+				font-size: 1rem;
+				margin: 0;
+			}
 			pre {
 				margin: 0;
-				text-align: left;
 				font: inherit;
-				font-size: 0.875rem;
 				white-space: break-spaces;
 			}
 		`;
@@ -37,6 +47,13 @@ export class SongZLyrics extends LitElement {
 			pending: { type: Boolean, attribute: false },
 			message: { type: String, attribute: false }
 		};
+	}
+	
+	constructor() {
+		super();
+		this.mdParser = window.markdownit({
+			breaks: true
+		}).use(furiganaMarkdownIt());
 	}
 	
 	/**
@@ -83,14 +100,15 @@ export class SongZLyrics extends LitElement {
 		var lyricsFileText = await lyricsRes.text();
 		// For now, remove all LRC file tags and preceding whitespace, and only display the lyric text.
 		// Later, this can be replaced with actually parsing the LRC file.
-		this.lyrics = lyricsFileText.replace(/\[.*?\]/g, '').replace(/^\n+/, '');
+		this.lyrics = `<pre>${lyricsFileText.replace(/\[.*?\]/g, '').replace(/^\n+/, '')}</pre>`;
 	}
 	
 	async loadMD() {
 		var lyricsRes = await fetch(toGDriveURL(this.song.gDriveMD, true), { signal: this.loadAbortController.signal });
 		await httpToJSError(lyricsRes);
-		this.lyrics = await lyricsRes.text();
-		// TODO: Convert markdown to HTML
+		var lyricsText = await lyricsRes.text(),
+			lyricsHTML = this.mdParser.render(lyricsText);
+		this.lyrics = lyricsHTML;
 	}
 	
 	/**
@@ -106,7 +124,7 @@ export class SongZLyrics extends LitElement {
 		} else if (this.message) {
 			return html`<p class="message">${this.message}</p>`;
 		} else {
-			return html`<pre>${this.lyrics}</pre>`;
+			return unsafeHTML(this.lyrics);
 		}
 	}
 }
