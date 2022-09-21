@@ -93,8 +93,8 @@ export class SongZPlayer extends LitElement {
 						width: auto;
 						flex-shrink: 1;
 					}
-				.play-controls {
-					padding-right: 8px;
+				div.play-controls {
+					width: var(--app-drawer-width);
 				}
 				.queue-toggle {
 					display: none;

@@ -18,6 +18,8 @@ body {
 	--mdc-dialog-heading-ink-color: rgba(0, 0, 0, 0.87);
 	--mdc-dialog-content-ink-color: rgba(0, 0, 0, 0.6);
 	--mdc-tab-text-label-color-default: rgba(0, 0, 0, 0.6);
+	--app-drawer-width: min(320px, calc(100% - 48px));
+	--app-drawer-content-padding: 0;
 	--player-height-small: 64px;
 	--player-height-large: 96px;
 	--player-height: var(--player-height-small);
@@ -55,8 +57,6 @@ songz-app {
 	flex-direction: column;
 }
 app-drawer-layout {
-	--app-drawer-width: min(320px, calc(100% - 48px));
-	--app-drawer-content-padding: 0;
 	flex-grow: 1;
 	height: calc(100% - var(--player-height));
 }
