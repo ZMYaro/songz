@@ -5,7 +5,8 @@
 			return _define(tagName, elementClass);
 		}
 		catch (err) {
-			console.warn(err);
+			//console.warn(err);
+			console.warn('Duplicate custom element definition caught.');
 		}
 	}).bind(window.customElements);
 })();
