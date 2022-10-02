@@ -9,6 +9,24 @@
 		
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" />
 		<link rel="stylesheet" type="text/css" href="styles/standalone_page.css" />
+		<style type="text/css">
+			label {
+				font-size: 0.75rem;
+			}
+				label:has(input[type="radio"]) {
+					font-size: 1rem;
+				}
+			input[type="text"],
+			input[type="number"] {
+				font-size: 0.875rem;
+			}
+				input[type="text"][name="title"] {
+					font-size: 1.2rem;
+				}
+				input[type="text"][name|="gdrive"] {
+					font-size: 0.75rem;
+				}
+		</style>
 	</head>
 	<body>
 		<h1>Add song</h1>
@@ -46,23 +64,25 @@
 					🆎 Title:
 					<input type="text" name="title" />
 				</label>
-				<label>
-					🕓 Duration:
-					<small>In milliseconds</small>
-					<input type="number" name="duration" step="0.1" />
-				</label>
-				<label>
-					🎹 Genre:
-					<input type="text" name="genre" />
-				</label>
+				<div style="display: flex; gap: 0.5rem;">
+					<label>
+						🕓 Duration:
+						<small>(in milliseconds)</small>
+						<input type="number" name="duration" step="0.1" />
+					</label>
+					<label style="flex-grow: 1;">
+						🎹 Genre:
+						<input type="text" name="genre" />
+					</label>
+				</div>
 				<label>
 					🧑‍🎤 Artist(s):
-					<small>Semicolon-separated</small>
+					<small>(semicolon-separated)</small>
 					<input type="text" name="artist" />
 				</label>
 				<label>
 					👤 Composer(s):
-					<small>Semicolon-separated</small>
+					<small>(semicolon-separated)</small>
 					<input type="text" name="composer" />
 				</label>
 				<label>
@@ -73,18 +93,20 @@
 					🧑‍🎤 Album artist:
 					<input type="text" name="album-artist" />
 				</label>
-				<label>
-					🔢 Track #:
-					<input type="number" name="track-no" />
-				</label>
-				<label>
-					🔢 Disc #:
-					<input type="number" name="disc-no" />
-				</label>
-				<label>
-					📅 Year:
-					<input type="number" name="year" min="1000" max="9999" />
-				</label>
+				<div style="display: flex; gap: 0.5rem;">
+					<label>
+						🔢 Track #:
+						<input type="number" name="track-no" />
+					</label>
+					<label>
+						🔢 Disc #:
+						<input type="number" name="disc-no" />
+					</label>
+					<label>
+						📅 Year:
+						<input type="number" name="year" min="1000" max="9999" />
+					</label>
+				</div>
 				<label>
 					🔁 Playthroughs:
 					<input type="number" name="playthroughs" min="0" />
