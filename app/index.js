@@ -7,6 +7,8 @@ const cookieSession = require('cookie-session'),
 	passport = require('passport'),
 	path = require('path'),
 	GoogleStrategy = require('passport-google-oauth20').Strategy,
+	bareModuleTransformMiddleware = require('express-transform-bare-module-specifiers').default,
+	
 	User = require('./models/user.js'),
 	apiRouter = require('./routes/api.js'),
 	authRouter = require('./routes/auth.js'),
@@ -20,6 +22,8 @@ const PORT = process.env.PORT || 8080,
 // Set up Express.
 const app = express();
 app.set('port', PORT);
+
+app.use('*', bareModuleTransformMiddleware());
 
 // Set up Passport for auth.
 passport.use(new GoogleStrategy({
@@ -62,6 +66,13 @@ app.use('/api', apiRouter);
 app.use('/auth', authRouter);
 app.use('/wrapped', wrappedRouter);
 app.use('/', guiRouter);
+
+// Fix Material web components leaving off file extensions.
+app.get(/^\/node_modules\/@material\/.+\/(constants|foundation|rtl-(default|negative|reverse)-scroller|util)$/, (req, res) => {
+	res.set('Content-Type', 'text/javascript');
+	res.sendFile(path.join(__dirname, (req.path + '.js')));
+	console.log('Fixed path to ' + path.join(__dirname, (req.path + '.js')));
+});
 
 // Set up DB connection.
 mongoose.connect(MONGODB_URI);

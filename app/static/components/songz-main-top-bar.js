@@ -1,7 +1,7 @@
 'use strict';
 
-//import {LitElement, html, css} from 'lit';
-import {LitElement, html, css} from 'https://unpkg.com/lit@2.3.1/index.js?module';
+import {LitElement, html, css} from 'lit';
+//import {LitElement, html, css} from 'https://unpkg.com/lit@2.6.1/index.js?module';
 
 export class SongZMainTopBar extends LitElement {
 	

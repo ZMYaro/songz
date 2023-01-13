@@ -1,9 +1,9 @@
 'use strict';
 
-//import {LitElement, html, css}, css from 'lit';
-import {LitElement, html, css} from 'https://unpkg.com/lit@2.3.1/index.js?module';
-//import {unsafeHTML} from 'lit/directives/unsafe-html.js';
-import {unsafeHTML} from 'https://unpkg.com/lit@2.3.1/directives/unsafe-html.js?module';
+import {LitElement, html, css} from 'lit';
+//import {LitElement, html, css} from 'https://unpkg.com/lit@2.6.1/index.js?module';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
+//import {unsafeHTML} from 'https://unpkg.com/lit@2.6.1/directives/unsafe-html.js?module';
 
 import {furiganaMarkdownIt} from '../scripts/furigana-markdown-it-modulified/index.js';
 
