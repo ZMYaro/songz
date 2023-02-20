@@ -12,14 +12,12 @@ router.get('/', (req, res) => res.sendFile(path.join(__dirname, '../views/wrappe
 router.get('/api/songs', async function (req, res) {
 	const DEFAULT_YEAR = 2021,
 		DEFAULT_START_DATE = `${DEFAULT_YEAR}-01-01`,
-		DEFAULT_END_DATE = `${DEFAULT_YEAR}-12-31`;
+		DEFAULT_END_DATE = `${DEFAULT_YEAR}-12-31`,
+		DEFAULT_COUNT = 100;
 	
-	var startDate = req.query['start']?.trim(),
-		endDate = req.query['end']?.trim();
-	if (!startDate || !endDate) {
-		startDate = DEFAULT_START_DATE;
-		endDate = DEFAULT_END_DATE;
-	}
+	var startDate = req.query['start']?.trim() || DEFAULT_START_DATE,
+		endDate = req.query['end']?.trim() || DEFAULT_END_DATE,
+		count = parseInt(req.query['count']) || DEFAULT_COUNT;
 	
 	var topSongs = await Playthrough.aggregate([
 		{ $match: {
@@ -37,7 +35,7 @@ router.get('/api/songs', async function (req, res) {
 		{ $sort: {
 			playthroughs: -1
 		}},
-		{ $limit: 100 },
+		{ $limit: count },
 		{ $lookup: {
 			from: 'songs',
 			localField: '_id',
