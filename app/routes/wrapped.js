@@ -52,6 +52,7 @@ router.get('/api/songs', async function (req, res) {
 		}}
 	]);
 	
+	res.set('Access-Control-Allow-Origin', 'https://zmyaro.com');
 	res.json(topSongs);
 });
 
