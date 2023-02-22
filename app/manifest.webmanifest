@@ -3,7 +3,7 @@
 	"name": "SongZ",
 	
 	"start_url": "/",
-	"display": "standalone",
+	"display": "minimal-ui",
 	
 	"theme_color": "#263238",
 	"background_color": "#263238",
