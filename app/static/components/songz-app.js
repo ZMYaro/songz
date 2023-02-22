@@ -432,7 +432,7 @@ export class SongZApp extends LitElement {
 					</songz-side-panel>
 				</app-drawer>
 				<songz-main-view
-					@play-now="${(ev) => {this.queue = ev.detail.list; this.queuePosition = -1; this.playSong(ev.detail.index);}}"
+					@play-now="${(ev) => {this.queue = [...ev.detail.list]; this.queuePosition = -1; this.playSong(ev.detail.index);}}"
 					@play-next="${(ev) => this.addSongToQueue(ev.detail.list, ev.detail.index, true)}"
 					@add-to-queue="${(ev) => this.addSongToQueue(ev.detail.list, ev.detail.index, false)}"
 					@open-album="${(ev) => location.hash = 'albums/' + ev.detail.list[ev.detail.index].album._id}"
