@@ -37,6 +37,9 @@ export class SongZSidePanel extends LitElement {
 					scroll-snap-align: start;
 					scroll-snap-stop: always;
 				}
+				.tab-contents > songz-queue {
+					display: inline-flex;
+				}
 		`;
 	}
 	

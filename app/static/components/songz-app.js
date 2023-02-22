@@ -3,7 +3,7 @@
 import {LitElement, html, css} from 'lit';
 //import {LitElement, html, css} from 'https://unpkg.com/lit@2.6.1/index.js?module';
 
-import {formatArtist, toGDriveURL} from '../scripts/utils.js';
+import {formatArtist, shuffle, toGDriveURL} from '../scripts/utils.js';
 
 export class SongZApp extends LitElement {
 	
@@ -319,6 +319,21 @@ export class SongZApp extends LitElement {
 	}
 	
 	/**
+	 * Shuffle the queue ahead of the current song.
+	 */
+	shuffleUpcoming() {
+		var remainingSongs = this.queue.slice(this.queuePosition + 1);
+		shuffle(remainingSongs);
+		this.queue.splice(this.queuePosition + 1, Infinity, ...remainingSongs);
+		
+		// Preload the new next song.
+		this.loadSong(this.inactivePlayer, this.queue[this.queuePosition + 1]);
+		
+		// Reassign the array so it will rerender.
+		this.queue = [...this.queue];
+	}
+	
+	/**
 	 * Submit the current playthrough to the database if it has not already.
 	 * @param {Object} song - The song whose playthrough to record
 	 * @returns {Promise} Resolves when the playthrough is saved, or immediately if this playthrough has already been saved.
@@ -410,6 +425,7 @@ export class SongZApp extends LitElement {
 						@queue-play-now="${(ev) => this.playSong(ev.detail.index)}"
 						@queue-play-next="${(ev) => this.moveSongNext(ev.detail.index)}"
 						@queue-remove="${(ev) => this.removeSongFromQueue(ev.detail.index)}"
+						@queue-shuffle-upcoming="${this.shuffleUpcoming}"
 						@open-album="${(ev) => location.hash = 'albums/' + this.queue[ev.detail.index].album._id}"
 						@open-artist="${(ev) => location.hash = 'artists/' + this.queue[ev.detail.index].artist[0]._id}"
 						@edit-song="${(ev) => this.editSongDialog.show(this.queue[ev.detail.index])}">

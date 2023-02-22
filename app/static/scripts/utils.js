@@ -112,6 +112,14 @@ export async function httpToJSError(res) {
 }
 
 /**
+ * Randomize the order of elements of an array.
+ * @param {Array} arr
+ */
+export function shuffle(arr) {
+	arr = arr.sort(() => Math.random() - 0.5);
+}
+
+/**
  * Generate a link to retrieve the file at a Google Drive file ID.
  * @param {String} gDriveID - The ID of the Google Drive file
  * @param {Boolean} useAPI - Use the Google API URL instead of the CDN URL

@@ -12,16 +12,22 @@ export class SongZQueue extends LitElement {
 	static get styles() {
 		return css`
 			:host {
+				display: flex;
+				flex-direction: column;
 				overflow-y: auto;
 				--mdc-list-vertical-padding: 0;
 			}
-			.queue-list mwc-list-item {
-				padding-left: 0;
-				padding-right: 0;
+			.queue-list {
+				flex-grow: 1;
+				overflow-y: scroll;
 			}
-				.queue-list mwc-list-item.current {
-					font-weight: bold;
+				.queue-list mwc-list-item {
+					padding-left: 0;
+					padding-right: 0;
 				}
+					.queue-list mwc-list-item.current {
+						font-weight: bold;
+					}
 			.album-art {
 				width: 3em;
 				height: 3em;
@@ -46,6 +52,14 @@ export class SongZQueue extends LitElement {
 				margin-top: -1em;
 				margin-left: -1.5em;
 				margin-right: 1.5em;
+			}
+			.bottom-bar {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+			.song-count {
+				padding: 12px;
 			}
 		`;
 	}
@@ -99,6 +113,16 @@ export class SongZQueue extends LitElement {
 	}
 	
 	/**
+	 * Shuffle the queue ahead of the current song.
+	 */
+	shuffleUpcoming() {
+		this.dispatchEvent(new CustomEvent('queue-shuffle-upcoming', {
+			bubbles: true,
+			composed: true
+		}));
+	}
+	
+	/**
 	 * Handle metadata getting updated.
 	 */
 	handleMetadataUpdate() {
@@ -123,6 +147,14 @@ export class SongZQueue extends LitElement {
 					`)
 				}
 			</mwc-list>
+			<div class="bottom-bar">
+				<span class="song-count">
+					${this.songs?.length || 0}
+					&middot;
+					${formatDuration(this.songs?.reduce((totalTime, song) => totalTime + song.duration / 1000, 0))}
+				</span>
+				<mwc-icon-button icon="shuffle" title="Shuffle upcoming" @click="${this.shuffleUpcoming}"></mwc-icon-button>
+			</div>
 			<songz-song-context-menu viewtype="queue" @action="${this.handleMenuItemSelect}"></songz-song-context-menu>
 		`;
 	}
