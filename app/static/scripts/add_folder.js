@@ -61,13 +61,15 @@ async function handleFolderIDSubmit(ev) {
 	
 	this.querySelector('fieldset').disabled = true;
 	
-	let folderID = this['folder-id'].value;
-	if (!folderID) { return; }
-	let filesData = await loadFilesMetadata(folderID);
-	if (!filesData) { return; }
-	let files = await loadFilesContents(filesData);
-	let songs = organizeSongObjects(files);
-	showFolderTagEditor(songs);
+	try {
+		let folderID = this['folder-id'].value,
+			filesData = await loadFilesMetadata(folderID),
+			files = await loadFilesContents(filesData),
+			songs = organizeSongObjects(files);
+		showFolderTagEditor(songs);
+	} catch (err) {
+		alert(err.message);
+	}
 	
 	this.querySelector('fieldset').disabled = false;
 }
@@ -86,9 +88,8 @@ async function loadFilesMetadata(folderID) {
 			fields: '*'
 		});
 	} catch (err) {
-		alert(`Failed to retrieve folder \u2013 ${err.message}`);
 		console.error(err);
-		return;
+		throw new Error(`Failed to retrieve folder \u2013 ${err.message}`);
 	}
 	
 	return folderRes.result.files;
@@ -138,8 +139,8 @@ async function loadFilesContents(filesData) {
 			progressIndicator.value++;
 			if (fileData.isAudio) { audioFileCount++; }
 		} catch (err) {
-			alert(`Failed to retrieve file \u201c${fileData.name}\u201d \u2013 ${err.message || err.result.error.message}`);
 			console.error(err);
+			throw new Error(`Failed to retrieve file \u201c${fileData.name}\u201d \u2013 ${err.message || err.result.error.message}`);
 		}
 	}
 	
