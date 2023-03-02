@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Add Folder Of Songs</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="shortcut icon" type="image/x-icon" sizes="16x16" href="/images/logo/favicon.ico" />
+		<link rel="icon" type="image/png" sizes="512x512" href="/images/logo/512.png" />
+		<link rel="manifest" href="/manifest.webmanifest" />
+		
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" />
+		<link rel="stylesheet" type="text/css" href="styles/standalone_page.css" />
+		
+		<script type="module" src="/components/songz-add-folder-view.js"></script>
+		<script type="module" src="/scripts/add_folder.js"></script>
+		<script async defer src="https://apis.google.com/js/api.js" onload="setTimeout(() => handleGAPILoad(), 1000);"></script>
+		<!-- TODO: Replace this setTimeout hack with a better solution to this race condition.-->
+		
+		<style type="text/css">
+			fieldset {
+				border: 0;
+				margin: auto;
+				max-width: 600px;
+			}
+			label {
+				font-size: 0.75rem;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Add folder of songs</h1>
+		<form id="folder-id-form">
+			<fieldset disabled="disabled">
+				<label>
+					GDrive folder ID:
+					<input type="text" name="folder-id" />
+				</label>
+				<button type="submit">Load</button>
+			</fieldset>
+		</form>
+		<section id="progress-section"></section>
+		<songz-add-folder-view></songz-add-folder-view>
+	</body>
+</html>
