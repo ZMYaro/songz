@@ -32,8 +32,7 @@ export class SongZAddFolderView extends LitElement {
 	
 	static get properties() {
 		return {
-			songs: { type: Array, attribute: false },
-			pending: { type: Boolean, attribute: false }
+			songs: { type: Array, attribute: false }
 		};
 	}
 	
@@ -46,7 +45,7 @@ export class SongZAddFolderView extends LitElement {
 		}
 		return html`
 			<form method="POST" action="/api/songs/multi">
-				<fieldset ?disabled="${this.pending}">
+				<fieldset>
 					<table>
 						<thead>
 							<tr>
