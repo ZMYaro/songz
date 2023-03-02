@@ -1,6 +1,6 @@
 'use strict';
 
-import {GOOGLE_API_KEY} from '/api_key.js';
+import {GOOGLE_API_KEY} from '/gapi.js';
 
 /**
  * Format a song's album as a link to that album.
