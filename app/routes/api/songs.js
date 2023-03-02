@@ -10,6 +10,55 @@ const bodyParser = require('body-parser'),
 	Song = require('../../models/song.js'),
 	{ handleError, populateSong, processDurationInput } = require('../../utils.js');
 
+/**
+ * Create a new Song document from a form submission.
+ * @param {Object} reqBody - A request body with song parameters
+ * @returns {Song}
+ */
+async function generateSongFromReq(reqBody) {
+	var title = reqBody['title']?.trim();
+	if (!title) { throw new Error('Missing title.'); }
+	
+	// Put all the text/number fields in the new song.
+	var newSong = new Song({
+		gDriveFLAC: reqBody['gdrive-flac']?.trim(),
+		gDriveM4A: reqBody['gdrive-m4a']?.trim(),
+		gDriveMP3: reqBody['gdrive-mp3']?.trim(),
+		gDriveOgg: reqBody['gdrive-ogg']?.trim(),
+		gDriveArt: reqBody['gdrive-art']?.trim(),
+		gDriveLRC: reqBody['gdrive-lrc']?.trim(),
+		gDriveMD: reqBody['gdrive-md']?.trim(),
+		title: title,
+		duration: processDurationInput(reqBody['duration']),
+		trackNo: parseInt(reqBody['track-no']) || undefined,
+		discNo: parseInt(reqBody['disc-no']) || undefined,
+		year: parseInt(reqBody['year']) || undefined,
+		rating: parseInt(reqBody['rating']) || undefined
+	});
+	
+	var genreName = reqBody['genre']?.trim();
+	if (genreName) {
+		let genre = await Genre.findOrCreateOne(genreName);
+		newSong.genre = genre?._id;
+	}
+	
+	if (reqBody['artist']) {
+		let artists = await Artist.findFromStrList(reqBody['artist'], true);
+		newSong.artist = artists.map((artist) => artist._id);
+	}
+	
+	if (reqBody['composer']) {
+		let composers = await Artist.findFromStrList(reqBody['composer'], true);
+		newSong.composer = composers.map((composer) => composer._id);
+	}
+	
+	var albumTitle = reqBody['album-title']?.trim(),
+		albumArtist = reqBody['album-artist']?.trim();
+	newSong.album = await Album.findOrCreateOne(albumTitle, albumArtist);
+	
+	return newSong;
+}
+
 const router = express.Router();
 
 router.route('')
@@ -101,48 +150,12 @@ router.route('')
 		console.log('\nAdding new song:');
 		console.dir(JSON.stringify(req.body));
 		
-		var title = req.body['title']?.trim();
-		if (!title) { return handleError(res, 'Missing title.', 422); }
-		
-		var rating = parseInt(req.body['rating']);
-		rating = (!isNaN(rating) ? rating : undefined);
-		
-		// Put all the text fields in the new song.
-		var newSong = new Song({
-			gDriveFLAC: req.body['gdrive-flac']?.trim(),
-			gDriveM4A: req.body['gdrive-m4a']?.trim(),
-			gDriveMP3: req.body['gdrive-mp3']?.trim(),
-			gDriveOgg: req.body['gdrive-ogg']?.trim(),
-			gDriveArt: req.body['gdrive-art']?.trim(),
-			gDriveLRC: req.body['gdrive-lrc']?.trim(),
-			gDriveMD: req.body['gdrive-md']?.trim(),
-			title: title,
-			duration: processDurationInput(req.body['duration']),
-			trackNo: Math.floor(parseInt(req.body['track-no'])) || undefined,
-			discNo: Math.floor(parseInt(req.body['disc-no'])) || undefined,
-			year: Math.floor(parseInt(req.body['year'])) || undefined,
-			rating: rating
-		});
-		
-		var genreName = req.body['genre']?.trim();
-		if (genreName) {
-			let genre = await Genre.findOrCreateOne(genreName);
-			newSong.genre = genre?._id;
+		var newSong;
+		try {
+			newSong = await generateSongFromReq(req.body);
+		} catch (err) {
+			return handleError(res, err.message, 422);
 		}
-		
-		if (req.body['artist']) {
-			let artists = await Artist.findFromStrList(req.body['artist'], true);
-			newSong.artist = artists.map((artist) => artist._id);
-		}
-		
-		if (req.body['composer']) {
-			let composers = await Artist.findFromStrList(req.body['composer'], true);
-			newSong.composer = composers.map((composer) => composer._id);
-		}
-		
-		var albumTitle = req.body['album-title']?.trim(),
-			albumArtist = req.body['album-artist']?.trim();
-		newSong.album = await Album.findOrCreateOne(albumTitle, albumArtist);
 		
 		await newSong.save();
 		
@@ -205,6 +218,49 @@ router.route('')
 		
 		await populateSong(song);
 		res.json(song);
+	});
+
+router.route('/multi')
+	.post(async function (req, res) {
+		console.log('\nAdding new songs:');
+		console.log(JSON.stringify(req.body));
+		
+		const FIELDS = [
+			'gdrive-flac',
+			'gdrive-m4a',
+			'gdrive-mp3',
+			'gdrive-ogg',
+			'gdrive-art',
+			'gdrive-lrc',
+			'gdrive-md',
+			'disc-no',
+			'track-no',
+			'title',
+			'duration',
+			'genre',
+			'artist',
+			'composer',
+			'album-title',
+			'album-artist',
+			'year'
+		];
+		
+		var newSongs = [];
+		try {
+			for (let i = 0; typeof req.body[`title${i}`] !== 'undefined'; i++) {
+				var newSongParams = {};
+				for (let field of FIELDS) {
+					newSongParams[field] = req.body[`${field}${i}`];
+				}
+				var newSong = await generateSongFromReq(newSongParams);
+				newSongs.push(newSong);
+			}
+		} catch (err) {
+			return handleError(res, err.message, 422);
+		}
+		
+		await Song.insertMany(newSongs);
+		res.json(newSongs);
 	});
 
 module.exports = router;
