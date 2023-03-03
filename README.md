@@ -51,7 +51,15 @@ To add an individual song to your SongZ library:
 
 ## Add a folder of songs
 
-_This feature is still in progress._
+To add all the songs in a Google Drive folder to your SongZ library:
+
+1. In SongZ, navigate to `/addfolder`.
+2. Enter the ID of the Google Drive folder and press “Load”.
+3. Wait for all the songs to be loaded in and scanned (this may take some time if there are many files or they are large).
+4. Confirm the metadata are all correct, and make changes if needed.
+  * SongZ will only connect lyrics or multiple formats of the same song if they have the same file name other than the file extension.
+  * If there are multiple image files in the folder, SongZ will assume the first one found is the album art.
+5. Submit the form.
 
 ## SongZ Wrapped
 
