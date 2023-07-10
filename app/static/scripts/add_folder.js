@@ -154,7 +154,10 @@ function organizeSongObjects(files) {
 	let songsMap = {},
 		art = [];
 	
-	for (let file of Object.values(files)) {
+	// When there are multiple file types, process the FLAC last so id3js gets them from the MP3 version.
+	let filesList = Object.values(files).sort((a, b) => (getFileType(a) === 'FLAC' ? 1 : -1));
+	
+	for (let file of filesList) {
 		if (!file.isAudio) {
 			// Non-songs should be skipped over.  They are art, lyrics, or irrelevant.
 			if (getFileType(file) === 'Art') {
@@ -179,19 +182,23 @@ function organizeSongObjects(files) {
 			continue;
 		}
 		
+		if (!file.tags) {
+			console.warn('File has no tags:', file);
+		}
+		
 		// Assemble the new song object.
 		songsMap[fileNameMinusExt] = {
-			discNo: parseInt(file.tags['set-part']) ?? undefined,
-			trackNo: parseInt(file.tags.track) ?? undefined,
-			title: file.tags.title,
+			discNo: parseInt(file.tags?.['set-part']) ?? undefined,
+			trackNo: parseInt(file.tags?.track) ?? undefined,
+			title: file.tags?.title,
 			duration: file.duration,
-			genre: file.tags.genre ?? undefined,
-			year: file.tags.year ?? undefined,
-			artist: file.tags.artist ?? undefined,
-			composer: file.tags.composer ?? undefined,
-			albumTitle: file.tags.album ?? undefined,
-			albumArtist: file.tags.band ?? undefined,
-			year: file.tags.year ?? undefined,
+			genre: file.tags?.genre ?? undefined,
+			year: file.tags?.year ?? undefined,
+			artist: file.tags?.artist ?? undefined,
+			composer: file.tags?.composer ?? undefined,
+			albumTitle: file.tags?.album ?? undefined,
+			albumArtist: file.tags?.band ?? undefined,
+			year: file.tags?.year ?? undefined,
 			gDriveLRC: files[`${fileNameMinusExt}.lrc`]?.id ?? undefined,
 			gDriveMD: files[`${fileNameMinusExt}.md`]?.id ?? undefined,
 			[gDriveIDKey]: file.id,
