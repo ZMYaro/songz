@@ -207,18 +207,21 @@ export class SongZPlayer extends LitElement {
 						<span class="artist">${unsafeHTML(formatArtist(this.song))}</span>
 					</div>
 					<div class="play-controls">
-						<mwc-icon-button icon="skip_previous" @click="${this.sendPrevious}"></mwc-icon-button>
-						<mwc-icon-button icon="replay_10" @click="${this.sendStepBackward}"></mwc-icon-button>
+						<mwc-icon-button icon="skip_previous" title="Previous song" @click="${this.sendPrevious}"></mwc-icon-button>
+						<mwc-icon-button icon="replay_10" title="Back 10 seconds" @click="${this.sendStepBackward}"></mwc-icon-button>
 						<mwc-fab
 							?mini=${this.narrowWindow}
 							icon="${this.status === 'buffering' ? 'refresh' :
 								this.status === 'playing' ? 'pause' :
 								'play_arrow'}"
+							title="${this.status === 'buffering' ? 'Buffering' :
+								this.status === 'playing' ? 'Pause' :
+								'Play'}"
 							class="${this.status === 'buffering' ? 'spin' : ''}"
 							@click="${this.sendPlayPause}">
 						</mwc-fab>
-						<mwc-icon-button icon="forward_10" @click="${this.sendStepForward}"></mwc-icon-button>
-						<mwc-icon-button icon="skip_next" @click="${this.sendNext}"></mwc-icon-button>
+						<mwc-icon-button icon="forward_10" title="Forward 10 seconds" @click="${this.sendStepForward}"></mwc-icon-button>
+						<mwc-icon-button icon="skip_next" title="Next song" @click="${this.sendNext}"></mwc-icon-button>
 					</div>
 				</div>
 				<div class="queue-toggle">
