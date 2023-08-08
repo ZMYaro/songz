@@ -37,6 +37,7 @@ import '../components/songz-edit-song-dialog.js';
 import '../components/songz-generate-list-form.js';
 import '../components/songz-genre.js';
 import '../components/songz-genres-list.js';
+import '../components/songz-icon.js';
 import '../components/songz-lyrics.js';
 import '../components/songz-main-top-bar.js';
 import '../components/songz-main-view.js';
