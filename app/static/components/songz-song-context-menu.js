@@ -92,56 +92,63 @@ export class SongZSongContextMenu extends LitElement {
 				<!-- GDrive links -->
 				${this.song?.gDriveFLAC ?
 					html`<a href="https://drive.google.com/open?id=${this.song.gDriveFLAC}" target="_blank" style="text-decoration: none;">
-						<mwc-list-item graphic="icon">
-							<mwc-icon slot="graphic">open_in_new</mwc-icon>
+						<mwc-list-item graphic="icon" hasMeta>
+							<mwc-icon slot="graphic">audio_file</mwc-icon>
+							<mwc-icon slot="meta">open_in_new</mwc-icon>
 							Open FLAC
 						</mwc-list-item>
 					</a>` : ''
 				}
 				${this.song?.gDriveM4A ?
 					html`<a href="https://drive.google.com/open?id=${this.song.gDriveM4A}" target="_blank" style="text-decoration: none;">
-						<mwc-list-item graphic="icon">
-							<mwc-icon slot="graphic">open_in_new</mwc-icon>
+						<mwc-list-item graphic="icon" hasMeta>
+							<mwc-icon slot="graphic">audio_file</mwc-icon>
+							<mwc-icon slot="meta">open_in_new</mwc-icon>
 							Open M4A
 						</mwc-list-item>
 					</a>` : ''
 				}
 				${this.song?.gDriveMP3 ?
 					html`<a href="https://drive.google.com/open?id=${this.song.gDriveMP3}" target="_blank" style="text-decoration: none;">
-						<mwc-list-item graphic="icon">
-							<mwc-icon slot="graphic">open_in_new</mwc-icon>
+						<mwc-list-item graphic="icon" hasMeta>
+							<mwc-icon slot="graphic">audio_file</mwc-icon>
+							<mwc-icon slot="meta">open_in_new</mwc-icon>
 							Open MP3
 						</mwc-list-item>
 					</a>` : ''
 				}
 				${this.song?.gDriveOgg ?
 					html`<a href="https://drive.google.com/open?id=${this.song.gDriveOgg}" target="_blank" style="text-decoration: none;">
-						<mwc-list-item graphic="icon">
-							<mwc-icon slot="graphic">open_in_new</mwc-icon>
+						<mwc-list-item graphic="icon" hasMeta>
+							<mwc-icon slot="graphic">audio_file</mwc-icon>
+							<mwc-icon slot="meta">open_in_new</mwc-icon>
 							Open Ogg
 						</mwc-list-item>
 					</a>` : ''
 				}
 				${this.song?.gDriveArt ?
 					html`<a href="https://drive.google.com/open?id=${this.song.gDriveArt}" target="_blank" style="text-decoration: none;">
-						<mwc-list-item graphic="icon">
-							<mwc-icon slot="graphic">open_in_new</mwc-icon>
+						<mwc-list-item graphic="icon" hasMeta>
+							<songz-icon slot="graphic" icon="file_image"></songz-icon>
+							<mwc-icon slot="meta">open_in_new</mwc-icon>
 							Open art
 						</mwc-list-item>
 					</a>` : ''
 				}
 				${this.song?.gDriveLRC ?
 					html`<a href="https://drive.google.com/open?id=${this.song.gDriveLRC}" target="_blank" style="text-decoration: none;">
-						<mwc-list-item graphic="icon">
-							<mwc-icon slot="graphic">open_in_new</mwc-icon>
+						<mwc-list-item graphic="icon" hasMeta>
+							<mwc-icon slot="graphic">description</mwc-icon>
+							<mwc-icon slot="meta">open_in_new</mwc-icon>
 							Open LRC
 						</mwc-list-item>
 					</a>` : ''
 				}
 				${this.song?.gDriveMD ?
 					html`<a href="https://drive.google.com/open?id=${this.song.gDriveMD}" target="_blank" style="text-decoration: none;">
-						<mwc-list-item graphic="icon">
-							<mwc-icon slot="graphic">open_in_new</mwc-icon>
+						<mwc-list-item graphic="icon" hasMeta>
+							<mwc-icon slot="graphic">description</mwc-icon>
+							<mwc-icon slot="meta">open_in_new</mwc-icon>
 							Open markdown
 						</mwc-list-item>
 					</a>` : ''
