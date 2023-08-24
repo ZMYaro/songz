@@ -21,6 +21,7 @@ import '@material/mwc-list/mwc-list-item';
 //import 'https://unpkg.com/@material/mwc-list@0.27.0/mwc-list-item.js?module';
 import '@material/mwc-menu';
 //import 'https://unpkg.com/@material/mwc-menu@0.27.0/mwc-menu.js?module';
+import '@material/mwc-snackbar';
 import '@material/mwc-tab-bar';
 //import 'https://unpkg.com/@material/mwc-tab-bar@0.27.0/mwc-tab-bar.js?module';
 import '@material/mwc-tab';
@@ -28,6 +29,7 @@ import '@material/mwc-tab';
 import '@material/mwc-top-app-bar-fixed';
 //import 'https://unpkg.com/@material/mwc-top-app-bar-fixed@0.27.0/mwc-top-app-bar-fixed.js?module';
 
+import '../components/songz-add-to-playlist-dialog.js';
 import '../components/songz-album.js';
 import '../components/songz-albums-list.js';
 import '../components/songz-app.js';

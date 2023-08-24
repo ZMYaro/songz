@@ -68,11 +68,11 @@ export class SongZSongContextMenu extends LitElement {
 				<!-- Library actions -->
 				<mwc-list-item graphic="icon" value="edit-song">
 					<mwc-icon slot="graphic">edit</mwc-icon>
-					Edit song
+					Edit song...
 				</mwc-list-item>
-				<mwc-list-item graphic="icon" @click=${() => alert('Not yet implemented.')}>
+				<mwc-list-item graphic="icon" hasMeta value="add-to-playlist">
 					<mwc-icon slot="graphic">playlist_add</mwc-icon>
-					Add to playlist
+					Add to playlist...
 				</mwc-list-item>
 				<li divider role="separator"></li>
 				<!-- Navigation actions -->
