@@ -16,6 +16,7 @@ export class SongZApp extends LitElement {
 	mainView;
 	sidePanel;
 	editSongDialog;
+	addToPlaylistDialog;
 	playthroughStatus = 0;
 	
 	static get properties() {
@@ -64,6 +65,7 @@ export class SongZApp extends LitElement {
 		this.mainView = this.querySelector('songz-main-view');
 		this.sidePanel = this.querySelector('songz-side-panel');
 		this.editSongDialog = this.querySelector('songz-edit-song-dialog');
+		this.addToPlaylistDialog = this.querySelector('songz-add-to-playlist-dialog');
 		
 		// Set up audio players.
 		this.activePlayer = new Audio();
@@ -428,7 +430,8 @@ export class SongZApp extends LitElement {
 						@queue-shuffle-upcoming="${this.shuffleUpcoming}"
 						@open-album="${(ev) => location.hash = 'albums/' + this.queue[ev.detail.index].album._id}"
 						@open-artist="${(ev) => location.hash = 'artists/' + this.queue[ev.detail.index].artist[0]._id}"
-						@edit-song="${(ev) => this.editSongDialog.show(this.queue[ev.detail.index])}">
+						@edit-song="${(ev) => this.editSongDialog.show(this.queue[ev.detail.index])}"
+						@add-to-playlist="${(ev) => this.addToPlaylistDialog.show(ev.detail.list[ev.detail.index])}">
 					</songz-side-panel>
 				</app-drawer>
 				<songz-main-view
@@ -438,6 +441,7 @@ export class SongZApp extends LitElement {
 					@open-album="${(ev) => location.hash = 'albums/' + ev.detail.list[ev.detail.index].album._id}"
 					@open-artist="${(ev) => location.hash = 'artists/' + ev.detail.list[ev.detail.index].artist[0]._id}"
 					@edit-song="${(ev) => this.editSongDialog.show(ev.detail.list[ev.detail.index])}"
+					@add-to-playlist="${(ev) => this.addToPlaylistDialog.show(ev.detail.list[ev.detail.index])}"
 					@open-queue="${() => this.sidePanel.parentElement.open()}">
 				</songz-main-view>
 			</app-drawer-layout>
@@ -457,6 +461,7 @@ export class SongZApp extends LitElement {
 			<songz-edit-song-dialog
 				@update-song="${this.handleMetadataUpdate}">
 			</songz-edit-song-dialog>
+			<songz-add-to-playlist-dialog></songz-add-to-playlist-dialog>
 		`;
 	}
 	
