@@ -71,23 +71,6 @@ export class SongZPlaylist extends LitElement {
 		}
 	}
 	
-	// TEMP
-	async addSongToPlaylist() {
-		var songId = prompt('Song ID?');
-		if (!songId?.trim()) {
-			return;
-		}
-		
-		var playlistItemRes = await fetch(`/api/playlists/${this.playlistid}`, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-				body: 'song-id=' + encodeURIComponent(songId)
-			}),
-			newPlaylistItem = await playlistItemRes.json();
-		this.songs.push(newPlaylistItem);
-		this.requestUpdate();
-	}
-	
 	/**
 	 * Handle metadata getting updated.
 	 */
@@ -103,7 +86,6 @@ export class SongZPlaylist extends LitElement {
 			<mwc-top-app-bar-fixed>
 				<mwc-icon-button icon="arrow_back" slot="navigationIcon" @click="${() => location.href = '#playlists'}"></mwc-icon-button>
 				<span role="heading" aria-level="1" slot="title">${this.title || ''}</span>
-				<button slot="actionItems" @click="${this.addSongToPlaylist}">Add song</button>
 			</mwc-top-app-bar-fixed>
 			${this.pending ? html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>` : ''}
 			${this.description ? html`<p>${this.description}</p>` : ''}
