@@ -117,6 +117,7 @@ export async function httpToJSError(res) {
  */
 export function shuffle(arr) {
 	arr = arr.sort(() => Math.random() - 0.5);
+	return arr;
 }
 
 /**

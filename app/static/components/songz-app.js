@@ -300,16 +300,25 @@ export class SongZApp extends LitElement {
 	}
 	
 	/**
-	 * Add a song to the queue.
-	 * @param {Array<Object>} songList - The list of songs from which a song is being added
-	 * @param {Object} i - The index from the main view list to add
+	 * Replace the queue with a new list of songs.
+	 * @param {Array<Song>} songs - The list of song objects to add
+	 * @param {Number} [startPosition] - The position in the new queue to play from (defaults to 0)
+	 */
+	replaceQueueWithSongs(songs, startPosition) {
+		this.queue = [...songs];
+		this.queuePosition = -1;
+		this.playSong(startPosition || 0);
+	}
+	
+	/**
+	 * Add songs to the queue.
+	 * @param {Array<Song>} songs - The list of song objects to add
 	 * @param {Boolean} next - Whether the song should be added next, rather than at the end.
 	 */
-	addSongToQueue(songList, i, next) {
+	addSongsToQueue(songs, next) {
 		// Insert the song at the appropriate position.
-		var insertionIndex = (next ? this.queuePosition + 1 : this.queue.length),
-			song = songList[i];
-		this.queue.splice(insertionIndex, 0, song);
+		var insertionIndex = (next ? this.queuePosition + 1 : this.queue.length);
+		this.queue.splice(insertionIndex, 0, ...songs);
 		
 		// If it was added next (explicitly or not), preload it.
 		if (insertionIndex === this.queuePosition + 1) {
@@ -435,9 +444,13 @@ export class SongZApp extends LitElement {
 					</songz-side-panel>
 				</app-drawer>
 				<songz-main-view
-					@play-now="${(ev) => {this.queue = [...ev.detail.list]; this.queuePosition = -1; this.playSong(ev.detail.index);}}"
-					@play-next="${(ev) => this.addSongToQueue(ev.detail.list, ev.detail.index, true)}"
-					@add-to-queue="${(ev) => this.addSongToQueue(ev.detail.list, ev.detail.index, false)}"
+					@play-now="${(ev) => this.replaceQueueWithSongs(ev.detail.list, ev.detail.index)}"
+					@play-all-now="${(ev) => this.replaceQueueWithSongs(ev.detail.list)}"
+					@shuffle-all-now="${(ev) => this.replaceQueueWithSongs(shuffle([...ev.detail.list]))}"
+					@play-next="${(ev) => this.addSongsToQueue([ev.detail.list[ev.detail.index]], true)}"
+					@play-all-next="${(ev) => this.addSongsToQueue(ev.detail.list, true)}"
+					@add-to-queue="${(ev) => this.addSongsToQueue([ev.detail.list[ev.detail.index]], false)}"
+					@add-all-to-queue="${(ev) => this.addSongsToQueue(ev.detail.list, false)}"
 					@open-album="${(ev) => location.hash = 'albums/' + ev.detail.list[ev.detail.index].album._id}"
 					@open-artist="${(ev) => location.hash = 'artists/' + ev.detail.list[ev.detail.index].artist[0]._id}"
 					@edit-song="${(ev) => this.editSongDialog.show(ev.detail.list[ev.detail.index])}"
