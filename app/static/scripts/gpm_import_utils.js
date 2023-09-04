@@ -24,7 +24,7 @@ export function logMessage(message) {
 }
 /**
  * Show a button for the user to click to continue
- * @returns {Promise} - Resolves when the button is clicked
+ * @returns {Promise} - Resolves when the button is selected
  */
 export function showContinueButton() {
 	return new Promise (function (resolve, reject) {

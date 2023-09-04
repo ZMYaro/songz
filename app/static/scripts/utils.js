@@ -134,7 +134,7 @@ export function toGDriveURL(gDriveID, useAPI) {
 }
 
 /**
- * Open a menu when its menu button is clicked.
+ * Open a menu when its menu button is selected.
  * @param {MouseEvent} ev
  * @param {Menu} menu - The menu to be opened by the button
  * @param {Object} song - The selected song metadata
@@ -151,7 +151,7 @@ export function showMenuForSong(ev, menu, song, songIndex) {
 }
 
 /**
- * Send an event from the queue in response to a song menu item being clicked.
+ * Send an event from the queue in response to a song menu item being selected.
  * @param {CustomEvent} ev - The onselected event from the menu
  * @param {Array<Object>} songList - The list of songs from which the action was taken
  * @param {HTMLElement} component - The custom element to emit the event from

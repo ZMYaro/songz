@@ -80,7 +80,7 @@ export class SongZQueue extends LitElement {
 	}
 	
 	/**
-	 * Open the menu next to a song when its menu button is clicked.
+	 * Open the menu next to a song when its menu button is selected.
 	 * @param {MouseEvent} ev
 	 */
 	handleMenuButton(ev) {
@@ -90,7 +90,7 @@ export class SongZQueue extends LitElement {
 	}
 	
 	/**
-	 * Send an event from the queue in response to a song menu item being clicked.
+	 * Send an event from the queue in response to a song menu item being selected.
 	 * @param {CustomEvent} ev - The onselected event from the menu
 	 */
 	handleMenuItemSelect(ev) {
