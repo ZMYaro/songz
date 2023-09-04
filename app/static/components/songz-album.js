@@ -3,11 +3,12 @@
 import {LitElement, html, css} from 'lit';
 //import {LitElement, html, css} from 'https://unpkg.com/lit@2.6.1/index.js?module';
 
-import {httpToJSError, setPageTitle} from '../scripts/utils.js';
+import {handleMenuItemSelect, httpToJSError, setPageTitle} from '../scripts/utils.js';
 
 export class SongZAlbum extends LitElement {
 	
 	loadAbortController;
+	actionsMenu;
 	
 	static get styles() {
 		return css`
@@ -28,6 +29,16 @@ export class SongZAlbum extends LitElement {
 	}
 	
 	/**
+	 * @override
+	 * Get a reference to the action menu when the component is first updated.
+	 */
+	firstUpdated() {
+		this.actionsMenu = this.shadowRoot.querySelector('songz-collection-actions-menu');
+		this.actionsMenu.anchor = this.shadowRoot.querySelector('mwc-top-app-bar-fixed mwc-icon-button[icon="more_vert"]');
+	}
+	
+	/**
+	 * @override
 	 * Abort loading on disconnect.
 	 */
 	disconnectedCallback() {
@@ -77,6 +88,14 @@ export class SongZAlbum extends LitElement {
 	}
 	
 	/**
+	 * Send an event in response to an action menu item being selected.
+	 * @param {CustomEvent} ev - The onselected event from the menu
+	 */
+	handleMenuItemSelect(ev) {
+		handleMenuItemSelect(ev, this.songs, this);
+	}
+	
+	/**
 	 * @override
 	 */
 	render() {
@@ -84,10 +103,12 @@ export class SongZAlbum extends LitElement {
 			<mwc-top-app-bar-fixed>
 				<mwc-icon-button icon="arrow_back" slot="navigationIcon" @click="${() => location.href = '#albums'}"></mwc-icon-button>
 				<span role="heading" aria-level="1" slot="title">${this.title || ''}</span>
+				<mwc-icon-button icon="more_vert" slot="actionItems" @click="${() => this.actionsMenu.show()}"></mwc-icon-button>
 			</mwc-top-app-bar-fixed>
 			${this.pending ? html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>` : ''}
 			${this.message ? html`<p>${this.message}</p>` : ''}
 			${this.songs ? html`<songz-song-list viewtype="album" .songs="${this.songs}"></songz-song-list>` : ''}
+			<songz-collection-actions-menu viewtype="album" @action="${this.handleMenuItemSelect}"></songz-collection-actions-menu>
 		`;
 	}
 }

@@ -35,6 +35,7 @@ import '../components/songz-albums-list.js';
 import '../components/songz-app.js';
 import '../components/songz-artist.js';
 import '../components/songz-artists-list.js';
+import '../components/songz-collection-actions-menu.js';
 import '../components/songz-edit-song-dialog.js';
 import '../components/songz-generate-list-form.js';
 import '../components/songz-genre.js';
