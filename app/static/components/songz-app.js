@@ -444,18 +444,18 @@ export class SongZApp extends LitElement {
 					</songz-side-panel>
 				</app-drawer>
 				<songz-main-view
-					@play-now="${(ev) => this.replaceQueueWithSongs(ev.detail.list, ev.detail.index)}"
-					@play-all-now="${(ev) => this.replaceQueueWithSongs(ev.detail.list)}"
-					@shuffle-all-now="${(ev) => this.replaceQueueWithSongs(shuffle([...ev.detail.list]))}"
-					@play-next="${(ev) => this.addSongsToQueue([ev.detail.list[ev.detail.index]], true)}"
-					@play-all-next="${(ev) => this.addSongsToQueue(ev.detail.list, true)}"
-					@add-to-queue="${(ev) => this.addSongsToQueue([ev.detail.list[ev.detail.index]], false)}"
-					@add-all-to-queue="${(ev) => this.addSongsToQueue(ev.detail.list, false)}"
+					@play-song-now="${(ev) => this.replaceQueueWithSongs(ev.detail.list, ev.detail.index)}"
+					@play-collection-now="${(ev) => this.replaceQueueWithSongs(ev.detail.list)}"
+					@shuffle-collection-now="${(ev) => this.replaceQueueWithSongs(shuffle([...ev.detail.list]))}"
+					@play-song-next="${(ev) => this.addSongsToQueue([ev.detail.list[ev.detail.index]], true)}"
+					@play-collection-next="${(ev) => this.addSongsToQueue(ev.detail.list, true)}"
+					@add-song-to-queue="${(ev) => this.addSongsToQueue([ev.detail.list[ev.detail.index]], false)}"
+					@add-collection-to-queue="${(ev) => this.addSongsToQueue(ev.detail.list, false)}"
 					@open-album="${(ev) => location.hash = 'albums/' + ev.detail.list[ev.detail.index].album._id}"
 					@open-artist="${(ev) => location.hash = 'artists/' + ev.detail.list[ev.detail.index].artist[0]._id}"
+					@open-queue="${() => this.sidePanel.parentElement.open()}"
 					@edit-song="${(ev) => this.editSongDialog.show(ev.detail.list[ev.detail.index])}"
-					@add-to-playlist="${(ev) => this.addToPlaylistDialog.show(ev.detail.list[ev.detail.index])}"
-					@open-queue="${() => this.sidePanel.parentElement.open()}">
+					@add-to-playlist="${(ev) => this.addToPlaylistDialog.show(ev.detail.list[ev.detail.index])}">
 				</songz-main-view>
 			</app-drawer-layout>
 			<songz-player

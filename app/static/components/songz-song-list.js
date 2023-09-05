@@ -106,7 +106,7 @@ export class SongZSongList extends LitElement {
 	 */
 	handleDblClick(ev) {
 		ev.preventDefault();
-		this.dispatchEvent(new CustomEvent('play-now', {
+		this.dispatchEvent(new CustomEvent('play-song-now', {
 			detail: {
 				list: this.songs,
 				index: parseInt(ev.currentTarget.parentElement.dataset.index)

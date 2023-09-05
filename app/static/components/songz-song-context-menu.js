@@ -51,15 +51,15 @@ export class SongZSongContextMenu extends LitElement {
 						<mwc-icon slot="graphic">remove_circle</mwc-icon>
 						Remove from queue
 					</mwc-list-item>` :
-					html`<mwc-list-item graphic="icon" value="play-now">
+					html`<mwc-list-item graphic="icon" value="play-song-now">
 						<mwc-icon slot="graphic">play_arrow</mwc-icon>
 						Play
 					</mwc-list-item>
-					<mwc-list-item graphic="icon" value="play-next">
+					<mwc-list-item graphic="icon" value="play-song-next">
 						<mwc-icon slot="graphic">playlist_play</mwc-icon>
 						Play next
 					</mwc-list-item>
-					<mwc-list-item graphic="icon" value="add-to-queue">
+					<mwc-list-item graphic="icon" value="add-song-to-queue">
 						<mwc-icon slot="graphic">queue_music</mwc-icon>
 						Add to queue
 					</mwc-list-item>`

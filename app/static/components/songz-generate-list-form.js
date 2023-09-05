@@ -72,10 +72,9 @@ export class SongZGenerateListForm extends LitElement {
 	 * @param {Array<Object>} songList - The generated list of songs to play
 	 */
 	dispatchPlayEvent(songList) {
-		this.dispatchEvent(new CustomEvent('play-now', {
+		this.dispatchEvent(new CustomEvent('play-collection-now', {
 			detail: {
-				list: songList,
-				index: 0
+				list: songList
 			},
 			bubbles: true,
 			composed: true
