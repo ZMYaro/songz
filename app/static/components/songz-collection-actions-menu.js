@@ -36,19 +36,19 @@ export class SongZCollectionActionsMenu extends LitElement {
 		return html`
 			<mwc-menu fixed wrapFocus menuCorner="END" corner="TOP_END" .anchor="${this.anchor}">
 				<!-- Play/queue actions -->
-				<mwc-list-item graphic="icon" value="play-all-now">
+				<mwc-list-item graphic="icon" value="play-collection-now">
 					<mwc-icon slot="graphic">play_arrow</mwc-icon>
 					Play all
 				</mwc-list-item>
-				<mwc-list-item graphic="icon" value="shuffle-all-now">
+				<mwc-list-item graphic="icon" value="shuffle-collection-now">
 					<mwc-icon slot="graphic">shuffle</mwc-icon>
 					Shuffle all
 				</mwc-list-item>
-				<mwc-list-item graphic="icon" value="play-all-next">
+				<mwc-list-item graphic="icon" value="play-collection-next">
 					<mwc-icon slot="graphic">playlist_play</mwc-icon>
 					Play all next
 				</mwc-list-item>
-				<mwc-list-item graphic="icon" value="add-all-to-queue">
+				<mwc-list-item graphic="icon" value="add-collection-to-queue">
 					<mwc-icon slot="graphic">queue_music</mwc-icon>
 					Add all to queue
 				</mwc-list-item>
