@@ -135,13 +135,13 @@ export class SongZMainView extends LitElement {
 		
 		switch (this.view) {
 			case 'album':
-				mainViewContents = html`<songz-album albumid="${this.viewContentId}"></songz-album>`;
+				mainViewContents = html`<songz-album collectionid="${this.viewContentId}"></songz-album>`;
 				break;
 			case 'albums':
 				mainViewContents = html`<songz-albums-list></songz-albums-list>`;
 				break;
 			case 'artist':
-				mainViewContents = html`<songz-artist artistid="${this.viewContentId}"></songz-artist>`;
+				mainViewContents = html`<songz-artist collectionid="${this.viewContentId}"></songz-artist>`;
 				break;
 			case 'artists':
 				mainViewContents = html`<songz-artists-list></songz-artists-list>`;
@@ -150,13 +150,13 @@ export class SongZMainView extends LitElement {
 				mainViewContents = html`<songz-generate-list-form></songz-generate-list-form>`;
 				break;
 			case 'genre':
-				mainViewContents = html`<songz-genre genreid="${this.viewContentId}"></songz-genre>`;
+				mainViewContents = html`<songz-genre collectionid="${this.viewContentId}"></songz-genre>`;
 				break;
 			case 'genres':
 				mainViewContents = html`<songz-genres-list></songz-genres-list>`;
 				break;
 			case 'playlist':
-				mainViewContents = html`<songz-playlist playlistid="${this.viewContentId}"></songz-playlist>`;
+				mainViewContents = html`<songz-playlist collectionid="${this.viewContentId}"></songz-playlist>`;
 				break;
 			case 'playlists':
 				mainViewContents = html`<songz-playlists-list></songz-playlists-list>`;
