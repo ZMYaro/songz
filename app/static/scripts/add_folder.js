@@ -6,17 +6,14 @@ import * as ID3 from './id3js/id3.js';
 const GOOGLE_DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
 const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/drive.readonly';
 
-/**
- * Callback after the Google API script is loaded.
- */
-window.handleGAPILoad = function () {
-	gapi.load('client', initGAPIClient);
-}
+// Before anything else, initialize the GDrive client API.
+initGAPIClient();
 
 /**
- * Callback after the Google API client library is loaded.
+ * Initialize the client API after the library is loaded.
  */
 async function initGAPIClient() {
+	await window.gapiLoadPromise;
 	await gapi.client.init({
 		apiKey: GOOGLE_API_KEY,
 		clientId: GOOGLE_CLIENT_ID,
