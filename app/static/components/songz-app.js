@@ -414,7 +414,7 @@ export class SongZApp extends LitElement {
 	 * Update the media session's position state with the player's state.
 	 */
 	updateSessionPositionState() {
-		if (!this.activePlayer.duration) {
+		if (!this.activePlayer.duration || this.activePlayer.duration === Infinity) {
 			return;
 		}
 		navigator.mediaSession.setPositionState({
