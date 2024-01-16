@@ -3,7 +3,8 @@
 import {LitElement, html, css} from 'lit';
 //import {LitElement, html, css} from 'https://unpkg.com/lit@2.6.1/index.js?module';
 
-import {formatArtist, formatDuration, toGDriveURL, showMenuForSong, handleMenuItemSelect} from '../scripts/utils.js';
+import {formatArtist, formatDuration, showMenuForSong, handleMenuItemSelect} from '../scripts/utils.js';
+import { getFileURL } from '../scripts/gapi_utils.js';
 
 export class SongZQueue extends LitElement {
 	
@@ -139,7 +140,7 @@ export class SongZQueue extends LitElement {
 					html`<p style="text-align: center;">No songs in queue.</p>` :
 					(this.songs || []).map((song, i) => html`
 						<mwc-list-item graphic="small" hasMeta class="${i === this.activeIndex ? 'current' : ''}" data-index="${i}" @dblclick="${this.handleDblClick}">
-							<img slot="graphic" class="album-art" src="${song.gDriveArt ? toGDriveURL(song.gDriveArt) : '/images/unknown_album.svg'}" alt="" />
+							<img slot="graphic" class="album-art" src="${song.gDriveArt ? getFileURL(song.gDriveArt) : '/images/unknown_album.svg'}" alt="" />
 							<span class="song-title">${song.title}</span>
 							<span class="artist">${formatDuration(song.duration / 1000)} &middot; ${formatArtist(song, true)}</span>
 							<mwc-icon-button slot="meta" icon="more_vert" @click=${this.handleMenuButton}></mwc-icon-button>
