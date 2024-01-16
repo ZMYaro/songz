@@ -11,6 +11,8 @@
 		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons&display=block" />
 		<link rel="stylesheet" type="text/css" href="/styles/styles.css" />
 		
+		<script>window.gapiLoadPromise = new Promise((resolve) => window.gapiPromiseResolve = resolve);</script>
+		<script async defer src="https://apis.google.com/js/api.js" onload="gapi.load('client', window.gapiPromiseResolve);"></script>
 		<script src="/node_modules/markdown-it/dist/markdown-it.min.js"></script>
 		<script src="/scripts/mwc_duplicate_define_fix_hack.js"></script>
 		<script type="module" src="/scripts/components.js"></script>
