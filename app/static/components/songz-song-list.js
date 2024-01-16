@@ -150,7 +150,7 @@ export class SongZSongList extends LitElement {
 							${this.viewtype === 'album' ? html`<td class="index">${song.trackNo}</td>` : ''}
 							${this.viewtype === 'playlist' ? html`<td class="index">${song.listIndex + 1}</td>` : ''}
 							${this.viewtype === 'wrapped' ? html`<td class="index">${i + 1}</td>` : ''}
-							${SHOW_ART ? html`<td><img class="album-art" src="${song.gDriveArt ? getFileURL(song.gDriveArt, this) : '/images/unknown_album.svg'}" alt="" /></td>` : ''}
+							${SHOW_ART ? html`<td><img class="album-art" src="${song.gDriveArt ? getFileURL(song.gDriveArt, true, this) : '/images/unknown_album.svg'}" alt="" /></td>` : ''}
 							<td class="title" title="${song.title}" @dblclick="${this.handleDblClick}">${song.title}</td>
 							${SHOW_ACTIONS ? html`<td><mwc-icon-button slot="meta" icon="more_vert" @click=${this.handleMenuButton}></mwc-icon-button></td>` : ''}
 							${this.viewtype !== 'wrapped' ? html`<td class="duration">${formatDuration(song.duration / 1000)}</td>` : ''}
