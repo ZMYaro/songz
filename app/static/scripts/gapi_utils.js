@@ -33,38 +33,40 @@ export function getFileURL(fileID, onlyThumbnail, containingElem) {
 	let mediaSource = new MediaSource(),
 		url = URL.createObjectURL(mediaSource);
 	
-	gapiInitPromise
-		.then(() => gapi.client.drive.files.get({
+	gapiInitPromise.then(async () => {
+		let fileRes = await gapi.client.drive.files.get({
 			fileId: fileID,
 			alt: !onlyThumbnail ? 'media' : undefined,
 			fields: onlyThumbnail ? 'thumbnailLink' : undefined
-		}))
-		.then(async (fileRes) => {
-			if (onlyThumbnail) {
-				// If loading an image thumbnail instead of a media file, quit here, and refresh the containing element.
-				fileURLs[fileID] = fileRes.result.thumbnailLink;
-				containingElem?.requestUpdate();
-				return;
-			}
-			
-			let dataArr = Uint8Array.from(fileRes.body.split('').map((chr) => chr.charCodeAt(0)));
-			
-			// Make a URL for the complete file for next time.
-			let blob = new Blob([dataArr], { type: fileRes.headers['Content-Type'] });
-			if (!fileURLs[fileID]) {
-				fileURLs[fileID] = URL.createObjectURL(blob);
-			}
-			
-			if (!MediaSource.isTypeSupported(fileRes.headers['Content-Type'])) { return; }
-			
-			if (mediaSource.readyState !== 'open') {
-				// If the media source isn't open, wait for it to be.
-				await (new Promise((resolve) => mediaSource.addEventListener('sourceopen', resolve)));
-			}
-			let sourceBuffer = mediaSource.addSourceBuffer(fileRes.headers['Content-Type']);
-			sourceBuffer.addEventListener('updateend', () => mediaSource.endOfStream());
-			sourceBuffer.appendBuffer(dataArr);
 		});
+		
+		if (onlyThumbnail) {
+			// If loading an image thumbnail instead of a media file, quit here, and refresh the containing element.
+			URL.revokeObjectURL(url);
+			fileURLs[fileID] = fileRes.result.thumbnailLink;
+			containingElem?.requestUpdate();
+			return;
+		}
+		
+		let dataArr = Uint8Array.from(fileRes.body.split('').map((chr) => chr.charCodeAt(0)));
+		
+		// Make a URL for the complete file for next time.
+		let blob = new Blob([dataArr], { type: fileRes.headers['Content-Type'] });
+		if (!fileURLs[fileID]) {
+			fileURLs[fileID] = URL.createObjectURL(blob);
+		}
+		
+		// If this was an invalid media type, quit now because it will just throw an error.
+		if (!MediaSource.isTypeSupported(fileRes.headers['Content-Type'])) { return; }
+		
+		if (mediaSource.readyState !== 'open') {
+			// If the media source isn't open, wait for it to be.
+			await (new Promise((resolve) => mediaSource.addEventListener('sourceopen', resolve)));
+		}
+		let sourceBuffer = mediaSource.addSourceBuffer(fileRes.headers['Content-Type']);
+		sourceBuffer.addEventListener('updateend', () => mediaSource.endOfStream());
+		sourceBuffer.appendBuffer(dataArr);
+	});
 	
 	// Return the MediaSource URL immediately.
 	return onlyThumbnail ? '' : url;
