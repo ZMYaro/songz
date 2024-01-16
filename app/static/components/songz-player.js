@@ -194,7 +194,7 @@ export class SongZPlayer extends LitElement {
 				${this.song?.album ?
 					html`<a href="${'#albums/' + this.song.album._id}" class="album-art">
 						<img
-							src="${this.song?.gDriveArt ? getFileURL(this.song.gDriveArt, this) : '/images/unknown_album.svg'}"
+							src="${this.song?.gDriveArt ? getFileURL(this.song.gDriveArt, true, this) : '/images/unknown_album.svg'}"
 							alt="${this.song.album.title + ' album cover.'}"
 							title="${this.song.album.title}" />
 					</a>` :
