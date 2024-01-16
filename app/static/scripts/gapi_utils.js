@@ -39,7 +39,7 @@ export function getFileURL(fileID, onlyThumbnail, containingElem) {
 			alt: !onlyThumbnail ? 'media' : undefined,
 			fields: onlyThumbnail ? 'thumbnailLink' : undefined
 		}))
-		.then((fileRes) => {
+		.then(async (fileRes) => {
 			if (onlyThumbnail) {
 				// If loading an image thumbnail instead of a media file, quit here, and refresh the containing element.
 				fileURLs[fileID] = fileRes.result.thumbnailLink;
@@ -57,6 +57,10 @@ export function getFileURL(fileID, onlyThumbnail, containingElem) {
 			
 			if (!MediaSource.isTypeSupported(fileRes.headers['Content-Type'])) { return; }
 			
+			if (mediaSource.readyState !== 'open') {
+				// If the media source isn't open, wait for it to be.
+				await (new Promise((resolve) => mediaSource.addEventListener('sourceopen', resolve)));
+			}
 			let sourceBuffer = mediaSource.addSourceBuffer(fileRes.headers['Content-Type']);
 			sourceBuffer.addEventListener('updateend', () => mediaSource.endOfStream());
 			sourceBuffer.appendBuffer(dataArr);
