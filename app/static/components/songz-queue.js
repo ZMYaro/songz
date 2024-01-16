@@ -140,7 +140,7 @@ export class SongZQueue extends LitElement {
 					html`<p style="text-align: center;">No songs in queue.</p>` :
 					(this.songs || []).map((song, i) => html`
 						<mwc-list-item graphic="small" hasMeta class="${i === this.activeIndex ? 'current' : ''}" data-index="${i}" @dblclick="${this.handleDblClick}">
-							<img slot="graphic" class="album-art" src="${song.gDriveArt ? getFileURL(song.gDriveArt) : '/images/unknown_album.svg'}" alt="" />
+							<img slot="graphic" class="album-art" src="${song.gDriveArt ? getFileURL(song.gDriveArt, this) : '/images/unknown_album.svg'}" alt="" />
 							<span class="song-title">${song.title}</span>
 							<span class="artist">${formatDuration(song.duration / 1000)} &middot; ${formatArtist(song, true)}</span>
 							<mwc-icon-button slot="meta" icon="more_vert" @click=${this.handleMenuButton}></mwc-icon-button>

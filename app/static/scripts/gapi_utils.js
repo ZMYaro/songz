@@ -22,9 +22,11 @@ async function initGAPIClient() {
 
 /**
  * Get the file from Google Drive, attempt to return it with a MediaSource, and create a blob URL for it.
+ * @param {String} fileID - The ID of the Google Drive file
+ * @param {LitElement} [containingElem] - The element in which the file is being shown
  * @returns {String} The existing blob URL, if any, or a blob URL for a MediaSource.
  */
-export function getFileURL(fileID) {
+export function getFileURL(fileID, containingElem) {
 	if (fileURLs[fileID]) { return fileURLs[fileID]; }
 	
 	let mediaSource = new MediaSource(),
@@ -42,8 +44,12 @@ export function getFileURL(fileID) {
 			let blob = new Blob([dataArr], { type: fileRes.headers['Content-Type'] });
 			fileURLs[fileID] = URL.createObjectURL(blob);
 			
-			// If not allowed to fill in the MediaSource, give up for now :(
-			if (!MediaSource.isTypeSupported(fileRes.headers['Content-Type'])) { return; }
+			if (!MediaSource.isTypeSupported(fileRes.headers['Content-Type'])) {
+				// If not allowed to fill in the MediaSource, at least refresh the containing element if one was passed,
+				// which will generally cause its images to re-fetch the file and get the new blob URL.
+				containingElem?.requestUpdate();
+				return;
+			}
 			
 			let sourceBuffer = mediaSource.addSourceBuffer(fileRes.headers['Content-Type']);
 			sourceBuffer.addEventListener('updateend', () => mediaSource.endOfStream());
