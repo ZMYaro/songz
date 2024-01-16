@@ -4,7 +4,7 @@ import {LitElement, html, css, unsafeCSS} from 'lit';
 //import {LitElement, html, css, unsafeCSS} from 'https://unpkg.com/lit@2.6.1/index.js?module';
 
 import {NARROW_WINDOW_THRESHOLD} from '../scripts/constants.js';
-import {formatDuration, toGDriveURL} from '../scripts/utils.js';
+import {formatDuration} from '../scripts/utils.js';
 
 export class SongZSeekBar extends LitElement {
 	
@@ -60,7 +60,7 @@ export class SongZSeekBar extends LitElement {
 			${formatDuration(this.currentTime)}
 			${!this.duration ?
 				html`<input type="range" value="0" disabled />` :
-				html`<input type="range" step="0.5" min="0" max="${this.duration}" value="${this.currentTime}" @input="${this.sendSeek}" />`
+				html`<input type="range" step="0.5" min="0" max="${this.duration}" .value="${this.currentTime}" @input="${this.sendSeek}" />`
 			}
 			${formatDuration(this.duration)}
 		`;
