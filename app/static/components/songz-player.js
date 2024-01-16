@@ -6,7 +6,8 @@ import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 //import {unsafeHTML} from 'https://unpkg.com/lit@2.6.1/directives/unsafe-html.js?module';
 
 import {NARROW_WINDOW_THRESHOLD} from '../scripts/constants.js';
-import {formatAlbum, formatArtist, toGDriveURL} from '../scripts/utils.js';
+import {formatAlbum, formatArtist} from '../scripts/utils.js';
+import { getFileURL } from '../scripts/gapi_utils.js';
 
 export class SongZPlayer extends LitElement {
 	
@@ -193,7 +194,7 @@ export class SongZPlayer extends LitElement {
 				${this.song?.album ?
 					html`<a href="${'#albums/' + this.song.album._id}" class="album-art">
 						<img
-							src="${this.song?.gDriveArt ? toGDriveURL(this.song.gDriveArt) : '/images/unknown_album.svg'}"
+							src="${this.song?.gDriveArt ? getFileURL(this.song.gDriveArt) : '/images/unknown_album.svg'}"
 							alt="${this.song.album.title + ' album cover.'}"
 							title="${this.song.album.title}" />
 					</a>` :
