@@ -2,13 +2,9 @@
 
 const express = require('express'),
 	passport = require('passport'),
-	path = require('path');
-
-const GOOGLE_SCOPES = [
-	'https://www.googleapis.com/auth/userinfo.email',
-	'https://www.googleapis.com/auth/userinfo.profile',
-	'https://www.googleapis.com/auth/drive.readonly'
-];
+	path = require('path'),
+	
+	{ GOOGLE_SCOPES } = require('../utils.js');
 
 const router = express.Router();
 

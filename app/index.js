@@ -13,7 +13,8 @@ const cookieSession = require('cookie-session'),
 	apiRouter = require('./routes/api.js'),
 	authRouter = require('./routes/auth.js'),
 	guiRouter = require('./routes/gui.js'),
-	wrappedRouter = require('./routes/wrapped.js');
+	wrappedRouter = require('./routes/wrapped.js'),
+	{ GOOGLE_SCOPES } = require('./utils.js');
 
 const PORT = process.env.PORT || 8080,
 	DB_NAME = 'songz',
@@ -61,8 +62,9 @@ app.get('/manifest.webmanifest', (req, res) => res.sendFile(path.join(__dirname,
 app.get('/gapi.js', (req, res) => {
 	res.set('Content-Type', 'text/javascript');
 	res.send(`
-		export const GOOGLE_API_KEY = '${process.env.GOOGLE_API_KEY}';
-		export const GOOGLE_CLIENT_ID = '${process.env.GOOGLE_CLIENT_ID}';
+		export const GOOGLE_API_KEY = "${process.env.GOOGLE_API_KEY}";
+		export const GOOGLE_CLIENT_ID = "${process.env.GOOGLE_CLIENT_ID}";
+		export const GOOGLE_SCOPES = ${JSON.stringify(GOOGLE_SCOPES)};
 	`);
 });
 app.use('/api', apiRouter);
