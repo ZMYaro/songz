@@ -1,5 +1,11 @@
 'use strict';
 
+const GOOGLE_SCOPES = [
+	'https://www.googleapis.com/auth/userinfo.email',
+	'https://www.googleapis.com/auth/userinfo.profile',
+	'https://www.googleapis.com/auth/drive.readonly'
+];
+
 const SONG_AGGREGATE_POPULATE_STEPS = [
 	{ $lookup: {
 		from: 'albums',
@@ -86,6 +92,7 @@ function processDurationInput(inputDuration) {
 }
 
 module.exports = {
+	GOOGLE_SCOPES,
 	SONG_AGGREGATE_POPULATE_STEPS,
 	handleError,
 	parseSemicolonSeparatedList,

@@ -1,10 +1,9 @@
 'use strict';
 
-import {GOOGLE_API_KEY, GOOGLE_CLIENT_ID} from '/gapi.js';
+import {GOOGLE_API_KEY, GOOGLE_CLIENT_ID, GOOGLE_SCOPES} from '/gapi.js';
 import * as ID3 from './id3js/id3.js';
 
 const GOOGLE_DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
-const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/drive.readonly';
 
 // Before anything else, initialize the GDrive client API.
 initGAPIClient();
@@ -17,7 +16,7 @@ async function initGAPIClient() {
 	await gapi.client.init({
 		apiKey: GOOGLE_API_KEY,
 		clientId: GOOGLE_CLIENT_ID,
-		scope: GOOGLE_SCOPES,
+		scope: GOOGLE_SCOPES.join(' '),
 		discoveryDocs: [GOOGLE_DISCOVERY_DOC]
 	});
 	if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
