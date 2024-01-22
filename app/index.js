@@ -2,12 +2,10 @@
 
 const cookieSession = require('cookie-session'),
 	express = require('express'),
-	passport = require('passport'),
 	path = require('path'),
-	GoogleStrategy = require('passport-google-oauth20').Strategy,
 	bareModuleTransformMiddleware = require('express-transform-bare-module-specifiers').default,
 	
-	User = require('./models/user.js'),
+	{ passport } = require('./config/passport.js'),
 	{ db } = require('./config/mongoose.js'),
 	apiRouter = require('./routes/api.js'),
 	authRouter = require('./routes/auth.js'),
@@ -23,27 +21,7 @@ app.set('port', PORT);
 
 app.use('*', bareModuleTransformMiddleware());
 
-// Set up Passport for auth.
-passport.use(new GoogleStrategy({
-	clientID: process.env.GOOGLE_CLIENT_ID,
-	clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-	callbackURL: '/auth/google/callback',
-	proxy: true
-}, function (accessToken, refreshToken, profile, done) {
-	User.findOne({ googleId: profile.id }).then(function (user) {
-		// Tell Passport done with DB.
-		done(null, user);
-	});
-}));
-passport.serializeUser(function (user, done) {
-	// Serialize the user's DB ID instead of xer Google ID.
-	done(null, user.id);
-});
-passport.deserializeUser(function (id, done) {
-	User.findById(id, function (err, user) {
-		done(err, user);
-	});
-});
+// Hook up Passport auth.
 app.use(cookieSession({
 	name: 'session',
 	keys: [process.env.SESSION_KEY],
