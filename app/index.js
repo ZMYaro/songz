@@ -2,23 +2,20 @@
 
 const cookieSession = require('cookie-session'),
 	express = require('express'),
-	mongoose = require('mongoose'),
-	Schema = mongoose.Schema,
 	passport = require('passport'),
 	path = require('path'),
 	GoogleStrategy = require('passport-google-oauth20').Strategy,
 	bareModuleTransformMiddleware = require('express-transform-bare-module-specifiers').default,
 	
 	User = require('./models/user.js'),
+	{ db } = require('./config/mongoose.js'),
 	apiRouter = require('./routes/api.js'),
 	authRouter = require('./routes/auth.js'),
 	guiRouter = require('./routes/gui.js'),
 	wrappedRouter = require('./routes/wrapped.js'),
 	{ GOOGLE_SCOPES } = require('./utils.js');
 
-const PORT = process.env.PORT || 8080,
-	DB_NAME = 'songz',
-	MONGODB_URI = process.env.MONGODB_URI || `mongodb://localhost:27017/${DB_NAME}`;
+const PORT = process.env.PORT || 8080;
 
 // Set up Express.
 const app = express();
@@ -79,16 +76,6 @@ app.get(/^\/node_modules\/@material\/.+\/(constants|foundation|rtl-(default|nega
 	console.log('Fixed path to ' + path.join(__dirname, (req.path + '.js')));
 });
 
-// Set up DB connection.
-mongoose.connect(MONGODB_URI);
-let db = mongoose.connection;
-db.on('error', (err) => {
-	console.error(`Error connecting to database \u201c${MONGODB_URI}\u201d:`);
-	console.error(err);
-	process.exit(1);
-})
-db.once('open', function () {
-	console.log(`Connected to database \u201c${MONGODB_URI}\u201d.`);
-	// Start server once DB ready.
-	app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
-});
+db.on('error', () => process.exit(1));
+// Start server once DB ready.
+db.once('open', () => app.listen(PORT, () => console.log(`Listening on port ${PORT}...`)));
