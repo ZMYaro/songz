@@ -59,8 +59,8 @@ artistSchema.statics.findByIdWithSongs = async function (id) {
 	
 	var artistSongs = await artistSongsPromise,
 		composerSongs = await composerSongsPromise,
-		returnableArtist = Object.assign({ artistSongs: artistSongs, composerSongs, composerSongs }, artist.toObject());
-	return returnableArtist;
+		artistAndComposerWithSongs = Object.assign({ artistSongs: artistSongs, composerSongs, composerSongs }, artist.toObject());
+	return artistAndComposerWithSongs;
 };
 
 const Artist = mongoose.model('Artist', artistSchema);
