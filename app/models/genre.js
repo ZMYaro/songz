@@ -53,8 +53,8 @@ genreSchema.statics.findByIdWithSongs = async function (id) {
 	if (!genre) { return; }
 	
 	var songs = await populateSong(Song.find({ genre: genre }).sort({ discNo: 'asc', trackNo: 'asc' })),
-		returnableGenre = Object.assign({ songs: songs }, genre.toObject());
-	return returnableGenre;
+		genreWithSongs = Object.assign({ songs: songs }, genre.toObject());
+	return genreWithSongs;
 };
 
 const Genre = mongoose.model('Genre', genreSchema);

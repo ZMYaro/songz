@@ -55,8 +55,8 @@ albumSchema.statics.findByIdWithSongs = async function (id) {
 	album = await album.populate('artist');
 	
 	var songs = await populateSong(Song.find({ album: album }).sort({ discNo: 'asc', trackNo: 'asc' })),
-		returnableAlbum = Object.assign({ songs: songs }, album.toObject());
-	return returnableAlbum;
+		albumWithSongs = Object.assign({ songs: songs }, album.toObject());
+	return albumWithSongs;
 };
 
 const Album = mongoose.model('Album', albumSchema);
