@@ -70,7 +70,7 @@ export class SongZArtist extends SongZCollection {
 			<mwc-top-app-bar-fixed>
 				<mwc-icon-button icon="arrow_back" slot="navigationIcon" @click="${() => location.href = '#artists'}"></mwc-icon-button>
 				<span role="heading" aria-level="1" slot="title">${this.collectionname || ''}</span>
-				<mwc-icon-button icon="more_vert" slot="actionItems" @click="${() => this.actionsMenu.show()}"></mwc-icon-button>
+				<mwc-icon-button icon="more_vert" title="More actions" slot="actionItems" @click="${() => this.actionsMenu.show()}"></mwc-icon-button>
 			</mwc-top-app-bar-fixed>
 			${this.pending ? html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>` : ''}
 			${this.message ? html`<p>${this.message}</p>` : ''}

@@ -35,6 +35,31 @@ router.route('')
 		});
 		await newPlaylist.save();
 		res.json(newPlaylist);
+	})
+	/**
+	 * Update a playlist's metadata.
+	 * id - The ID of the playlist
+	 * [title] - The title of the playlist
+	 * [description] - Description for the playlist
+	 * [archived] - Whether the playlist should be archived
+	 */
+	.put(async function (req, res) {
+		var playlistId = req.body['id'];
+		if (!playlistId) { return handleError(res, 'Missing playlist ID.', 422); }
+		
+		var playlist = await Playlist.findById(playlistId);
+		if (!playlist) { return handleError(res, 'Playlist not found.', 404); }
+		
+		var title = req.body['title']?.trim(),
+			description = req.body['description']?.trim(),
+			archived = req.body['archived'];
+		
+		playlist.title = title ?? playlist.title;
+		playlist.description = description ?? playlist.description;
+		playlist.archived = archived ?? playlist.archived;
+		
+		await playlist.save();
+		res.json(playlist);
 	});
 
 router.route('/:playlistId')

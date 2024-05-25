@@ -78,6 +78,9 @@ export class SongZCollection extends LitElement {
 			setPageTitle(this.title);
 			this.message = collection.description || undefined;
 			this.songs = collection.songs;
+			if (this.VIEW_TYPE === 'playlist') {
+				this.archived = collection.archived ?? false; // Make it definitively false because undefined is assumed to mean pending.
+			}
 		} catch (err) {
 			this.message = err;
 		} finally {
@@ -108,7 +111,16 @@ export class SongZCollection extends LitElement {
 			<mwc-top-app-bar-fixed>
 				<mwc-icon-button icon="arrow_back" slot="navigationIcon" @click="${() => location.href = `#${this.VIEW_TYPE}s`}"></mwc-icon-button>
 				<span role="heading" aria-level="1" slot="title">${this.title || ''}</span>
-				<mwc-icon-button icon="more_vert" slot="actionItems" @click="${() => this.actionsMenu.show()}"></mwc-icon-button>
+				${this.VIEW_TYPE === 'playlist' ?
+					html`<mwc-icon-button
+						slot="actionItems"
+						icon="${this.archived ? 'unarchive' : 'archive'}"
+						title="${this.archived ? 'Unarchive' : 'Archive'}"
+						.disabled="${this.pending || typeof this.archived === 'undefined'}"
+						@click="${this.toggleArchived}"></mwc-icon-button>` :
+					''
+				}
+				<mwc-icon-button icon="more_vert" title="More actions" slot="actionItems" @click="${() => this.actionsMenu.show()}"></mwc-icon-button>
 			</mwc-top-app-bar-fixed>
 			${this.pending ? html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>` : ''}
 			${this.message ? html`<p>${this.message}</p>` : ''}

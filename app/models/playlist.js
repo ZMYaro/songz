@@ -9,6 +9,7 @@ const mongoose = require('mongoose'),
 const playlistSchema = new Schema({
 	title: String,
 	description: String,
+	archived: Boolean,
 	firstItem: {
 		type: Schema.Types.ObjectId,
 		ref: 'PlaylistItem'
