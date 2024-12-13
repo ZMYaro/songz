@@ -119,7 +119,7 @@ async function loadFilesContents(filesData) {
 				dataArr = Uint8Array.from(fileRes.body.split('').map((chr) => chr.charCodeAt(0))),
 				file = new File([dataArr], fileData.name, { type: fileData.mimeType });
 			
-			fileData.isAudio = !!fileData.mimeType.match('^audio\/');
+			fileData.isAudio = !!fileData.mimeType.match('(^audio\/)|(\/ogg$)');
 			fileData.blobURL = URL.createObjectURL(file);
 			if (fileData.isAudio) {
 				let audio = new Audio();
