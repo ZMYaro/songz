@@ -45,12 +45,12 @@ export class SongZCollectionActionsMenu extends LitElement {
 					Shuffle all
 				</mwc-list-item>
 				<mwc-list-item graphic="icon" value="play-collection-next">
-					<mwc-icon slot="graphic">playlist_play</mwc-icon>
-					Play all next
+					<mwc-icon slot="graphic" style="transform: scaleY(-1);">playlist_play</mwc-icon>
+					Queue all next
 				</mwc-list-item>
 				<mwc-list-item graphic="icon" value="add-collection-to-queue">
-					<mwc-icon slot="graphic">queue_music</mwc-icon>
-					Add all to queue
+					<mwc-icon slot="graphic">playlist_play</mwc-icon>
+					Queue all at end
 				</mwc-list-item>
 				<li divider role="separator"></li>
 				<!-- Library actions -->

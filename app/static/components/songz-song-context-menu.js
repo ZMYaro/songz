@@ -44,11 +44,11 @@ export class SongZSongContextMenu extends LitElement {
 						Play
 					</mwc-list-item>
 					<mwc-list-item graphic="icon" value="queue-play-next">
-						<mwc-icon slot="graphic">playlist_play</mwc-icon>
-						Play next
+						<mwc-icon slot="graphic" style="transform: scaleY(-1);">playlist_play</mwc-icon>
+						Queue next
 					</mwc-list-item>
 					<mwc-list-item graphic="icon" value="queue-remove">
-						<mwc-icon slot="graphic">remove_circle</mwc-icon>
+						<mwc-icon slot="graphic">playlist_remove</mwc-icon>
 						Remove from queue
 					</mwc-list-item>` :
 					html`<mwc-list-item graphic="icon" value="play-song-now">
@@ -56,12 +56,12 @@ export class SongZSongContextMenu extends LitElement {
 						Play
 					</mwc-list-item>
 					<mwc-list-item graphic="icon" value="play-song-next">
-						<mwc-icon slot="graphic">playlist_play</mwc-icon>
-						Play next
+						<mwc-icon slot="graphic" style="transform: scaleY(-1);">playlist_play</mwc-icon>
+						Queue next
 					</mwc-list-item>
 					<mwc-list-item graphic="icon" value="add-song-to-queue">
-						<mwc-icon slot="graphic">queue_music</mwc-icon>
-						Add to queue
+						<mwc-icon slot="graphic">playlist_play</mwc-icon>
+						Queue at end
 					</mwc-list-item>`
 				}
 				<li divider role="separator"></li>
