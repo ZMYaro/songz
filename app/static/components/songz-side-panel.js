@@ -82,8 +82,8 @@ export class SongZSidePanel extends LitElement {
 	render() {
 		return html`
 			<mwc-tab-bar @MDCTabBar:activated="${this.handleTabSelect}">
-				<mwc-tab label="Queue"></mwc-tab>
-				<mwc-tab label="Lyrics"></mwc-tab>
+				<mwc-tab label="Queue" icon="queue_music"></mwc-tab>
+				<mwc-tab label="Lyrics" icon="lyrics"></mwc-tab>
 			</mwc-tab-bar>
 			<div class="tab-contents" @scroll="${this.handleTabContentsScroll}">
 				<songz-queue
