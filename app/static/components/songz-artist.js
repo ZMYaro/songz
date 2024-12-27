@@ -2,7 +2,7 @@
 
 import {html} from 'lit';
 
-import {SongZCollection} from './collection.js';
+import {SongZCollection} from './songz-collection.js';
 import {httpToJSError, setPageTitle} from '../scripts/utils.js';
 
 export class SongZArtist extends SongZCollection {
