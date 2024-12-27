@@ -78,9 +78,9 @@ export class SongZAddToPlaylistDialog extends LitElement {
 				});
 			await httpToJSError(playlistItemRes);
 			
-			message = `Added to playlist \u201c${playlist.title}\u201d.`;
+			message = `Added \u201c${this.song.title}\u201d to \u201c${playlist.title}\u201d.`;
 		} catch (err) {
-			message = `Something went wrong adding to playlist: ${err}`;
+			message = `Something went wrong adding \u201c${this.song.title}\u201d to \u201c${playlist.title}\u201d: ${err}`;
 		}
 		
 		this.dialog.close();
