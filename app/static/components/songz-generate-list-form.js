@@ -17,8 +17,13 @@ export class SongZGenerateListForm extends LitElement {
 				max-width: 600px;
 				padding: 4px;
 			}
+			button,
+			input {
+				font: inherit;
+			}
 			input[type="text"] {
-				width: calc(100% - 1em);
+				box-sizing: border-box;
+				width: 100%;
 			}
 			button[type="submit"] {
 				float: right;
