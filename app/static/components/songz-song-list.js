@@ -45,6 +45,9 @@ export class SongZSongList extends LitElement {
 				margin-top: -0.25rem;
 				margin-bottom: -0.25rem;
 			}
+			.rating {
+				white-space: nowrap;
+			}
 			.doubled-thumb-down,
 			.doubled-thumb-up,
 			.tripled-thumb-down,
