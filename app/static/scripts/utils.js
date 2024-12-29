@@ -86,6 +86,16 @@ export function formatGenre(song, returnPlainText) {
 }
 
 /**
+ * Check whether two arrays have any elements in common.
+ * @param {Array} arr1
+ * @param {Array} arr2
+ * @returns {Boolean}
+ */
+export function haveCommonElements(arr1, arr2) {
+	return arr1.some((elem) => arr2.includes(elem));
+}
+
+/**
  * If a response had an HTTP error, turn it into a JavaScript error.
  * @param {Response} res
  * @returns {Promise} Resolves if no error, or rejects with the error code and message if there was an HTTP error
@@ -109,6 +119,16 @@ export async function httpToJSError(res) {
 	}
 	
 	throw new Error(message);
+}
+
+/**
+ * Convert a semicolon-separated list to an array, or return an empty array if invalid.
+ * @param {String} input
+ * @returns {Array<String>}
+ */
+export function parseSemicolonSeparatedList(input) {
+	// Remove whitespace from the ends and around each semicolon.
+	return (input?.trim()?.split(/ *; */)) || [];
 }
 
 /**
