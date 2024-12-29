@@ -130,7 +130,7 @@ export class SongZFilterDialog extends LitElement {
 						<input name="min-rating" type="number" min="-3" max="3" />
 					</label>
 					<footer id="actions">
-						<button type="reset" slot="secondaryAction">Reset</button>
+						<button type="reset" slot="secondaryAction">Clear</button>
 						<button type="button" slot="secondaryAction" dialogAction="close">Cancel</button>
 						<button type="submit" slot="primaryAction">Filter</button>
 					</footer>
