@@ -1,6 +1,6 @@
 'use strict';
 
-import {SongZCollection} from './collection.js';
+import {SongZCollection} from './songz-collection.js';
 
 export class SongZGenre extends SongZCollection {
 	/** @override */

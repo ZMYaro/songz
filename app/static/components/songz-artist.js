@@ -2,7 +2,7 @@
 
 import {html} from 'lit';
 
-import {SongZCollection} from './collection.js';
+import {SongZCollection} from './songz-collection.js';
 import {httpToJSError, setPageTitle} from '../scripts/utils.js';
 
 export class SongZArtist extends SongZCollection {
@@ -20,10 +20,26 @@ export class SongZArtist extends SongZCollection {
 			collectionid: { type: String, reflect: true },
 			collectionname: { type: String, reflect: true },
 			message: { type: String, reflect: true },
+			filters: { type: Object, attribute: false },
 			pending: { type: Boolean, attribute: false },
 			songs: { type: Array, attribute: false },
-			composersongs: { type: Array, attribute: false }
+			composersongs: { type: Array, attribute: false },
+			filteredSongs: { type: Array, state: true },
+			filteredComposerSongs: { type: Array, state: true }
 		};
+	}
+	
+	/**
+	 * @override
+	 * Handle `collectionid`, `filters`, `songs`, or `composersongs` changing.
+	 * @param {Map} changedProperties - Names of changed properties to corresponding previous values
+	 */
+	willUpdate(changedProperties) {
+		super.willUpdate(changedProperties);
+		if (changedProperties.has('filters') || changedProperties.has('composersongs')) {
+			// Update the filtered composer songs list if `composersongs` or `filters` changed.
+			this.filteredComposerSongs = (this.composersongs || []).filter(this.boundApplyFilters);
+		}
 	}
 	
 	/**
@@ -70,23 +86,25 @@ export class SongZArtist extends SongZCollection {
 			<mwc-top-app-bar-fixed>
 				<mwc-icon-button icon="arrow_back" slot="navigationIcon" @click="${() => location.href = '#artists'}"></mwc-icon-button>
 				<span role="heading" aria-level="1" slot="title">${this.collectionname || ''}</span>
-				<mwc-icon-button icon="more_vert" slot="actionItems" @click="${() => this.actionsMenu.show()}"></mwc-icon-button>
+				<mwc-icon-button icon="filter_list" title="Filter..." slot="actionItems" @click="${() => this.filterDialog.show()}"></mwc-icon-button>
+				<mwc-icon-button icon="more_vert" title="More actions" slot="actionItems" @click="${() => this.actionsMenu.show()}"></mwc-icon-button>
 			</mwc-top-app-bar-fixed>
 			${this.pending ? html`<p><mwc-circular-progress indeterminate></mwc-circular-progress></p>` : ''}
 			${this.message ? html`<p>${this.message}</p>` : ''}
-			${this.songs ?
-				(this.songs.length === 0 ?
+			${this.filteredSongs ?
+				(this.filteredSongs.length === 0 ?
 					html`<p>No artist credits</p>` :
-					html`<songz-song-list viewtype="artist" .songs="${this.songs}"></songz-song-list>`
+					html`<songz-song-list viewtype="artist" .songs="${this.filteredSongs}"></songz-song-list>`
 				) : ''
 			}
-			${this.composersongs ?
-				(this.composersongs.length === 0 ?
+			${this.filteredComposerSongs ?
+				(this.filteredComposerSongs.length === 0 ?
 					html`<hr /><p>No composer credits</p>` :
-					html`<hr /><songz-song-list viewtype="composer" .songs="${this.composersongs}"></songz-song-list>`
+					html`<hr /><songz-song-list viewtype="composer" .songs="${this.filteredComposerSongs}"></songz-song-list>`
 				) : ''
 			}
 			<songz-collection-actions-menu viewtype="${this.VIEW_TYPE}" @action="${this.handleMenuItemSelect}"></songz-collection-actions-menu>
+			<songz-filter-dialog @change="${this.handleFilterChange}"></songz-filter-dialog>
 		`;
 	}
 }
