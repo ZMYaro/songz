@@ -43,21 +43,21 @@ export class SongZCollection extends LitElement {
 	}
 	
 	/**
+	 * @override
+	 * Handle `collectionid` changing.
+	 * @param {Map} changedProperties - Names of changed properties to corresponding previous values
+	 */
+	willUpdate(changedProperties) {
+		if (changedProperties.has('collectionid') && changedProperties.get('collectionid') !== this.collectionid) {
+			this.loadSongs();
+		}
+	}
+	
+	/**
 	 * Abort loading on disconnect.
 	 */
 	disconnectedCallback() {
 		this.loadAbortController.abort();
-	}
-	
-	/**
-	 * @override
-	 * Load the new collection if the ID is changed.
-	 * @param {Map} changedProperties - Names of changed properties to corresponding previous values
-	 */
-	updated(changedProperties) {
-		if (changedProperties.has('collectionid') && changedProperties.get('collectionid') !== this.collectionid) {
-			this.loadSongs();
-		}
 	}
 	
 	/**
