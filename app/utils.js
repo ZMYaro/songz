@@ -50,10 +50,8 @@ function handleError(res, message, code) {
  * @returns {Array<String>}
  */
 function parseSemicolonSeparatedList(input) {
-	return (input?.
-		trim()?.
-		split(';')?.
-		map((elem) => elem.trim())) || [];
+	// Remove whitespace from the ends and around each semicolon.
+	return (input?.trim()?.split(/ *; */)) || [];
 }
 
 /**
