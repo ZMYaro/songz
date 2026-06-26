@@ -28,7 +28,9 @@ async function initGAPIClient() {
  * @returns {String} The existing blob URL, if any, or a blob URL for a MediaSource.
  */
 export function getFileURL(fileID, onlyThumbnail, containingElem) {
-	if (fileURLs[fileID]) { return fileURLs[fileID]; }
+	if (fileURLs[fileID]) {
+		return fileURLs[fileID];
+	}
 	
 	let mediaSource = new MediaSource(),
 		url = URL.createObjectURL(mediaSource);
@@ -44,7 +46,15 @@ export function getFileURL(fileID, onlyThumbnail, containingElem) {
 			// If loading an image thumbnail instead of a media file, quit here, and refresh the containing element.
 			URL.revokeObjectURL(url);
 			fileURLs[fileID] = fileRes.result.thumbnailLink;
-			containingElem?.requestUpdate();
+			
+			// Update relevant thumbnail <img> element(s) if present.
+			let thumbnailElems = [
+				...(containingElem?.querySelectorAll(`[data-gdrive-id="${fileID}"]`) || []),
+				...(containingElem?.shadowRoot?.querySelectorAll(`[data-gdrive-id="${fileID}"]`) || [])
+			];
+			for (let thumbnailElem of thumbnailElems) {
+				thumbnailElem.src = fileRes.result.thumbnailLink;
+			}
 			return;
 		}
 		
