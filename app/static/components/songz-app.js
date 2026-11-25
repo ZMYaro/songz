@@ -151,7 +151,7 @@ export class SongZApp extends LitElement {
 	 * @returns {Promise} Resolves when the song starts playing
 	 */
 	resumeSong() {
-		navigator.mediaSession.playbackState = 'none';
+		navigator.mediaSession.playbackState = 'paused';
 		this.playStatus = 'buffering';
 		this.duration = null;
 		return this.activePlayer.play();
