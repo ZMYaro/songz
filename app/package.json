@@ -2,6 +2,11 @@
 	"name": "songz",
 	"version": "1.0.0",
 	"description": "",
+	"author": {
+		"name": "Zachary Yaro",
+		"email": "zmyaro@zmyaro.com",
+		"url": "https://zmyaro.com"
+	},
 	"main": "index.js",
 	"scripts": {
 		"start": "node index.js",
@@ -11,7 +16,6 @@
 		"type": "git",
 		"url": "git+https://github.com/zmyaro/songz.git"
 	},
-	"author": "Zachary Yaro",
 	"bugs": {
 		"url": "https://github.com/zmyaro/songz/issues"
 	},
