@@ -121,11 +121,10 @@ export class SongZApp extends LitElement {
 	 * @param {Number} i - The index from the queue to play
 	 * @returns {Promise} Resolves when the song starts playing
 	 */
-	async playSong(i) {
+	playSong(i) {
 		if (this.queuePosition === i) {
 			// Do not reload if the selected song is already playing.
-			await this.resumeSong();
-			return;
+			return this.resumeSong();
 		}
 		this.loadSong(this.activePlayer, this.queue[i]);
 		if (i + 1 < this.queue.length) {
@@ -133,7 +132,7 @@ export class SongZApp extends LitElement {
 		}
 		this.queuePosition = i;
 		this.playthroughStatus = this.PLAYTHROUGH_STATUS_NOT_COUNTED;
-		await this.resumeSong();
+		return this.resumeSong();
 	}
 	
 	/**
@@ -211,13 +210,13 @@ export class SongZApp extends LitElement {
 	 * Move to the previous song in the queue, if any.
 	 * @returns {Promise} Resolves when the previous song starts playing, or immediately if there is no previous song.
 	 */
-	async prevSong() {
+	prevSong() {
 		if (this.queuePosition - 1 < 0) {
 			// Abort if there is no previous song.
 			return;
 		}
 		// Stop the current song and switch players so it is ready if the queue steps forward.
-		await this.stopSong();
+		this.stopSong();
 		this.swapPlayers();
 		// Step the queue position back.
 		this.queuePosition--;
@@ -226,19 +225,19 @@ export class SongZApp extends LitElement {
 		// Load the now-current song and play when ready.
 		this.loadSong(this.activePlayer, this.queue[this.queuePosition]);
 		this.playthroughStatus = this.PLAYTHROUGH_STATUS_NOT_COUNTED;
-		await this.resumeSong();
+		return this.resumeSong();
 	}
 	/**
 	 * Move to the next song in the queue, if any.
 	 * @returns {Promise} Resolves when the next song starts playing, or immediately if ithere is no next song.
 	 */
-	async nextSong() {
+	nextSong() {
 		if (this.queuePosition + 1 >= this.queue.length) {
 			// Abort if there is no next song.
 			return;
 		}
 		// Stop the current song and switch to the player where the next song is preloaded.
-		await this.pauseSong();
+		this.pauseSong();
 		this.swapPlayers();
 		// Step the queue position forward.
 		this.queuePosition++;
@@ -247,7 +246,7 @@ export class SongZApp extends LitElement {
 			this.loadSong(this.inactivePlayer, this.queue[this.queuePosition + 1]);
 		}
 		this.playthroughStatus = this.PLAYTHROUGH_STATUS_NOT_COUNTED;
-		await this.resumeSong();
+		return this.resumeSong();
 	}
 	
 	/**
